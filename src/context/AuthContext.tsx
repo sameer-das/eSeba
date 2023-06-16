@@ -1,0 +1,132 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useState, useEffect } from "react";
+import { getUserInfo, validateUser } from "../API/services";
+import { Alert } from 'react-native';
+export const AuthContext = createContext<IAuthContext>({
+    userData: null,
+    isLoading: false,
+    token: null,
+    menuCategories: null,
+    login: () => { },
+    logout: () => { }
+});
+export interface IAuthContext {
+    userData: any | null,
+    isLoading: boolean,
+    token: string | null,
+    menuCategories: any | null,
+    login: Function,
+    logout: Function
+}
+//555401005338
+export const AuthProvider = ({ children }: { children: any }) => {
+    const [userData, setUserData] = useState<any | null>(null);
+    const [menuCategories, setMenuCategories] = useState<any | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [token, setToken] = useState<string | null>(null);
+
+    const login = async (loginId: string, password: string) => {
+        console.log(`logging in ${loginId} and ${password}`);
+        if (!loginId || !password) {
+            Alert.alert('Login Error', 'Please enter Login ID and Password!');
+            return;
+        }
+        setIsLoading(true);
+        const credentials = { userid: loginId, password: password };
+        try {
+            const resp = await validateUser(credentials);
+            // console.log(resp.data);
+            if (resp.data.status === 'Success' && resp.data.data && resp.data?.data?.userDetais && resp.data?.data?.userDetais?.user_ID) {
+                // call user Info 
+                const userInfoResp = await getUserInfo(resp.data.data.userDetais.user_ID);
+                if (userInfoResp.data.status === 'Success' && userInfoResp.data.code === 200) {
+                    await AsyncStorage.setItem('userData', JSON.stringify(userInfoResp.data.data));
+                    await AsyncStorage.setItem('token', 'xxxxxxxxxxxxxxxx');
+                    const menuCategories = getFormattedServices(resp.data.data);
+                    await AsyncStorage.setItem('menuCategories', JSON.stringify(menuCategories));
+                    setToken('xxxxxxxxxxxxxxxx');
+                    setMenuCategories(menuCategories);
+                    setUserData(userInfoResp.data.data);
+                    setIsLoading(false);
+                } else {
+                    clearAsyncStorageForUserData();
+                    // show modal that login failed
+                    Alert.alert('Login Error', 'Something went wrong! Contact helpdesk.');
+                }
+            } else {
+                clearAsyncStorageForUserData();
+                // show modal that login failed
+                Alert.alert('Login Error', 'Invalid Credentials!')
+            }
+        } catch (e) {
+            console.log(e);
+            clearAsyncStorageForUserData();
+            // show modal that login failed
+            Alert.alert('Login Error', 'Something went wrong! Contact helpdesk.');
+        }
+    }
+
+    const logout = () => {
+        setIsLoading(true);
+        // set time out is given to show loader only 
+        setTimeout(async () => {
+            clearAsyncStorageForUserData();
+        }, 1000)
+    }
+
+    const clearAsyncStorageForUserData = async () => {
+        setIsLoading(false);
+        setToken(null);
+        setUserData(null);
+        setMenuCategories(null);
+        await AsyncStorage.setItem('userData', '');
+        await AsyncStorage.setItem('token', '');
+        await AsyncStorage.setItem('menuCategories', '');
+    }
+
+    const isLoggedIn = async () => {
+        try {
+            setIsLoading(true);
+            const userData = await AsyncStorage.getItem('userData') as string;
+            const token = await AsyncStorage.getItem('token') as string;
+            const menuCategories = await AsyncStorage.getItem('menuCategories') as string;
+
+            if (userData === '' || !userData || menuCategories === '' || token === '') {
+                console.log('Login Not Found')
+                clearAsyncStorageForUserData();
+            }
+            else {
+                console.log('Login Found')
+                setUserData(JSON.parse(userData));
+                setToken(JSON.stringify(token));
+                setMenuCategories(JSON.parse(menuCategories));
+            }
+            setIsLoading(false);
+        } catch (e) {
+            console.log('isLoggedIn error');
+            console.log(e)
+        }
+    }
+
+    const getFormattedServices = (data: any) => {
+        const categories = data.services.map((serv: any) => {
+            return {
+                ...serv,
+                services: data.categories.filter((cat: any) => cat.services_ID === serv.services_ID)
+            }
+        });
+
+        // console.log(categories);
+        return categories
+    }
+
+    useEffect(() => {
+        console.log('checking login')
+        isLoggedIn();
+    }, [])
+
+
+    return (<AuthContext.Provider value={{ userData, isLoading, token, menuCategories, login, logout }}>
+        {children}
+    </AuthContext.Provider>)
+}
