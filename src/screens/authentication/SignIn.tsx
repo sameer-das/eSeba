@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import colors from '../../../src/constants/colors';
 import { AuthContext } from '../../../src/context/AuthContext';
 
@@ -11,6 +11,9 @@ const SignIn = () => {
 
   return (
     <View style={styles.rootContainer}>
+
+      <Image source={require('../../../assets/logos/esk_logo.png')} style={styles.logo} />
+
       <Text style={styles.welcomeText}>Login here to continue with us</Text>
       <View style={{ marginTop: 32 }}>
         <View style={styles.inputContainer}>
@@ -42,6 +45,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     paddingHorizontal: 14,
+  },
+  logo: {
+    height: 110,
+    marginBottom: 50
   },
   welcomeText: {
     fontSize: 28,
