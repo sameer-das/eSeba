@@ -17,11 +17,18 @@ export const getUserInfo = (user_id: number) => {
 }
 
 export const getBillerInfo = (billerId: string) => {
-    return axios.post(`${BASE_URL}/api/GSKRecharge/eBBPSBillerInfoByBillerID?billerid=${billerId}`,{})
+    return axios.post(`${BASE_URL}/api/GSKRecharge/eBBPSBillerInfoByBillerID?billerid=${billerId}`, {})
 }
 
 export const getWalletBalance = (email: string) => {
     return axios.post(`${BASE_URL}/api/GSKRecharge/GetWalletBalance?emailid=${email}`, {});
 }
 
+export const bbpsFetchBill = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/GSKRecharge/eBBPSBillFetch`, payload);
+}
+
+export const bbpsPayBill = (requestId: string, payBill: any, serviceCatId: string, serviceId: string, user_EmailID: string) => {
+    return axios.post(`${BASE_URL}/api/GSKRecharge/eBBPSBillPay?requestid=${requestId}&serviceId=${serviceId}&categoryId=${serviceCatId}&userId=${user_EmailID}`, payBill)
+}
 

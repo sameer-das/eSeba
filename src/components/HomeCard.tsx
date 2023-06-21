@@ -4,17 +4,21 @@ import colors from '../constants/colors';
 import { windowWidth } from '../utils/dimension';
 import { useNavigation } from '@react-navigation/native';
 import { IamgeMapping } from '../constants/billers-mapping';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeCard = ({ item }: { item: any }) => {
     const [col] = useState(4);
     const navigation = useNavigation<any>();
 
-    const handleCardItemPress = (item: any) => {
-        // console.log('Pressed ' + JSON.stringify(item));
+    const handleCardItemPress = async (item: any) => {
+        console.log('Pressed ' + JSON.stringify(item));
         if(item.services_Cat_Name === 'Mobile Prepaid') {
-            navigation.navigate('prepaidRecharge');
+            navigation.navigate('prepaidRechargeStack');
         } else {
-            navigation.push('bbps', { bbpsSeviceName: item.services_Cat_Name, path: item.route })
+            await AsyncStorage.setItem('currentServiceDetails', JSON.stringify(
+                {services_id: item.services_ID ,services_cat_id: item.services_Cat_ID}
+            ));
+            navigation.push('bbpsStack', { bbpsSeviceName: item.services_Cat_Name, path: item.route })
         }
     }
 

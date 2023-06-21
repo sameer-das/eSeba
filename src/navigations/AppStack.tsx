@@ -15,6 +15,7 @@ import Profile from '../screens/home/Profile';
 import RechargeWallet from '../screens/wallet/RechargeWallet';
 import Wallet from '../screens/wallet/Wallet';
 import SearchContact from '../screens/prepaid recharge/SearchContact';
+import ShowPlans from '../screens/prepaid recharge/ShowPlans';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -70,10 +71,6 @@ const BBPSStack = () => {
             }}
             initialParams={route.params} component={FetchBillDetails} />
 
-        <Stack.Screen name='BillDetails'
-            options={{ title: 'Bill Details' }}
-            component={BillDetails} />
-
     </Stack.Navigator>)
 }
 
@@ -101,6 +98,7 @@ const PrepaidRechargeStack = () => {
             headerTintColor: colors.white
         }}>
             <Stack.Screen name='searchContact' component={SearchContact} options={{ title: 'Prepaid Recharge' }} />
+            <Stack.Screen name='showPlan' component={ShowPlans} options={{ title: 'Choose Plans' }} />
         </Stack.Navigator>
     )
 }
@@ -112,9 +110,9 @@ const AppStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen name='Home' component={DrawNav} options={{ headerShown: false }} />
-            <Stack.Screen name='bbps' component={BBPSStack} options={{ headerShown: false }} />
+            <Stack.Screen name='bbpsStack' component={BBPSStack} options={{ headerShown: false }} />
             <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />
-            <Stack.Screen name='prepaidRecharge' component={PrepaidRechargeStack} options={{ headerShown: false }} />
+            <Stack.Screen name='prepaidRechargeStack' component={PrepaidRechargeStack} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }

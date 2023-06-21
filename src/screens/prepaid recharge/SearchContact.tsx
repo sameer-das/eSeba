@@ -1,24 +1,133 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { StyleSheet, Text, View, TextInput, Pressable, FlatList } from 'react-native'
+import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import colors from '../../constants/colors';
+import Contacts from 'react-native-contacts';
+import { PermissionsAndroid } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Loading from '../../components/Loading';
 
 const SearchContact = () => {
+    const navigation = useNavigation<any>();
+
     const { userData } = useContext(AuthContext);
     const [mobileNo, setMobileNo] = useState('');
+    const [contactList, setContactList] = useState<any[]>([]);
+    const [filteredContactList, setFilteredContactList] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const getContactsArray = (contacts: any[]) => {
+        const result: any[] = [];
+        
+        contacts.forEach((contact: any) => {
+            const con = contact.phoneNumbers.map((phno: any) => {
+                return { name: contact.givenName, number: phno.number.replace(/-|\s/g, "") }
+            })
+            result.push(...con);
+        });
+        const unSortedUniqueArray = uniqByKeepLast(result, (it: any) => it.number.substr(-10));
+        unSortedUniqueArray.sort((a, b) => {
+            if (a.name > b.name)
+                return 1
+            else
+                return -1
+        })
+        return unSortedUniqueArray;
+    }
+
+    const uniqByKeepLast = (data: any[], key: Function) => {
+        return [...new Map(
+            data.map(x => [key(x), x])
+        ).values()]
+    }
+
+    const contactPressHandler = (item: any) => {
+        navigation.push('showPlan', {...item})
+    }
+    const contactItem = ({ item }: any) => {
+        return (
+            <Pressable onPress={() => contactPressHandler(item)} style={styles.contactItem}>
+                <Text style={styles.contactName}>{item.name}</Text>
+                <Text style={styles.contactNumber}>{item.number}</Text>
+            </Pressable>
+        )
+    }
+
+    const filterList = (searchText: string) => {
+        if (searchText.toLowerCase() === '') {
+            setFilteredContactList(contactList);
+        }
+        else {
+            const result = contactList.filter(contact => {
+                return contact.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                    contact.number.toLowerCase().includes(searchText.toLowerCase())
+            })
+            setFilteredContactList(result)
+        }
+    }
+
+    const searchHandler = (searchText: string) => {
+        setMobileNo(searchText);
+        filterList(searchText.trim());
+    }
+
+    const newContactPressHandler = () => {
+
+    }
+
+
+    useEffect(() => {
+        console.log('in list contacts')
+        PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
+            title: 'Contacts',
+            message: 'This app would like to view your contacts.',
+            buttonPositive: 'Please accept',
+        }).then((res) => {
+            // console.log('Permission: ', res);
+            setIsLoading(true);
+            Contacts.getAll()
+                .then((contacts) => {
+                    const contactArray = getContactsArray(contacts);
+                    setContactList(contactArray);
+                    setFilteredContactList(contactArray);
+                    setIsLoading(false);
+                })
+                .catch((e) => {
+                    console.log(e);
+                    setIsLoading(false);
+                });
+        })
+            .catch((error) => {
+                console.error('Permission error: ', error);
+            });
+    }, []);
+
+
+    if(isLoading)
+       return <Loading label={'Reading your contacts'}/>
 
     return (
         <View style={styles.rootContainer}>
             <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Please enter mobile no or choose from contact</Text>
+                <Text style={styles.inputLabel}>Please enter mobile or name</Text>
                 <View style={styles.mobileNoInput}>
-                    <Text style={styles.countryCode}>+91</Text>
+                    {/* <Text style={styles.countryCode}>+91</Text> */}
                     <TextInput style={styles.input}
+                        placeholder='Number or Name'
                         value={mobileNo}
-                        keyboardType='number-pad'
                         autoFocus
-                        onChangeText={(val) => setMobileNo(val)} />
+                        onChangeText={searchHandler} />
                 </View>
+            </View>
+
+
+            <View style={{ flex: 1 }}>
+                {filteredContactList.length > 0 ?
+                    <FlatList showsVerticalScrollIndicator={false} data={filteredContactList} renderItem={contactItem} /> :
+                    <Pressable onPress={newContactPressHandler} style={styles.typedNumberContainer}>
+                        <Text style={styles.newNumberLable}>New Number</Text>
+                        <Text style={styles.typedNumber}>+91 {mobileNo}</Text>
+                    </Pressable>}
             </View>
         </View>
     )
@@ -47,7 +156,7 @@ const styles = StyleSheet.create({
         borderColor: colors.primary100,
         alignItems: 'center',
         paddingHorizontal: 8
-    }, 
+    },
     countryCode: {
         fontSize: 20,
         color: colors.primary500,
@@ -56,7 +165,44 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 20,
         color: colors.primary500,
+        fontWeight: 'bold',
+        width:'100%'
+    },
+
+    typedNumberContainer: {
+        paddingVertical: 8,
+        backgroundColor: colors.primary50,
+        paddingHorizontal: 4
+    },
+    typedNumber: {
+        fontSize: 18,
+        color: colors.primary500,
+        fontWeight: 'bold',
+        marginTop: 4,
+        paddingLeft: 8
+    },
+    newNumberLable: {
+        fontStyle: 'italic',
+        fontSize: 16,
+        color: colors.primary500,
+        paddingLeft: 8
+    },
+
+
+    contactItem: {
+        paddingVertical: 8,
+        borderBottomColor: colors.primary200,
+        borderBottomWidth: 1,
+        paddingHorizontal: 4
+    },
+    contactName: {
+        fontSize: 18,
+        color: colors.primary500,
         fontWeight: 'bold'
     },
+    contactNumber: {
+        fontSize: 18,
+        color: colors.primary400,
+    }
 
 })

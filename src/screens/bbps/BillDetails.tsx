@@ -1,18 +1,20 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import colors from '../../../src/constants/colors'
 
-const BillDetails = () => {
+const BillDetails = ({billerResponse}) => {
+
     const payHandler = () => {
         console.log('Proceed to pay clicked')
     }
+
+    
     return (
         <View style={{flex:1, justifyContent: 'space-between'}}>
             <View style={[styles.card]}>
-                <View style={styles.header}>
-                    <Text style={styles.biller_name}>TP Central Odisha Distribution Ltd</Text>
-                    <Text style={styles.consumer_id}>102S7546891356</Text>
-                </View>
+                {/* <View style={styles.header}>
+                    <Text style={styles.biller_name}>{billerResponse.customerName}</Text>
+                </View> */}
                 <View style={styles.bill_details_container}>
                     <Text style={styles.bill_details_header}>Bill Details</Text>
                     <View style={styles.bill_details}>
@@ -21,14 +23,14 @@ const BillDetails = () => {
                             <Text style={styles.bill_details_label}>Bill Date</Text>
                         </View>
                         <View style={styles.right_col}>
-                            <Text style={styles.bill_details_value}>Mr Kumar Ojha</Text>
-                            <Text style={styles.bill_details_value}>30-Apr-2023</Text>
+                            <Text style={styles.bill_details_value}>{billerResponse.customerName}</Text>
+                            <Text style={styles.bill_details_value}>{billerResponse.billDate}</Text>
                         </View>
                     </View>
 
                     <View style={styles.amount_container}>
-                        <Text style={styles.amount_value}>₹ 536</Text>
-                        <Text style={styles.amount_due_date}>Due Date: 7-Jun-2023</Text>
+                        <Text style={styles.amount_value}>₹ {billerResponse.billAmount / 100}</Text>
+                        <Text style={styles.amount_due_date}>{billerResponse.dueDate}</Text>
                     </View>
                 </View>
             </View>
@@ -61,10 +63,6 @@ const styles = StyleSheet.create({
     biller_name: {
         fontSize: 18,
         color: colors.primary500
-    },
-    consumer_id: {
-        fontSize: 16,
-        color: colors.primary300
     },
     bill_details_container: {
         marginTop: 18
