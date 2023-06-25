@@ -16,6 +16,11 @@ import RechargeWallet from '../screens/wallet/RechargeWallet';
 import Wallet from '../screens/wallet/Wallet';
 import SearchContact from '../screens/prepaid recharge/SearchContact';
 import ShowPlans from '../screens/prepaid recharge/ShowPlans';
+import OtpScreen from '../screens/common/OtpScreen';
+import ProceedToPay from '../screens/prepaid recharge/ProceedToPay';
+import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus';
+import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
+import ListTransactions from '../screens/transactions/ListTransactions';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -39,6 +44,9 @@ const DrawNav = () => {
             }} />
             <Drawer.Screen component={Wallet} name='Wallet' options={{
                 drawerIcon: ({ color }) => <MaterialIcon name='account-balance-wallet' size={30} color={color} />
+            }} />
+            <Drawer.Screen component={ListTransactions} name='Transactions' options={{
+                drawerIcon: ({ color }) => <MaterialIcon name='view-list' size={30} color={color} />
             }} />
             {/* <Drawer.Screen component={Profile} name='Profile' options={{
                 drawerLabel: 'My Profile', title: 'My Profile',
@@ -99,6 +107,7 @@ const PrepaidRechargeStack = () => {
         }}>
             <Stack.Screen name='searchContact' component={SearchContact} options={{ title: 'Prepaid Recharge' }} />
             <Stack.Screen name='showPlan' component={ShowPlans} options={{ title: 'Choose Plans' }} />
+            <Stack.Screen name='proceedToPay' component={ProceedToPay} options={{ title: 'Confirm Payment' }} />
         </Stack.Navigator>
     )
 }
@@ -113,6 +122,9 @@ const AppStack = () => {
             <Stack.Screen name='bbpsStack' component={BBPSStack} options={{ headerShown: false }} />
             <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />
             <Stack.Screen name='prepaidRechargeStack' component={PrepaidRechargeStack} options={{ headerShown: false }} />
+            <Stack.Screen name='otpScreen' component={OtpScreen} options={{ headerShown: false }} />
+            <Stack.Screen name='prepaidTransSuccess' component={PrepaidTransactionStatus} options={{ headerShown: false }} />
+            <Stack.Screen name='bbpsTxnStatus' component={BBPSTransactionStatus} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }

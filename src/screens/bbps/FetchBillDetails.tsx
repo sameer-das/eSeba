@@ -7,6 +7,7 @@ import Loading from '../../components/Loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BillDetails from './BillDetails';
 import { AuthContext } from '../../context/AuthContext';
+import { validateWalletBalance, validateWalletPin } from '../../utils/walletUtil';
 
 const FetchBillDetails = () => {
     const { userData } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const FetchBillDetails = () => {
     const [billerInfo, setBillerInfo] = useState<any>({});
     const [rawBillerInfo, setRawBillerInfo] = useState<any>({});
     const [isLoading, setIsLoading] = useState(false);
+    const [loadingLabel, setLoadingLabel] = useState<string>('Loading...');
     const [showBillDetails, setShowBillDetails] = useState(false);
 
 
@@ -26,7 +28,7 @@ const FetchBillDetails = () => {
     const [billerResponse, setBillerResponse] = useState<any | null>(null);
     const [additionalInfo, setAdditionalInfo] = useState<any | null>(null);
 
-    const route = useRoute();
+    const route = useRoute<any>();
     const navigation = useNavigation<any>();
     // console.log('in fetch bill details' + (route.params as any).blr_id);
 
@@ -38,7 +40,7 @@ const FetchBillDetails = () => {
             // console.log(data)
             if (data.status === 'Success' && data.code === 200 && data?.resultDt?.resultDt?.billerId.length > 0) {
                 const _billerInfo = data?.resultDt?.resultDt?.billerInputParams.paramInfo;
-                
+
                 console.log(data?.resultDt?.resultDt.billerName);
                 AsyncStorage.setItem('currentBillerName', data?.resultDt?.resultDt.billerName)
 
@@ -81,6 +83,7 @@ const FetchBillDetails = () => {
 
     const fetchBill = async (bbpsFetchBillBody: any) => {
         console.log('fetching bill')
+        setLoadingLabel('Fetching Bill');
         setIsLoading(true)
         try {
             const { data } = await bbpsFetchBill(bbpsFetchBillBody);
@@ -102,71 +105,128 @@ const FetchBillDetails = () => {
         } catch (e) {
             console.log(e)
         } finally {
+            setLoadingLabel('Loading...');
             setIsLoading(false)
         }
     }
 
-    const payBill =async () => {
-       const sd = await AsyncStorage.getItem('currentServiceDetails') as string;
-       const serviceDetails = JSON.parse(sd);
+    const payBill = async () => {
+        const sd = await AsyncStorage.getItem('currentServiceDetails') as string;
+        const serviceDetails = JSON.parse(sd);
+        setLoadingLabel('Making Payment. Dont press back or close application!');
+        setIsLoading(true);
 
         const payBillPayload = {
             "agentId": "CC01BA48AGTU00000001",
             "billerAdhoc": true,
             "agentDeviceInfo": {
-              "ip": "192.168.2.73",
-              "initChannel": "AGT",
-              "mac": "01-23-45-67-89-ab"
+                "ip": "192.168.2.73",
+                "initChannel": "AGT",
+                "mac": "01-23-45-67-89-ab"
             },
             "customerInfo": {
-              "customerMobile": "9777117452",
-              "customerEmail": "info.gskindiaorg@gmail.com",
-              "customerAdhaar": "",
-              "customerPan": ""
+                "customerMobile": "9777117452",
+                "customerEmail": "info.gskindiaorg@gmail.com",
+                "customerAdhaar": "",
+                "customerPan": ""
             },
             "billerId": (route.params as any).blr_id,
             "inputParams": {
-              "input": [
-                ...inputParams
-              ]
+                "input": [
+                    ...inputParams
+                ]
             },
             "billerResponse": billerResponse,
             "additionalInfo": additionalInfo,
             "amountInfo": {
-              "amount": billerResponse.billAmount,
-              "currency": 356,
-              "custConvFee": 0,
-              "amountTags": [
-      
-              ]
+                "amount": billerResponse.billAmount,
+                "currency": 356,
+                "custConvFee": 0,
+                "amountTags": [
+
+                ]
             },
             "paymentMethod": {
-              "paymentMode": 'Wallet',
-              "quickPay": "N",
-              "splitPay": "N"
+                "paymentMode": 'Wallet',
+                "quickPay": "N",
+                "splitPay": "N"
             },
             "paymentInfo": {
-              "info": [
-                {
-                  "infoName": "WalletName",
-                  "infoValue": "Paytm"
-                }, {
-                  "infoName": "MobileNo",
-                  "infoValue": userData.user.mobile_Number
-                }
-              ]
+                "info": [
+                    {
+                        "infoName": "WalletName",
+                        "infoValue": "Paytm"
+                    }, {
+                        "infoName": "MobileNo",
+                        "infoValue": userData.user.mobile_Number
+                    }
+                ]
             }
-          }
+        }
 
-          // check wallet Balance
 
-         const {data} = await bbpsPayBill(requestID,payBillPayload,serviceDetails.service_cat_id,serviceDetails.service_id,userData.user.user_EmailID)
-        
+        try {
+            // const {data} = await bbpsPayBill(requestID,payBillPayload,serviceDetails.service_cat_id,serviceDetails.service_id,userData.user.user_EmailID)
+            // await AsyncStorage.removeItem('bbpsTxnStatus');
+            // await AsyncStorage.setItem('bbpsTxnStatus', JSON.stringify({
+            //     resp: data,
+            //     rawBillerInfo,
+            //     billerResponse
+            // }));
+            setLoadingLabel('Loading...');
+            setIsLoading(false);
+
+            setTimeout(() => {
+                console.log(JSON.stringify(payBillPayload));
+                setLoadingLabel('Loading...');
+                setIsLoading(false);
+                navigation.navigate('bbpsTxnStatus');
+            }, 3000)
+
+        } catch (e) {
+            console.log(e);
+            Alert.alert('Error', 'Failed to make payment, Please try later!');
+        } finally {
+            setLoadingLabel('Loading...');
+            setIsLoading(false);
+        }
+
     }
 
-    // const 
 
-    
+    const onPinInput = async (pin: string) => {
+        console.log('got pin ' + pin);
+        try {
+            setLoadingLabel('Validating Pin');
+            setIsLoading(true);
+            const isPinOk = await validateWalletPin(userData.user.user_ID, pin);
+            if (isPinOk) {
+                console.log('BillDetails pin ok');
+                // check for wallet balance
+                const amount = billerResponse.billAmount / 100;
+                setLoadingLabel('Checking Wallet');
+                const isWalletOk = await validateWalletBalance(amount, userData.user.user_EmailID);
+                if (!isWalletOk) { //TODO remove !
+                    console.log('wallet ok');
+                    await payBill();
+                }
+                setIsLoading(false);
+                setLoadingLabel('Loading...')
+            } else {
+                Alert.alert('Invalid Pin', 'You have entered a wrong PIN!');
+            }
+        } catch (e) {
+
+        } finally {
+            setIsLoading(false);
+            setLoadingLabel('Loading...')
+        }
+
+
+    }
+
+
+
 
     useEffect(() => {
         const biller_id = (route.params as any).blr_id;
@@ -183,9 +243,18 @@ const FetchBillDetails = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const pin = (route.params as any)?.pin;
+        if ((route.params as any)?.pin) {
+            console.log('otp Found in bbps fetch bill' + pin);
+            onPinInput(pin);
+        }
+    }, [(route.params as any)?.pin])
+
+
 
     if (isLoading) {
-        return <Loading />
+        return <Loading label={loadingLabel} />
     }
 
     const handleInputChange = (name: string, value: string) => {
@@ -256,8 +325,15 @@ const FetchBillDetails = () => {
 
     }
 
-    if(showBillDetails)
-        return <BillDetails billerResponse={billerResponse} />
+    const proceedToPay = () => {
+        navigation.navigate('otpScreen', {
+            fromRouteName: 'FetchBill',
+            purpose: `Bill payment of Rs ${billerResponse.billAmount / 100} to ${(route.params as any).blr_name}`
+        });
+    }
+
+    if (showBillDetails)
+        return <BillDetails billerResponse={billerResponse} proceedToPay={proceedToPay} />
 
     return (
         <View style={styles.rootContainer}>

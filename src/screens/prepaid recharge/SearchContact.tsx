@@ -72,7 +72,7 @@ const SearchContact = () => {
     }
 
     const newContactPressHandler = () => {
-
+        navigation.push('showPlan', {number:mobileNo, name: 'Unknow'})
     }
 
 

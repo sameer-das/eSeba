@@ -1,39 +1,51 @@
-import React from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import React, { useState } from 'react'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import colors from '../../../src/constants/colors'
+import Loading from '../../components/Loading'
 
-const BillDetails = ({billerResponse}) => {
+const BillDetails = ({ billerResponse, proceedToPay }: any) => {
+
+    const navigation = useNavigation<any>();
+    const route = useRoute();
+  
 
     const payHandler = () => {
-        console.log('Proceed to pay clicked')
+        console.log('Proceed to pay clicked');
+        proceedToPay();      
     }
 
-    
     return (
-        <View style={{flex:1, justifyContent: 'space-between'}}>
-            <View style={[styles.card]}>
-                {/* <View style={styles.header}>
+        <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View>
+                <View style={[styles.card]}>
+                    {/* <View style={styles.header}>
                     <Text style={styles.biller_name}>{billerResponse.customerName}</Text>
                 </View> */}
-                <View style={styles.bill_details_container}>
-                    <Text style={styles.bill_details_header}>Bill Details</Text>
-                    <View style={styles.bill_details}>
-                        <View style={styles.left_col}>
-                            <Text style={styles.bill_details_label}>Biller Name</Text>
-                            <Text style={styles.bill_details_label}>Bill Date</Text>
+                    <View style={styles.bill_details_container}>
+                        <View style={styles.bbpsLogoContainer}>
+                            <Text style={styles.bill_details_header}>Bill Details</Text>
+                            <Image source={require('../../../assets/logos/BharatBillPay.png')} />
                         </View>
-                        <View style={styles.right_col}>
-                            <Text style={styles.bill_details_value}>{billerResponse.customerName}</Text>
-                            <Text style={styles.bill_details_value}>{billerResponse.billDate}</Text>
+                        <View style={styles.bill_details}>
+                            <View style={styles.left_col}>
+                                <Text style={styles.bill_details_label}>Name</Text>
+                                <Text style={styles.bill_details_label}>Bill Date</Text>
+                            </View>
+                            <View style={styles.right_col}>
+                                <Text style={styles.bill_details_value}>{billerResponse.customerName}</Text>
+                                <Text style={styles.bill_details_value}>{billerResponse.billDate}</Text>
+                            </View>
                         </View>
-                    </View>
 
-                    <View style={styles.amount_container}>
-                        <Text style={styles.amount_value}>₹ {billerResponse.billAmount / 100}</Text>
-                        <Text style={styles.amount_due_date}>{billerResponse.dueDate}</Text>
+                        <View style={styles.amount_container}>
+                            <Text style={styles.amount_value}>₹ {billerResponse.billAmount / 100}</Text>
+                            <Text style={styles.amount_due_date}>{billerResponse.dueDate}</Text>
+                        </View>
                     </View>
                 </View>
             </View>
+
 
             <Pressable style={styles.confirm_cta} onPress={payHandler}>
                 <Text style={styles.confirm_cta_text}>Proceed to pay</Text>
@@ -75,12 +87,12 @@ const styles = StyleSheet.create({
     left_col: { flex: 1 },
     right_col: { flex: 1 },
     bill_details_header: {
-        fontSize: 18,
+        fontSize: 22,
         color: colors.primary500,
         fontWeight: 'bold'
     },
     bill_details_label: {
-        fontSize: 16,
+        fontSize: 18,
         color: colors.primary300,
         fontWeight: 'bold'
     },
@@ -96,13 +108,13 @@ const styles = StyleSheet.create({
     },
     amount_value: {
         fontSize: 36,
-        color:colors.primary500,
+        color: colors.primary500,
         fontWeight: 'bold'
     },
-    amount_due_date:{
-        marginTop:14,
-        fontSize: 14,
-        color:'red'
+    amount_due_date: {
+        marginTop: 14,
+        fontSize: 16,
+        color: 'red'
     },
     confirm_cta: {
         padding: 20,
@@ -115,4 +127,10 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         color: colors.white
     },
+
+    bbpsLogoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end'
+    }
 })

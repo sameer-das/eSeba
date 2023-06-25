@@ -2,13 +2,19 @@ import React, { useContext, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import colors from '../../../src/constants/colors';
 import { AuthContext } from '../../../src/context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
 const SignIn = () => {
   const { login } = useContext(AuthContext);
+  const navigation = useNavigation<any>();
 
   const [loginId, setLoginId] = useState<string | undefined>(undefined);
   const [password, setPassword] = useState<string | undefined>(undefined);
 
+  const sugnup = () => {
+    navigation.navigate('SignUpStack');
+  }
+  
   return (
     <View style={styles.rootContainer}>
 
@@ -29,6 +35,10 @@ const SignIn = () => {
         </View>
         <Pressable style={styles.loginButton} onPress={() => login(loginId, password)} >
           <Text style={styles.loginButtonText}>Login</Text>
+        </Pressable>
+
+        <Pressable style={styles.signUpLink} onPress={() => sugnup()} >
+          <Text style={styles.signUpText}>Register with us</Text>
         </Pressable>
 
       </View>
@@ -88,5 +98,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center'
   },
+
+  signUpLink: {
+    marginTop: 16,
+  },
+  signUpText: {
+    color: colors.primary500,
+    fontSize: 20,
+    textAlign: 'center',
+  }
 
 })

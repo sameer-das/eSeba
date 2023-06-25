@@ -5,10 +5,12 @@ import Loading from '../components/Loading'
 import { AuthContext, IAuthContext } from '../context/AuthContext'
 import AppStack from './AppStack'
 import AuthStack from './AuthStack'
+import OtpScreen from '../screens/common/OtpScreen'
 
 const AppNav = () => {
     const { isLoading, token, userData } = useContext<IAuthContext>(AuthContext);
 
+    
     if (isLoading) {
        return <Loading label="Let's hope it's worth the wait!" />
     }

@@ -32,3 +32,31 @@ export const bbpsPayBill = (requestId: string, payBill: any, serviceCatId: strin
     return axios.post(`${BASE_URL}/api/GSKRecharge/eBBPSBillPay?requestid=${requestId}&serviceId=${serviceId}&categoryId=${serviceCatId}&userId=${user_EmailID}`, payBill)
 }
 
+
+export const getMobileNumberDetails = (mobileNo: string) => {
+    return axios.post(`${BASE_URL}/api/GSKRecharge/eBBPSMNP`, { agentId: '', mobileNo: mobileNo, });
+}
+
+export const getPlanForMobileNo = (billerId: string, circle: string) => {
+    return axios.post(`${BASE_URL}/api/GSKRecharge/eBBPSRechargePlanInfo`, { billerId: billerId, circle: circle, });
+}
+
+
+export const validateTPin = (userid: number, pin: string) => {
+    return axios.post(`${BASE_URL}/api/User/ValidateUserTPin`, { "userId": userid, "tpin": pin })
+}
+
+
+export const prepaidRecharge = (recharge: any) => {
+    return axios.post(`${BASE_URL}/api/GSKRecharge/eGSKMobileRecharge`, recharge);
+}
+
+
+export const getTransactionHistory = (emailid: string) => {
+    return axios.post(`${BASE_URL}/api/GSKRecharge/GetTransactions?emailid=${emailid}`, {});
+}
+
+
+export const checkRefId = (refId: string) => {
+    return axios.get(`${BASE_URL}/api/User/CheckReferenceNumber?rId=${refId}`);
+}
