@@ -21,7 +21,6 @@ const FetchBillDetails = () => {
     const [loadingLabel, setLoadingLabel] = useState<string>('Loading...');
     const [showBillDetails, setShowBillDetails] = useState(false);
 
-
     // for bbps bill fetch and bill pay
     const [inputParams, setInputParams] = useState<any[]>([]);
     const [requestID, setRequestID] = useState<string>('');
@@ -113,6 +112,7 @@ const FetchBillDetails = () => {
     const payBill = async () => {
         const sd = await AsyncStorage.getItem('currentServiceDetails') as string;
         const serviceDetails = JSON.parse(sd);
+        console.log(serviceDetails)
         setLoadingLabel('Making Payment. Dont press back or close application!');
         setIsLoading(true);
 
@@ -139,7 +139,7 @@ const FetchBillDetails = () => {
             "billerResponse": billerResponse,
             "additionalInfo": additionalInfo,
             "amountInfo": {
-                "amount": billerResponse.billAmount,
+                "amount": +billerResponse.billAmount,
                 "currency": 356,
                 "custConvFee": 0,
                 "amountTags": [
@@ -163,33 +163,34 @@ const FetchBillDetails = () => {
                 ]
             }
         }
-
+        console.log(JSON.stringify(payBillPayload));
+        console.log({requestID, catid:serviceDetails.services_cat_id, serv_id: serviceDetails.services_id})
 
         try {
-            // const {data} = await bbpsPayBill(requestID,payBillPayload,serviceDetails.service_cat_id,serviceDetails.service_id,userData.user.user_EmailID)
-            // await AsyncStorage.removeItem('bbpsTxnStatus');
-            // await AsyncStorage.setItem('bbpsTxnStatus', JSON.stringify({
-            //     resp: data,
-            //     rawBillerInfo,
-            //     billerResponse
-            // }));
+            const { data } = await bbpsPayBill(requestID, payBillPayload, serviceDetails.services_cat_id, serviceDetails.services_id, userData.user.user_EmailID)
+            console.log(JSON.stringify(data));
+
+            await AsyncStorage.removeItem('bbpsTxnStatus');
+            await AsyncStorage.setItem('bbpsTxnStatus', JSON.stringify({
+                resp: data.resultDt
+            }));
             setLoadingLabel('Loading...');
             setIsLoading(false);
 
-            setTimeout(() => {
-                console.log(JSON.stringify(payBillPayload));
-                setLoadingLabel('Loading...');
-                setIsLoading(false);
-                navigation.navigate('bbpsTxnStatus');
-            }, 3000)
+            
+            navigation.navigate('bbpsTxnStatus');
 
         } catch (e) {
             console.log(e);
             Alert.alert('Error', 'Failed to make payment, Please try later!');
+            
         } finally {
             setLoadingLabel('Loading...');
             setIsLoading(false);
+            navigation.setParams({...route.params, pin:''});
         }
+
+
 
     }
 
@@ -205,15 +206,16 @@ const FetchBillDetails = () => {
                 // check for wallet balance
                 const amount = billerResponse.billAmount / 100;
                 setLoadingLabel('Checking Wallet');
-                const isWalletOk = await validateWalletBalance(amount, userData.user.user_EmailID);
-                if (!isWalletOk) { //TODO remove !
-                    console.log('wallet ok');
-                    await payBill();
-                }
+                // const isWalletOk = await validateWalletBalance(amount, userData.user.user_EmailID);
+                // if (isWalletOk) { //TODO remove !
+                //     console.log('wallet ok');
+                // }
+                await payBill();
                 setIsLoading(false);
                 setLoadingLabel('Loading...')
             } else {
                 Alert.alert('Invalid Pin', 'You have entered a wrong PIN!');
+                navigation.setParams({...route.params, pin:''});
             }
         } catch (e) {
 
@@ -247,7 +249,8 @@ const FetchBillDetails = () => {
         const pin = (route.params as any)?.pin;
         if ((route.params as any)?.pin) {
             console.log('otp Found in bbps fetch bill' + pin);
-            onPinInput(pin);
+            if (pin !== '')
+                onPinInput(pin);
         }
     }, [(route.params as any)?.pin])
 
@@ -326,6 +329,7 @@ const FetchBillDetails = () => {
     }
 
     const proceedToPay = () => {
+        console.log(route.params)
         navigation.navigate('otpScreen', {
             fromRouteName: 'FetchBill',
             purpose: `Bill payment of Rs ${billerResponse.billAmount / 100} to ${(route.params as any).blr_name}`
@@ -333,7 +337,7 @@ const FetchBillDetails = () => {
     }
 
     if (showBillDetails)
-        return <BillDetails billerResponse={billerResponse} proceedToPay={proceedToPay} />
+        return <BillDetails billerResponse={billerResponse} inputParams={inputParams} proceedToPay={proceedToPay} />
 
     return (
         <View style={styles.rootContainer}>

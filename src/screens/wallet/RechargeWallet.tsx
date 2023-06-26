@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: colors.primary500,
     borderRadius: 8,
-    textAlign: 'center'
+    // textAlign: 'center'
 
   },
   rechargeButton: {

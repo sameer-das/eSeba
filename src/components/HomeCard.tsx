@@ -31,7 +31,7 @@ const HomeCard = ({ item }: { item: any }) => {
         const imageUri = imageObj.imageUri;
         return (<Pressable style={styles.cardItem} onPress={() => handleCardItemPress(item)}>
             <Image source={imageUri}
-                style={{ width: 50, height: 45 }} />
+                style={{ width: 45, height: 45 }} />
             <Text style={styles.cardItemLabel}>{item.services_Cat_Name}</Text>
         </Pressable>
         )

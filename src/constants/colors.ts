@@ -13,6 +13,7 @@ const colors = {
     secondary300: '#eb5d5d',
     secondary200: '#ee7474',
     secondary100: '#f18c8c',
+    success500: '#8EAC50'
     // FFDD83
     // 98DFD6
 

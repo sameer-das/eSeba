@@ -8,6 +8,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { AuthContext } from '../../context/AuthContext'
 import { operatorList } from '../../constants/mobile-operator-billerid-mapping'
 import { validateWalletBalance, validateWalletPin } from '../../utils/walletUtil'
+import { prepaidRecharge } from '../../API/services'
 
 
 const ProceedToPay = () => {
@@ -43,7 +44,7 @@ const ProceedToPay = () => {
                 "mn": mobileDetails.mobileNo + '',
                 "op": operatorId?.op + '',
                 "amt": item.amount + '',
-                "reqid": new Date().getTime(),
+                "reqid": `${new Date().getTime()}`,
                 "field1": "",
                 "field2": "",
                 "serviceId": 1,
@@ -53,23 +54,34 @@ const ProceedToPay = () => {
 
             console.log(rechargePayload);
 
+            /**
+             * {
+    "status": "Success",
+    "code": 200,
+    "data": "{\"reqid\":\"e4293054-4de2-49be-8cfd-f967dda3cd1a\",\"status\":\"SUCCESS\",\"remark\":\"Recharge Success.\",\"balance\":\"872.2240\",\"mn\":\"8480899980\",\"field1\":\"6458768744\",\"ec\":\"1000\",\"apirefid\":\"22897998185396\",\"amt\":\"49\"}"
+}
+             */
 
-            let message = 'Recharge Success';
-            // const rechargeResponse = await prepaidRecharge(rechargePayload);
-            // if (rechargeResponse.data.data.includes('status')) {
-            //     const data = JSON.parse(rechargeResponse.data.data);
-            //     message = data.remark;
-            // } else {
-            //     message = rechargeResponse.data.data;
-            // }
+
+            let message = '';
+            const rechargeResponse = await prepaidRecharge(rechargePayload);
+            JSON.stringify(rechargeResponse)
+            if (rechargeResponse.data.data.includes('status')) {
+                const data = JSON.parse(rechargeResponse.data.data);
+                message = data.remark;
+            } else {
+                message = rechargeResponse.data.data;
+            }
             navigation.navigate('prepaidTransSuccess', { message });
 
             bRet = true;
         } catch (e) {
             console.log(e)
             bRet = false;
-            Alert.alert('Error', 'Error while making recharge! Please try after sometime.')
+            Alert.alert('Error', 'Error while making recharge! Please try after sometime.');
+            navigation.setParams({ ...route.params, pin: '' });
         } finally {
+            navigation.setParams({ ...route.params, pin: '' });
         }
 
         return bRet;
@@ -92,11 +104,12 @@ const ProceedToPay = () => {
                 const isWalletOk = await validateWalletBalance(+item.amount, userData.user.user_EmailID);
                 if (isWalletOk) {
                     console.log('wallet ok');
-                    const rechargeResp = await goForRecharge();
                 }
+                const rechargeResp = await goForRecharge();
             } else {
                 // incorrect pin
                 Alert.alert('Invalid Pin', 'You have entered a wrong PIN!');
+                navigation.setParams({ ...route.params, pin: '' });
             }
 
             // call pay API 
@@ -120,8 +133,9 @@ const ProceedToPay = () => {
     useEffect(() => {
         const pin = (route.params as any)?.pin;
         if ((route.params as any)?.pin) {
-            console.log('otpFound in prepaid' + pin);
-            onPinInput(pin);
+            console.log('otp found in prepaid' + pin);
+            if (pin !== '')
+                onPinInput(pin);
         }
     }, [(route.params as any)?.pin])
 

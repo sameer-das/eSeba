@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, BackHandler } from 'react-native'
-import React, {useEffect} from 'react'
+import { StyleSheet, Text, View, BackHandler, Image } from 'react-native'
+import React, { useEffect } from 'react'
 import colors from '../../constants/colors'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { windowHeight } from '../../utils/dimension'
 
 const PrepaidTransactionStatus = () => {
     const route = useRoute();
@@ -24,9 +25,12 @@ const PrepaidTransactionStatus = () => {
 
     return (
         <View style={styles.rootContainer}>
-            <Text style={styles.headerLabel}>Success</Text>
-            <View style={styles.render}>
-                <Text style={{ fontSize: 16, color: colors.white, textAlign: 'center' }}>{(route.params as any).message}</Text>
+            <View style={{flexDirection:'row', justifyContent:'flex-end', width:'100%'}}>
+                <Image style={{width: 70, height: 70}} source={require('../../../assets/logos/BeAssured.png')} />
+            </View>
+            <View style={{marginTop: windowHeight / 4}}>
+                <Text style={styles.headerLabel}>Your Recharge Status</Text>
+                <Text style={styles.message}>{(route.params as any).message}</Text>
             </View>
         </View>
     )
@@ -37,16 +41,19 @@ export default PrepaidTransactionStatus
 const styles = StyleSheet.create({
     rootContainer: {
         flex: 1,
-        backgroundColor: colors.primary500,
+        backgroundColor: colors.success500,
         alignItems: 'center',
-        padding: 8
+        justifyContent: 'flex-start',
     },
     headerLabel: {
-        fontSize: 20,
+        fontSize: 28,
         fontWeight: 'bold',
-        color: colors.white
+        color: colors.white,
+        textAlign: 'center'
     },
     render: {
         marginTop: 20
+    }, message: {
+        fontSize: 24, color: colors.white, textAlign: 'center', marginTop: 20
     }
 })

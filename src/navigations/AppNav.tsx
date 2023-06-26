@@ -6,13 +6,15 @@ import { AuthContext, IAuthContext } from '../context/AuthContext'
 import AppStack from './AppStack'
 import AuthStack from './AuthStack'
 import OtpScreen from '../screens/common/OtpScreen'
+import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus'
+import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus'
 
 const AppNav = () => {
     const { isLoading, token, userData } = useContext<IAuthContext>(AuthContext);
 
-    
+
     if (isLoading) {
-       return <Loading label="Let's hope it's worth the wait!" />
+        return <Loading label="Let's hope it's worth the wait!" />
     }
 
     return (

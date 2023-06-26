@@ -1,31 +1,34 @@
-import { useNavigation, useRoute } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import colors from '../../../src/constants/colors'
-import Loading from '../../components/Loading'
+import { windowWidth } from '../../utils/dimension'
 
-const BillDetails = ({ billerResponse, proceedToPay }: any) => {
-
-    const navigation = useNavigation<any>();
-    const route = useRoute();
-  
+const BillDetails = ({ billerResponse, proceedToPay, inputParams }: any) => {
 
     const payHandler = () => {
         console.log('Proceed to pay clicked');
-        proceedToPay();      
+        proceedToPay();
     }
 
     return (
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
             <View>
                 <View style={[styles.card]}>
-                    {/* <View style={styles.header}>
-                    <Text style={styles.biller_name}>{billerResponse.customerName}</Text>
-                </View> */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View style={{ width: (windowWidth - 50) * 0.75 }}>
+                            {inputParams.map((curr: any) => {
+                                return (<View key={curr.paramName} style={styles.header}>
+                                    <Text style={styles.paramName}>{curr.paramName}</Text>
+                                    <Text style={styles.paramValue}>{curr.paramValue}</Text>
+                                </View>)
+                            })}                                 
+                        </View>
+                        <Image source={require('../../../assets/logos/BharatBillPay.png')} />
+
+                    </View>
                     <View style={styles.bill_details_container}>
                         <View style={styles.bbpsLogoContainer}>
                             <Text style={styles.bill_details_header}>Bill Details</Text>
-                            <Image source={require('../../../assets/logos/BharatBillPay.png')} />
                         </View>
                         <View style={styles.bill_details}>
                             <View style={styles.left_col}>
@@ -68,17 +71,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     header: {
-        borderBottomColor: colors.primary100,
-        borderBottomWidth: 2,
-        paddingBottom: 18
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    biller_name: {
-        fontSize: 18,
+    paramName: {
+        fontSize: 16,
+        color: colors.primary500,
+        fontWeight: 'bold'
+    },
+    paramValue: {
+        fontSize: 14,
         color: colors.primary500
     },
     bill_details_container: {
-        marginTop: 18
-
+        // paddingTop: 12,
+        marginTop:12,
     },
     bill_details: {
         marginTop: 12,
