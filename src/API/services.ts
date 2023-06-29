@@ -57,6 +57,31 @@ export const getTransactionHistory = (emailid: string) => {
 }
 
 
+
+
+
+
+
 export const checkRefId = (refId: string) => {
     return axios.get(`${BASE_URL}/api/User/CheckReferenceNumber?rId=${refId}`);
+}
+
+export const getStates = (countryId: number) => {
+    return axios.get(`${BASE_URL}/api/Master/GetStateMaster?countryId=${countryId}`);
+}
+
+export const getDistrict = (stateId: number) => {
+    return axios.get(`${BASE_URL}/api/Master/GetDistrictMaster?stateId=${stateId}`);
+}
+
+export const getBlocks = (stateId: number, districtId: number) => {
+    return axios.get(`${BASE_URL}/api/Master/GetBlockMaster?stateId=${stateId}&distId=${districtId}`);
+}
+
+export const getUserLocationType = () => {
+    return axios.get(`${BASE_URL}/api/User/GetUserLocations`);
+}
+
+export const saveUserRegistrationDetails = (userRegDetails: any) => {
+    return axios.post(`${BASE_URL}/api/User/SaveUserMPInfo`, userRegDetails);
 }

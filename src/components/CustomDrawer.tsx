@@ -1,20 +1,55 @@
-import { Image, Pressable, StyleSheet, Text, View, } from 'react-native'
-import React, { useContext } from 'react';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import colors from '../constants/colors';
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { getWalletBalance } from '../API/services';
+import colors from '../constants/colors';
 import { AuthContext } from '../context/AuthContext';
 
 
 const CustomDrawer = (props: any) => {
     const { logout, userData } = useContext(AuthContext);
+    const [wallet, setWallet] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const fetchWalletBalance = async () => {
+        const email = userData.user.user_EmailID
+        setIsLoading(true)
+        try {
+            const { data } = await getWalletBalance(email);
+            if (data.status === 'Success' && data.code === 200) {
+                const [walletBalance, commission] = data.data.split(',');
+                setWallet(walletBalance);
+            } else {
+
+            }
+        } catch (e) {
+            console.log('error while fetching wallet balance in custoom drawer screen')
+            console.log(e)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchWalletBalance()
+    }, [])
+
+
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContentStyle}>
             <View>
                 <View style={[styles.profilePicContainer]}>
                     <Image source={require('../../assets/images/user-profile2.png')} style={styles.profilePic} />
                     <Text style={styles.userName}>Hello Sameer</Text>
-                    <Text style={styles.balance}>Balance ₹ 5000.00</Text>
+                    {!isLoading ?
+                        <Pressable style={{ alignItems: 'center' }} onPress={() => fetchWalletBalance()}>
+                            <Text style={styles.balance}>Balance ₹ {wallet}</Text>
+                            <Text style={{ fontSize: 12, color: colors.primary100 }}>Tap to Refresh</Text>
+                        </Pressable> :
+                        <ActivityIndicator color={colors.white} size={30} />
+                    }
+
                 </View>
                 <View style={styles.itemListContainer}>
                     <DrawerItemList {...props} />

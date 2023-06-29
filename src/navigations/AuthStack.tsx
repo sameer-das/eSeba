@@ -1,23 +1,26 @@
-import { View, Text } from 'react-native'
+
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignIn from '../screens/authentication/SignIn';
-import SignUp from '../screens/authentication/SignUp';
 import CheckRefNo from '../screens/authentication/CheckRefNo';
+import SignUpFirst from '../screens/authentication/SignUpFirst';
+import SignUpSecond from '../screens/authentication/SignUpSecond';
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
+
     const SignUpStack = () => {
         return (<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='CheckRefNo'>
             <Stack.Screen name="CheckRefNo" component={CheckRefNo} />
-            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="SignUpFirst" component={SignUpFirst} />
+            <Stack.Screen name="SignUpSecond" component={SignUpSecond} />
         </Stack.Navigator>)
     }
+    
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUpStack" component={SignUpStack} />
-        </Stack.Navigator>
-    )
+        </Stack.Navigator>)
 }
 
 export default AuthStack

@@ -11,7 +11,7 @@ const SignIn = () => {
   const [loginId, setLoginId] = useState<string | undefined>(undefined);
   const [password, setPassword] = useState<string | undefined>(undefined);
 
-  const sugnup = () => {
+  const SignUp = () => {
     navigation.navigate('SignUpStack');
   }
   
@@ -37,7 +37,7 @@ const SignIn = () => {
           <Text style={styles.loginButtonText}>Login</Text>
         </Pressable>
 
-        <Pressable style={styles.signUpLink} onPress={() => sugnup()} >
+        <Pressable style={styles.signUpLink} onPress={() => SignUp()} >
           <Text style={styles.signUpText}>Register with us</Text>
         </Pressable>
 
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
 
   signUpLink: {
-    marginTop: 16,
+    marginTop: 20,
   },
   signUpText: {
     color: colors.primary500,

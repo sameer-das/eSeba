@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import colors from '../../constants/colors'
 import { useNavigation } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import { checkRefId } from '../../API/services';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const CheckRefNo = () => {
@@ -30,10 +31,12 @@ const CheckRefNo = () => {
             const { data } = await checkRefId(refNo);
             if (data.status === 'Success' && data.code === 200 && data.data === 'S') {
                 // go next
-                navigation.push('SignUp', {refNo});
+                console.log(data)
+                await AsyncStorage.setItem('regRefNo', refNo);
+                navigation.push('SignUpFirst');
             } else if (data.status === 'Success' && data.code === 200 && data.data === 'F') {
-                Alert.alert('Not Found', 
-                'The reference number you have entered is invalid. Please use Admin reference code i.e. 555401005338');
+                Alert.alert('Not Found',
+                    'The reference number you have entered is invalid. Please use Admin reference code i.e. 555401005338');
                 setErrorLable('');
             } else {
                 console.log(`Error while calling check ref id URL`);
@@ -41,14 +44,22 @@ const CheckRefNo = () => {
             }
 
         } catch (e) {
-            Alert.alert('Error', 
-            'Error while verifying reference number. Please try after sometime.');
+            Alert.alert('Error',
+                'Error while verifying reference number. Please try after sometime.');
             setErrorLable('');
         } finally {
             setIsLoading(false);
         }
 
     }
+
+    const clearAsyncStorageForRefNo = async () => {
+        await AsyncStorage.removeItem('regRefNo');
+    }
+
+    useEffect(() => {
+        clearAsyncStorageForRefNo()
+    }, [])
 
     if (isLoading)
         return <Loading label={'Verifying reference no...'} />

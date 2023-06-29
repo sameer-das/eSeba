@@ -1,16 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import colors from '../../constants/colors'
+import colors from '../../../constants/colors'
 
-const Profile = () => {
+const AddRecipient = () => {
   return (
     <View style={styles.rootContainer}>
-      <Text style={{fontSize:24, color:colors.primary500}}>Profile</Text>
+      <Text style={{fontSize:24, color:colors.primary500}}>Add Recipient</Text>
     </View>
   )
 }
 
-export default Profile
+export default AddRecipient
 
 const styles = StyleSheet.create({
   rootContainer: {

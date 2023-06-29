@@ -21,6 +21,8 @@ import ProceedToPay from '../screens/prepaid recharge/ProceedToPay';
 import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus';
 import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
 import ListTransactions from '../screens/transactions/ListTransactions';
+import Kyc from '../screens/home/Kyc';
+import DMTTabs from '../screens/dmt/DmtTabs';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -48,10 +50,13 @@ const DrawNav = () => {
             <Drawer.Screen component={ListTransactions} name='Transactions' options={{
                 drawerIcon: ({ color }) => <MaterialIcon name='view-list' size={30} color={color} />
             }} />
-            {/* <Drawer.Screen component={Profile} name='Profile' options={{
+            <Drawer.Screen component={Kyc} name='Documents' options={{
+                drawerIcon: ({ color }) => <MaterialIcon name='article' size={30} color={color} />
+            }} />
+            <Drawer.Screen component={Profile} name='Profile' options={{
                 drawerLabel: 'My Profile', title: 'My Profile',
                 drawerIcon: ({ color }) => <MaterialIcon name='person' size={30} color={color} />
-            }} /> */}
+            }} />
         </Drawer.Navigator>
     )
 }
@@ -112,9 +117,14 @@ const PrepaidRechargeStack = () => {
     )
 }
 
-const AppStack = () => {
 
-    const { logout, userData } = useContext(AuthContext);
+const DMTStack = () => {
+    return (<Stack.Navigator>
+        <Stack.Screen name='DMTTabMenus' component={DMTTabs} options={{ headerShown: false }} />
+    </Stack.Navigator>)
+}
+
+const AppStack = () => {
 
     return (
         <Stack.Navigator>
@@ -122,6 +132,8 @@ const AppStack = () => {
             <Stack.Screen name='bbpsStack' component={BBPSStack} options={{ headerShown: false }} />
             <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />
             <Stack.Screen name='prepaidRechargeStack' component={PrepaidRechargeStack} options={{ headerShown: false }} />
+            <Stack.Screen name='DMTStack' component={DMTStack} options={{ headerShown: false }} />
+            {/* Common Screens */}
             <Stack.Screen name='otpScreen' component={OtpScreen} options={{ headerShown: false }} />
             <Stack.Screen name='prepaidTransSuccess' component={PrepaidTransactionStatus} options={{ headerShown: false }} />
             <Stack.Screen name='bbpsTxnStatus' component={BBPSTransactionStatus} options={{ headerShown: false }} />

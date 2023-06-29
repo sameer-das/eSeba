@@ -14,6 +14,8 @@ const HomeCard = ({ item }: { item: any }) => {
         console.log('Pressed ' + JSON.stringify(item));
         if(item.services_Cat_Name === 'Mobile Prepaid') {
             navigation.navigate('prepaidRechargeStack');
+        } else if(item.services_Cat_Name === 'DMT') {
+            navigation.navigate('DMTStack')
         } else {
             await AsyncStorage.setItem('currentServiceDetails', JSON.stringify(
                 {services_id: item.services_ID ,services_cat_id: item.services_Cat_ID}

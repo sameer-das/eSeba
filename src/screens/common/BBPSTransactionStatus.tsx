@@ -11,8 +11,8 @@ const BBPSTransactionStatus = () => {
 
 
     const readAsynchStorage = async () => {
-        //  await AsyncStorage.getItem('bbpsTxnStatus') ||
-        const _bbpsTxnStatus = '{"responseCode":0,"responseReason":"Successful","txnRefId":"CC013177BAAA34796545","approvalRefNumber":"3875769870170882","txnRespType":"FORWARD TYPE RESPONSE","inputParams":{"input":[{"paramName":"Consumer Id","paramValue":"102S03778407"}]},"custConvFee":0,"respAmount":72600,"respBillDate":"2023-06-18T00:00:00","respBillNumber":"202306182306102S03778407","respBillPeriod":"1","respCustomerName":"SAMEER KU DAS.","respDueDate":"2023-06-26T00:00:00"}';
+        //  
+        const _bbpsTxnStatus = await AsyncStorage.getItem('bbpsTxnStatus') || '{}';
         setTxnStatus(JSON.parse(_bbpsTxnStatus));
     }
     const handleBackButton = () => {
