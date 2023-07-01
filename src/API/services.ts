@@ -60,7 +60,7 @@ export const getTransactionHistory = (emailid: string) => {
 
 
 
-
+// User Registration
 
 export const checkRefId = (refId: string) => {
     return axios.get(`${BASE_URL}/api/User/CheckReferenceNumber?rId=${refId}`);
@@ -84,4 +84,16 @@ export const getUserLocationType = () => {
 
 export const saveUserRegistrationDetails = (userRegDetails: any) => {
     return axios.post(`${BASE_URL}/api/User/SaveUserMPInfo`, userRegDetails);
+}
+
+export const getBankMaster = () => {
+    return axios.get(`${BASE_URL}/api/Master/GetBankMaster`);
+}
+
+
+
+// DMT
+
+export const getSenderInfo = (payload: any) => {
+    return axios.post(`${ BASE_URL } / api / DMT / eSenderDetails`, payload)
 }

@@ -41,7 +41,7 @@ const CustomDrawer = (props: any) => {
             <View>
                 <View style={[styles.profilePicContainer]}>
                     <Image source={require('../../assets/images/user-profile2.png')} style={styles.profilePic} />
-                    <Text style={styles.userName}>Hello Sameer</Text>
+                    <Text style={styles.userName}>Hello {userData.personalDetail.user_FName}</Text>
                     {!isLoading ?
                         <Pressable style={{ alignItems: 'center' }} onPress={() => fetchWalletBalance()}>
                             <Text style={styles.balance}>Balance ₹ {wallet}</Text>

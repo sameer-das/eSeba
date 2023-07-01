@@ -9,10 +9,10 @@ const Kyc = () => {
   return (
     <View style={styles.rootContainer}>
       <Text style={{ fontSize: 24, color: colors.primary500 }}>Update KYC</Text>
-
+{/* 
       <Image source={
         { uri: 'https://api.esebakendra.com/api/User/Download?fileName=111122223333Front.jpg' }
-        } style={{ width: '200', height: '300' }} />
+        } style={{ width: '200', height: '300' }} /> */}
 
       <Pressable onPress={() => {
         ImagePicker.openPicker({
