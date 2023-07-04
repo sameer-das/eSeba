@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, Alert } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Alert, RefreshControl, ScrollView } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import colors from '../../constants/colors';
 import { AuthContext } from '../../context/AuthContext';
@@ -11,12 +11,14 @@ const Wallet = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [walletBalance, setWalletBallance] = useState('');
   const [commissionEarned, setCommissionEarned] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchWalletBalance = async (email: string) => {
-    setIsLoading(true);
+  const fetchWalletBalance = async (email: string, withRefresh: boolean) => {
+    !withRefresh && setIsLoading(true);
     try {
       const { data } = await getWalletBalance(email);
       if (data.status === 'Success' && data.code === 200) {
+        console.log('Wallet Fetched')
         const [walletBalance, commission] = data.data.split(',');
         setWalletBallance(walletBalance);
         setCommissionEarned(commission);
@@ -36,14 +38,16 @@ const Wallet = ({ navigation }: any) => {
         }
       }])
     } finally {
-      setIsLoading(false);
+      !withRefresh && setIsLoading(false);
+      withRefresh && setRefreshing(false);
     }
   }
 
   // fetch wallet balance
   useEffect(() => {
-    fetchWalletBalance(userData.user.user_EmailID)
+    fetchWalletBalance(userData.user.user_EmailID, false)
   }, [])
+
 
 
   if (isLoading) {
@@ -51,9 +55,18 @@ const Wallet = ({ navigation }: any) => {
   }
 
 
+  const onRefresh = () => {
+    setRefreshing(true)
+    fetchWalletBalance(userData.user.user_EmailID, true);
+  }
+
+  const RefreshLoader = <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+    colors={[colors.primary500, colors.success500, colors.primary500]}
+    progressBackgroundColor={colors.white} />
   // Actual JSX
   return (
-    <View style={styles.rootContainer}>
+    <ScrollView contentContainerStyle={styles.rootContainer}
+      refreshControl={RefreshLoader}>
       <View style={styles.topCardContainer}>
         <View style={styles.innerCard}>
           <Text style={styles.cardTitle}>Wallet Balance</Text>
@@ -66,11 +79,17 @@ const Wallet = ({ navigation }: any) => {
       </View>
 
       <Pressable style={styles.addMoneyButton} onPress={() => {
-        navigation.navigate('wallet');
+        navigation.navigate('wallet', { screen: 'rechargeWallet' });
       }}>
         <Text style={styles.addMoneyButtonLabel}>Recharge Wallet</Text>
       </Pressable>
-    </View>
+
+      <Pressable style={styles.ChangePasswordButton}  onPress={() => {
+        navigation.navigate('wallet', { screen: 'changeWalletPin' });
+      }}>
+        <Text style={styles.ChangePasswordButtonLabel}>Change Wallet PIN</Text>
+      </Pressable>
+    </ScrollView>
   )
 }
 
@@ -114,5 +133,14 @@ const styles = StyleSheet.create({
   addMoneyButtonLabel: {
     color: colors.white,
     fontSize: 18
+  },
+  ChangePasswordButtonLabel: {
+    color: colors.primary500,
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  ChangePasswordButton: {
+    padding: 16,
+    marginTop: 16
   }
 })

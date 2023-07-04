@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, Image, Pressable } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Image, Pressable, Alert } from 'react-native'
 import React, { useState } from 'react'
 import colors from '../constants/colors';
 import { windowWidth } from '../utils/dimension';
@@ -12,13 +12,18 @@ const HomeCard = ({ item }: { item: any }) => {
 
     const handleCardItemPress = async (item: any) => {
         console.log('Pressed ' + JSON.stringify(item));
-        if(item.services_Cat_Name === 'Mobile Prepaid') {
+        if (item.services_Cat_Name === 'Mobile Prepaid') {
             navigation.navigate('prepaidRechargeStack');
-        } else if(item.services_Cat_Name === 'DMT') {
+        } else if (item.services_Cat_Name === 'DMT') {
             navigation.navigate('DMTStack')
-        } else {
+        } else if (['PGDCA', 'DCA', 'Education Fee', 'PAN Card'].includes(item.services_Cat_Name)) {
+            // No access as per Avinash from mobile
+            Alert.alert('Limited Access', 'Please register as a retailer to avail these services. For more information, please contact us at Toll-Free No 1800 8904 368')
+        }
+
+        else {
             await AsyncStorage.setItem('currentServiceDetails', JSON.stringify(
-                {services_id: item.services_ID ,services_cat_id: item.services_Cat_ID}
+                { services_id: item.services_ID, services_cat_id: item.services_Cat_ID }
             ));
             navigation.push('bbpsStack', { bbpsSeviceName: item.services_Cat_Name, path: item.route })
         }

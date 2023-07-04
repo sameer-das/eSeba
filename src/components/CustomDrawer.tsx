@@ -45,7 +45,7 @@ const CustomDrawer = (props: any) => {
                     {!isLoading ?
                         <Pressable style={{ alignItems: 'center' }} onPress={() => fetchWalletBalance()}>
                             <Text style={styles.balance}>Balance ₹ {wallet}</Text>
-                            <Text style={{ fontSize: 12, color: colors.primary100 }}>Tap to Refresh</Text>
+                            <Text style={{ fontSize: 12, color: colors.primary100}}>Tap to Refresh</Text>
                         </Pressable> :
                         <ActivityIndicator color={colors.white} size={30} />
                     }
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     bottomMenuItemLabel: {
         fontSize: 18,
         color: colors.white,
-        marginLeft: 10
+        marginLeft: 10,
     },
     bottomMenuList: {
         flexDirection: 'row',

@@ -73,6 +73,7 @@ const DMTTabs = () => {
     )
   }
 
+  return <></>
 }
 
 export default DMTTabs

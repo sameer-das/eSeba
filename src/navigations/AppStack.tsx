@@ -23,6 +23,8 @@ import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
 import ListTransactions from '../screens/transactions/ListTransactions';
 import Kyc from '../screens/home/Kyc';
 import DMTTabs from '../screens/dmt/DmtTabs';
+import ChangePassword from '../screens/home/ChangePassword';
+import ChangeWalletPin from '../screens/wallet/ChangeWalletPin';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -56,6 +58,10 @@ const DrawNav = () => {
             <Drawer.Screen component={Profile} name='Profile' options={{
                 drawerLabel: 'My Profile', title: 'My Profile',
                 drawerIcon: ({ color }) => <MaterialIcon name='person' size={30} color={color} />
+            }} />
+            <Drawer.Screen component={ChangePassword} name='ChangePassword' options={{
+                drawerLabel: 'Change Password', title: 'Change Password',
+                drawerIcon: ({ color }) => <MaterialIcon name='vpn-key' size={30} color={color} />
             }} />
         </Drawer.Navigator>
     )
@@ -99,6 +105,12 @@ const WalletStack = () => {
             component={RechargeWallet}
             options={{
                 title: 'Reacharge Wallet'
+            }} />
+        <Stack.Screen
+            name="changeWalletPin"
+            component={ChangeWalletPin}
+            options={{
+                title: 'Change Wallet PIN'
             }} />
 
     </Stack.Navigator>)

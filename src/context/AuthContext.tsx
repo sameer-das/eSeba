@@ -8,7 +8,9 @@ export const AuthContext = createContext<IAuthContext>({
     token: null,
     menuCategories: null,
     login: () => { },
-    logout: () => { }
+    logout: () => { },
+    refreshUserDataInContext: () => {},
+    getFreshUserData: () => {}
 });
 export interface IAuthContext {
     userData: any | null,
@@ -16,7 +18,9 @@ export interface IAuthContext {
     token: string | null,
     menuCategories: any | null,
     login: Function,
-    logout: Function
+    logout: Function,
+    refreshUserDataInContext: Function,
+    getFreshUserData: Function,
 }
 //555401005338
 export const AuthProvider = ({ children }: { children: any }) => {
@@ -74,6 +78,33 @@ export const AuthProvider = ({ children }: { children: any }) => {
         }, 1000)
     }
 
+    const refreshUserDataInContext = async (userId?: number) => {
+        let userID;
+        if(!userId) {
+            // read from current AsyncStorage 
+            const _userData = await AsyncStorage.getItem('userData') || '{}';
+            userID = JSON.parse(_userData).user.user_ID
+        }  else {
+            userID = userId;
+        }
+        const userInfoResp = await getUserInfo(userID);
+        if (userInfoResp.data.status === 'Success' && userInfoResp.data.code === 200) {
+            await AsyncStorage.removeItem('userData');
+            // console.log('in auth context')
+            // console.log(userInfoResp.data.data);
+            setUserData(() => {return userInfoResp.data.data});
+            await AsyncStorage.setItem('userData', JSON.stringify(userInfoResp.data.data));
+        } else {
+            // setUserData(null);
+        }
+    }
+
+    const getFreshUserData =async () => {
+        const x = await AsyncStorage.getItem('userData') || '{}';
+        return JSON.parse(x);
+
+    }
+
     const clearAsyncStorageForUserData = async () => {
         setIsLoading(false);
         setToken(null);
@@ -126,7 +157,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
     }, [])
 
 
-    return (<AuthContext.Provider value={{ userData, isLoading, token, menuCategories, login, logout }}>
+    return (<AuthContext.Provider value={{ userData, isLoading, token, menuCategories, login, logout, refreshUserDataInContext, getFreshUserData }}>
         {children}
     </AuthContext.Provider>)
 }

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TextInput } from 'react-native'
 import React from 'react'
 import colors from '../constants/colors'
 
-const InputWithLabelAndError = ({ value, onChangeText, placeholder, errorMessage, inputLabel, keyboardType, maxLength }: any) => {
+const InputWithLabelAndError = ({ value, onChangeText, placeholder, errorMessage, inputLabel, keyboardType, maxLength, autoCapitalize, autoCorrect, secureTextEntry, style, ...props }: any) => {
 
     // const borderStyle = errorMessage === '' ? {borderColor: colors.secondary100} 
     // : {borderColor: colors.primary100} 
@@ -11,12 +11,16 @@ const InputWithLabelAndError = ({ value, onChangeText, placeholder, errorMessage
     return (
         <View style={{ marginVertical: 2 }}>
             <Text style={styles.textInputLabel}>{inputLabel}</Text>
-            <TextInput style={[styles.textInput, borderStyle]}
+            <TextInput style={[styles.textInput, borderStyle, style]}
                 value={value}
                 onChangeText={onChangeText}
                 placeholder={placeholder}
-                keyboardType={keyboardType ? keyboardType: 'default'}
+                keyboardType={keyboardType ? keyboardType : 'default'}
                 maxLength={maxLength}
+                autoCapitalize={autoCapitalize}
+                autoCorrect={autoCorrect}
+                secureTextEntry={secureTextEntry}
+                {...props}
             />
             <Text style={styles.textInputErrorLabel}>{errorMessage}</Text>
         </View>
@@ -34,7 +38,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.primary500,
         borderRadius: 8,
-        width: '100%'
+        width: '100%',
     },
     textInputLabel: {
         fontSize: 16,

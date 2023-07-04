@@ -127,7 +127,7 @@ const SignUpSecond = () => {
             }
             console.log(registrationPayload);
 
-            saveUserInfo(registrationPayload);
+            // saveUserInfo(registrationPayload);
         }
 
     }

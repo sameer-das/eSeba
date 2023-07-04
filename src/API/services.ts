@@ -90,10 +90,26 @@ export const getBankMaster = () => {
     return axios.get(`${BASE_URL}/api/Master/GetBankMaster`);
 }
 
+export const updateUserPersonalInfo = (userPersonalInfo: any) => {
+    return axios.post(`${BASE_URL}/api/User/UpdateUserPersonalDetail`, userPersonalInfo);
+}
+
+export const updateUserBankDetails = (bankDetails: any) => {
+    return axios.post(`${BASE_URL}/api/User/UpdateUserBankDetail`, bankDetails);
+}
+
+export const updatePassword = (passwords: any) => {
+    return axios.post(`${BASE_URL}/api/User/UpdateUserPWD`, passwords);
+}
+
+export const updateWalletPin = (userID: number, pin: string, oldpin: string) => {
+    return axios.post(`${BASE_URL}/api/User/UpdateUserTPin`, { "userId": userID, "tpin": pin, "otp": oldpin })
+}
+
 
 
 // DMT
 
 export const getSenderInfo = (payload: any) => {
-    return axios.post(`${ BASE_URL } / api / DMT / eSenderDetails`, payload)
+    return axios.post(`${BASE_URL} / api / DMT / eSenderDetails`, payload)
 }
