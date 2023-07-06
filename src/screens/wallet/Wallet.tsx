@@ -132,12 +132,14 @@ const styles = StyleSheet.create({
   },
   addMoneyButtonLabel: {
     color: colors.white,
-    fontSize: 18
+    fontSize: 18,
+    fontWeight:'bold'
   },
   ChangePasswordButtonLabel: {
     color: colors.primary500,
     fontSize: 18,
-    textAlign: 'center'
+    textAlign: 'center',
+    
   },
   ChangePasswordButton: {
     padding: 16,

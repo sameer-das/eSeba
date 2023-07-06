@@ -25,9 +25,28 @@ import Kyc from '../screens/home/Kyc';
 import DMTTabs from '../screens/dmt/DmtTabs';
 import ChangePassword from '../screens/home/ChangePassword';
 import ChangeWalletPin from '../screens/wallet/ChangeWalletPin';
+import UpdateAdhar from '../screens/home/Kyc/UpdateAdhar';
+import UpdatePan from '../screens/home/Kyc/UpdatePan';
+import UpdateProfilePic from '../screens/home/Kyc/UpdateProfilePic';
+import UpdateGST from '../screens/home/Kyc/UpdateGST';
+
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
+
+const KycStack = () => {
+    return (
+        <Drawer.Navigator screenOptions={{
+            headerShown: false
+        }}>
+            <Drawer.Screen name='kycDetails' component={Kyc}  />
+            <Drawer.Screen name='updateAdhar' component={UpdateAdhar}  />
+            <Drawer.Screen name='updatePan' component={UpdatePan}  />
+            <Drawer.Screen name='updateProfilePic' component={UpdateProfilePic}  />
+            <Drawer.Screen name='updateGst' component={UpdateGST}  />
+        </Drawer.Navigator>
+    )
+}
 
 const DrawNav = () => {
     return (
@@ -52,7 +71,7 @@ const DrawNav = () => {
             <Drawer.Screen component={ListTransactions} name='Transactions' options={{
                 drawerIcon: ({ color }) => <MaterialIcon name='view-list' size={30} color={color} />
             }} />
-            <Drawer.Screen component={Kyc} name='Documents' options={{
+            <Drawer.Screen component={KycStack} name='Documents' options={{
                 drawerIcon: ({ color }) => <MaterialIcon name='article' size={30} color={color} />
             }} />
             <Drawer.Screen component={Profile} name='Profile' options={{

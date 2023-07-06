@@ -42,6 +42,7 @@ const CustomDrawer = (props: any) => {
                 <View style={[styles.profilePicContainer]}>
                     <Image source={require('../../assets/images/user-profile2.png')} style={styles.profilePic} />
                     <Text style={styles.userName}>Hello {userData.personalDetail.user_FName}</Text>
+                    <Text style={styles.loginCode} selectable>{userData.user.login_Code}</Text>
                     {!isLoading ?
                         <Pressable style={{ alignItems: 'center' }} onPress={() => fetchWalletBalance()}>
                             <Text style={styles.balance}>Balance ₹ {wallet}</Text>
@@ -90,7 +91,12 @@ const styles = StyleSheet.create({
     userName: {
         color: colors.white,
         fontSize: 20,
-        marginVertical: 8
+        // marginVertical: 4
+    },
+    loginCode: {
+        color: colors.primary100,
+        fontSize: 14,
+        fontWeight: '500'
     },
     balance: {
         color: colors.white,
