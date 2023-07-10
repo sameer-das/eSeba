@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView, Pressable, KeyboardAvoidingView, Al
 import React, { useState, useContext, useRef, useEffect } from 'react'
 import colors from '../../constants/colors'
 import InputWithLabelAndError from '../../components/InputWithLabelAndError'
-import { updatePassword, updateWalletPin } from '../../API/services'
+import { updateWalletPin } from '../../API/services'
 import { AuthContext } from '../../context/AuthContext'
 import Loading from '../../components/Loading'
 

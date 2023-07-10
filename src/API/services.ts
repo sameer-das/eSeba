@@ -59,7 +59,6 @@ export const getTransactionHistory = (emailid: string) => {
 
 
 
-
 // User Registration
 
 export const checkRefId = (refId: string) => {
@@ -103,7 +102,16 @@ export const updatePassword = (passwords: any) => {
 }
 
 export const updateWalletPin = (userID: number, pin: string, oldpin: string) => {
-    return axios.post(`${BASE_URL}/api/User/UpdateUserTPin`, { "userId": userID, "tpin": pin, "otp": oldpin })
+    return axios.post(`${BASE_URL}/api/User/UpdateUserTPin`, { "userId": userID, "tpin": pin, "otp": oldpin });
+}
+
+export const generateOtpForWalletPinChange = (userId: string) => {
+    return axios.post(`${BASE_URL}/api/User/PostUserTPin?userId=${userId}`, {});
+}
+
+
+export const saveUserKycDetails = (kycDetials: any) => {
+    return axios.post(`${BASE_URL}/api/User/UpdateUserKycDetail`, kycDetials);
 }
 
 

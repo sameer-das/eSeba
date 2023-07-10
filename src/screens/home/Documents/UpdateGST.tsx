@@ -1,13 +1,73 @@
-import { Pressable, StyleSheet, Text, View, Image, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { Pressable, StyleSheet, Text, View, Image, ScrollView, Alert } from 'react-native'
+import React, { useState, useContext } from 'react'
 import InputWithLabelAndError from '../../../components/InputWithLabelAndError';
 import CustomImagePicker from '../../../components/CustomImagePicker';
 import colors from '../../../constants/colors';
+import Loading from '../../../components/Loading';
+import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../../../context/AuthContext';
+import { saveUserKycDetails } from '../../../API/services';
 
 const UpdateGST = () => {
 
     const [gstn, setGstn] = useState<string>('');
     const [gstImage, setGstImage] = useState<any>('');
+
+    const { userData, refreshUserDataInContext } = useContext(AuthContext);
+    const navigation = useNavigation<any>();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const updateGST = async () => {
+        if (!gstn.trim() || !gstImage) {
+            Alert.alert('Not Found', 'Please enter GSTN and upload GST Certificate!');
+            return;
+        }
+
+        const kycDetails = {
+            kyC_ID: userData.kycDetail?.kyC_ID || 0,
+            user_ID: userData.user.user_ID,
+
+            aadhar_Number: "",
+            aadhar_FontPhoto: "",
+            aadhar_BackPhoto: "",
+            pancard_Number: "",
+            pancard_Photo: "",
+            passport_Photo: "",
+            gsT_Number: gstn,
+            gsT_Photo: gstImage,
+            center_IndoorPhoto: "",
+            center_OutDoorPhoto: "",
+        };
+        try {
+            setIsLoading(true);
+            const { data } = await saveUserKycDetails(kycDetails);
+            if (data.code === 200 && data.status === 'Success') {
+                setIsLoading(false);
+                refreshUserDataInContext();
+                Alert.alert('Success', 'GST Details updated successfully');
+                setGstn('');
+                setGstImage('');
+                // go back to the Document screen 
+                navigation.goBack();
+            } else {
+                setIsLoading(false);
+                Alert.alert('Fail', 'Failed to update GST details. Please try after sometime.')
+            }
+
+        } catch (e) {
+            setIsLoading(false);
+            console.log('Error while uploading KYC docs - GST');
+            console.log(e);
+            Alert.alert('Error', 'Error while updating GST details. Please try after sometime.')
+        } finally {
+
+        }
+
+    }
+
+    if (isLoading)
+        return <Loading label={'Updating GST Details. Please Wait'} />
+
     return (
         <ScrollView style={styles.rootContainer}>
             <Text style={styles.pageTitle}>Update Your GST Details</Text>
@@ -23,7 +83,7 @@ const UpdateGST = () => {
                 {/* Adhar Front */}
                 <CustomImagePicker value={gstImage} setValue={setGstImage} placeholder='Tap to upload image of your GST certificate' label='Image of your GST Certificate' />
 
-                <Pressable style={styles.uploadButton}>
+                <Pressable style={styles.uploadButton} onPress={updateGST}>
                     <Text style={styles.uploadButtonText}>Upload and Update Details</Text>
                 </Pressable>
             </View>

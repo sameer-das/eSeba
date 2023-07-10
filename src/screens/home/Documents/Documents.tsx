@@ -1,14 +1,19 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import colors from '../../constants/colors';
+import React, { useContext } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import DocumentImage from '../../../components/DocumentImage';
+import colors from '../../../constants/colors';
+import { AuthContext } from '../../../context/AuthContext';
 
 
-const Kyc = () => {
+const Documents = () => {
   const navigation = useNavigation<any>();
+  const { userData } = useContext(AuthContext);
 
+  const time = new Date().getTime();
+  console.log('Documents rerun')
   const editButtonPressHandler = (type: string) => {
-    console.log('Presses ' + type)
+    // console.log('Presses ' + type)
     if (type === 'adhar') {
       navigation.navigate('updateAdhar');
     } else if (type === 'pan') {
@@ -19,6 +24,12 @@ const Kyc = () => {
       navigation.navigate('updateGst');
     }
   }
+
+
+  const ImageLoader = <View style={{ position: 'absolute' }}>
+    <ActivityIndicator size={40} color={colors.primary100} />
+    <Text style={styles.imageLoadingText}>Image Loading</Text>
+  </View>
 
   return (
     <ScrollView style={styles.rootContainer}>
@@ -31,11 +42,7 @@ const Kyc = () => {
           </Pressable>
         </Pressable>
         <View style={styles.imageContainer}>
-          <Image source={
-            {
-              uri: 'https://api.esebakendra.com/api/User/Download?fileName=AYQPO5896LPan.jpg',
-              method: 'GET'
-            }} style={{ height: '100%', width: '100%', resizeMode: 'contain' }} />
+          <DocumentImage imageUrl={`${userData.kycDetail?.passport_Photo}&time=${time}`}  />
         </View>
       </View>
 
@@ -48,24 +55,24 @@ const Kyc = () => {
           </Pressable>
         </Pressable>
         <View style={styles.adharNumberContainer}>
-          <Text style={styles.adharNumber}>Adhar No : 1236 5698 5256</Text>
+          <Text style={styles.adharNumber}>Adhar No : {userData.kycDetail?.aadhar_Number}</Text>
         </View>
 
         <Text style={styles.imageLabel}>Adhar Front Side Pic</Text>
         <View style={styles.imageContainer}>
-          <Image source={
-            {
-              uri: 'https://api.esebakendra.com/api/User/Download?fileName=111122223333Front.jpg',
-              method: 'GET'
-            }} style={{ height: '100%', width: '100%', resizeMode: 'contain' }} />
+          <DocumentImage imageUrl={userData.kycDetail?.aadhar_FontPhoto} />
         </View>
         <Text style={styles.imageLabel}>Adhar Back Side Pic</Text>
         <View style={styles.imageContainer}>
-          <Image source={
+          <DocumentImage imageUrl={userData.kycDetail?.aadhar_BackPhoto} />
+          {/* {userData.kycDetail?.aadhar_BackPhoto && imageLoading.adharBack && ImageLoader}
+          {userData.kycDetail?.aadhar_BackPhoto && <Image source={
             {
-              uri: 'https://api.esebakendra.com/api/User/Download?fileName=111122223333Back.jpg',
-              method: 'GET'
-            }} style={{ height: '100%', width: '100%', resizeMode: 'contain' }} />
+              uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.aadhar_BackPhoto}`,
+            }}
+            style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
+            onLoadStart={() => setImageLoading({ ...imageLoading, adharBack: true })}
+            onLoadEnd={() => setImageLoading({ ...imageLoading, adharBack: false })} />} */}
         </View>
       </View>
 
@@ -78,16 +85,20 @@ const Kyc = () => {
           </Pressable>
         </Pressable>
         <View style={styles.adharNumberContainer}>
-          <Text style={styles.adharNumber}>PAN : AYQPD3866P</Text>
+          <Text style={styles.adharNumber}>PAN : {userData.kycDetail?.pancard_Number?.toUpperCase()}</Text>
         </View>
 
         <Text style={styles.imageLabel}>PAN Card Pic</Text>
         <View style={styles.imageContainer}>
-          <Image source={
+          <DocumentImage imageUrl={userData.kycDetail?.pancard_Photo} />
+          {/* {userData.kycDetail?.pancard_Photo && imageLoading.pan && ImageLoader}
+          {userData.kycDetail?.pancard_Photo && <Image source={
             {
-              uri: 'https://api.esebakendra.com/api/User/Download?fileName=AYQPO5896LPan.jpg',
-              method: 'GET'
-            }} style={{ height: '100%', width: '100%', resizeMode: 'contain' }} />
+              uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.pancard_Photo}`,
+            }}
+            style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
+            onLoadStart={() => setImageLoading({ ...imageLoading, pan: true })}
+            onLoadEnd={() => setImageLoading({ ...imageLoading, pan: false })} />} */}
         </View>
       </View>
 
@@ -100,23 +111,27 @@ const Kyc = () => {
           </Pressable>
         </Pressable>
         <View style={styles.adharNumberContainer}>
-          <Text style={styles.adharNumber}>GSTN : 37AADCS0472N1Z1</Text>
+          <Text style={styles.adharNumber}>GSTN : {userData.kycDetail?.gsT_Number}</Text>
         </View>
 
         <Text style={styles.imageLabel}>GST Certificate Pic</Text>
-        <View style={styles.imageContainer}>
-          <Image source={
+        <View style={[styles.imageContainer]}>
+          <DocumentImage imageUrl={userData.kycDetail?.gsT_Photo} />
+          {/* {userData.kycDetail?.gsT_Photo && imageLoading.gst && ImageLoader}
+          {userData.kycDetail?.gsT_Photo && <Image source={
             {
-              uri: 'https://api.esebakendra.com/api/User/Download?fileName=AYQPO5896LPan.jpg',
-              method: 'GET'
-            }} style={{ height: '100%', width: '100%', resizeMode: 'contain' }} />
+              uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.gsT_Photo}`,
+            }}
+            style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
+            onLoadStart={() => setImageLoading({ ...imageLoading, gst: true })}
+            onLoadEnd={() => setImageLoading({ ...imageLoading, gst: false })} />} */}
         </View>
       </View>
     </ScrollView>
   )
 }
 
-export default Kyc
+export default Documents
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -159,6 +174,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     paddingHorizontal: 8,
 
+    justifyContent: 'center',
+    alignItems: 'center'
+
   },
   imageLabel: {
     fontSize: 16,
@@ -169,5 +187,9 @@ const styles = StyleSheet.create({
   editButton: {
     fontSize: 16,
     color: colors.white
+  },
+  imageLoadingText: {
+    fontSize: 14,
+    color: colors.primary100
   }
 })

@@ -21,14 +21,17 @@ import ProceedToPay from '../screens/prepaid recharge/ProceedToPay';
 import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus';
 import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
 import ListTransactions from '../screens/transactions/ListTransactions';
-import Kyc from '../screens/home/Kyc';
+import Documents from '../screens/home/Documents/Documents';
 import DMTTabs from '../screens/dmt/DmtTabs';
 import ChangePassword from '../screens/home/ChangePassword';
 import ChangeWalletPin from '../screens/wallet/ChangeWalletPin';
-import UpdateAdhar from '../screens/home/Kyc/UpdateAdhar';
-import UpdatePan from '../screens/home/Kyc/UpdatePan';
-import UpdateProfilePic from '../screens/home/Kyc/UpdateProfilePic';
-import UpdateGST from '../screens/home/Kyc/UpdateGST';
+import UpdateAdhar from '../screens/home/Documents/UpdateAdhar';
+import UpdatePan from '../screens/home/Documents/UpdatePan';
+import UpdateProfilePic from '../screens/home/Documents/UpdateProfilePic';
+import UpdateGST from '../screens/home/Documents/UpdateGST';
+import EnterOtpForPinChange from '../screens/wallet/EnterOtpForPinChange';
+import SetNewWalletPin from '../screens/wallet/SetNewWalletPin';
+import LoginPinScreen from '../screens/common/LoginPinScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -39,7 +42,7 @@ const KycStack = () => {
         <Drawer.Navigator screenOptions={{
             headerShown: false
         }}>
-            <Drawer.Screen name='kycDetails' component={Kyc}  />
+            <Drawer.Screen name='kycDetails' component={Documents}  />
             <Drawer.Screen name='updateAdhar' component={UpdateAdhar}  />
             <Drawer.Screen name='updatePan' component={UpdatePan}  />
             <Drawer.Screen name='updateProfilePic' component={UpdateProfilePic}  />
@@ -132,6 +135,19 @@ const WalletStack = () => {
                 title: 'Change Wallet PIN'
             }} />
 
+        <Stack.Screen
+            name="enterOTPForPinChange"
+            component={EnterOtpForPinChange}
+            options={{
+                title: 'Enter OTP For PIN Change'
+            }} />
+        <Stack.Screen
+            name="setNewWalletPin"
+            component={SetNewWalletPin}
+            options={{
+                title: 'Set New Wallet PIN'
+            }} />
+
     </Stack.Navigator>)
 }
 
@@ -159,6 +175,7 @@ const AppStack = () => {
 
     return (
         <Stack.Navigator>
+            {/* <Stack.Screen name="LoginPinScreen" component={LoginPinScreen} options={{ headerShown: false }} /> */}
             <Stack.Screen name='Home' component={DrawNav} options={{ headerShown: false }} />
             <Stack.Screen name='bbpsStack' component={BBPSStack} options={{ headerShown: false }} />
             <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />

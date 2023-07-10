@@ -148,7 +148,7 @@ const Profile = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // console.log('on focus');
+      console.log('on focus');
       populateAll()
     });
 
@@ -515,7 +515,7 @@ const Profile = () => {
           <Text style={styles.value}>{userData?.personalDetail?.user_Pin}</Text>
           <Text style={styles.break}></Text>
           <Text style={styles.value}>{userData?.personalDetail?.user_Nomine_Name}</Text>
-          <Text style={styles.value}>{userData?.personalDetail?.nomine_Relation}</Text>
+          <Text style={styles.value}>{currentNomineeRelation?.name}</Text>
           <Text style={styles.value}>{userData?.personalDetail?.nomine_ContactNumber}</Text>
         </View>
       </View>

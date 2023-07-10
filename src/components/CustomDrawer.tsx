@@ -5,13 +5,19 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { getWalletBalance } from '../API/services';
 import colors from '../constants/colors';
 import { AuthContext } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
 
 const CustomDrawer = (props: any) => {
+
     const { logout, userData } = useContext(AuthContext);
     const [wallet, setWallet] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [profilePicImageError, setProfilePicImageError] = useState(false);
+    const navigation = useNavigation();
 
+    const time = new Date().getTime();
+    console.log('CustomDrawer rerun');
     const fetchWalletBalance = async () => {
         const email = userData.user.user_EmailID
         setIsLoading(true)
@@ -35,18 +41,28 @@ const CustomDrawer = (props: any) => {
         fetchWalletBalance()
     }, [])
 
-
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            console.log('Drawer focus');
+        });
+        return unsubscribe;
+    }, [])
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContentStyle}>
             <View>
                 <View style={[styles.profilePicContainer]}>
-                    <Image source={require('../../assets/images/user-profile2.png')} style={styles.profilePic} />
+                    {profilePicImageError ? <Image source={require('../../assets/images/user-profile2.png')} style={styles.profilePic} /> :
+                        <Image source={{
+                            uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.passport_Photo}&time=${time}`,
+                        }} style={styles.profilePic} onError={(e) => {console.log('error while loading image in custome draw');setProfilePicImageError(true)}} />
+                    }
+                    {/* <Image source={require('../../assets/images/user-profile2.png')} style={styles.profilePic} /> */}
                     <Text style={styles.userName}>Hello {userData.personalDetail.user_FName}</Text>
                     <Text style={styles.loginCode} selectable>{userData.user.login_Code}</Text>
                     {!isLoading ?
                         <Pressable style={{ alignItems: 'center' }} onPress={() => fetchWalletBalance()}>
                             <Text style={styles.balance}>Balance ₹ {wallet}</Text>
-                            <Text style={{ fontSize: 12, color: colors.primary100}}>Tap to Refresh</Text>
+                            <Text style={{ fontSize: 12, color: colors.primary100 }}>Tap to Refresh</Text>
                         </Pressable> :
                         <ActivityIndicator color={colors.white} size={30} />
                     }

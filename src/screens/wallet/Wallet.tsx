@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Pressable, Alert, RefreshControl, ScrollView } 
 import React, { useContext, useEffect, useState } from 'react'
 import colors from '../../constants/colors';
 import { AuthContext } from '../../context/AuthContext';
-import { getWalletBalance } from '../../API/services';
+import { generateOtpForWalletPinChange, getWalletBalance } from '../../API/services';
 import Loading from '../../components/Loading';
 
 
@@ -60,6 +60,41 @@ const Wallet = ({ navigation }: any) => {
     fetchWalletBalance(userData.user.user_EmailID, true);
   }
 
+  const onForgotPinClick = () => {
+    // navigation.navigate('wallet', { screen: 'enterOTPForPinChange' });
+    // return;
+    Alert.alert('Forgot Wallet PIN',
+      'An OTP will be sent to your registered mobile number and will be used to validate. Press OK to continue.',
+      [
+        {
+          text: 'Ok',
+          onPress: async () => {
+            setIsLoading(true);
+            try {
+              //sendOtp 
+              const { data } = await generateOtpForWalletPinChange(userData.user.user_ID);
+              if (data.status === 'Success' && data.code === 200 && data.data === "OTP send to the user") {
+                // navigate to otp screen
+                setIsLoading(false);
+                navigation.navigate('wallet', { screen: 'enterOTPForPinChange' });
+              } else {
+                setIsLoading(false);
+                Alert.alert('Failed', 'OTP generation failed!, Please contact support!')
+              }
+            } catch (e) {
+              setIsLoading(false);
+              console.log('Error while sending otp to user');
+              console.log(e);
+              Alert.alert('Error', 'OTP generation error!, Please try after sometime.')
+            }
+          }
+        },
+        {
+          text: 'Cancel',
+          onPress: () => { }
+        },
+      ])
+  }
   const RefreshLoader = <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
     colors={[colors.primary500, colors.success500, colors.primary500]}
     progressBackgroundColor={colors.white} />
@@ -84,11 +119,17 @@ const Wallet = ({ navigation }: any) => {
         <Text style={styles.addMoneyButtonLabel}>Recharge Wallet</Text>
       </Pressable>
 
-      <Pressable style={styles.ChangePasswordButton}  onPress={() => {
-        navigation.navigate('wallet', { screen: 'changeWalletPin' });
-      }}>
-        <Text style={styles.ChangePasswordButtonLabel}>Change Wallet PIN</Text>
-      </Pressable>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 8, gap: 12 }}>
+
+        <Pressable style={styles.ChangePasswordButton} onPress={() => {
+          navigation.navigate('wallet', { screen: 'changeWalletPin' });
+        }}>
+          <Text style={styles.ChangePasswordButtonLabel}>Change Wallet PIN</Text>
+        </Pressable>
+        <Pressable style={styles.ChangePasswordButton} onPress={onForgotPinClick}>
+          <Text style={styles.ChangePasswordButtonLabel}>Forgot Wallet PIN</Text>
+        </Pressable>
+      </View>
     </ScrollView>
   )
 }
@@ -133,16 +174,20 @@ const styles = StyleSheet.create({
   addMoneyButtonLabel: {
     color: colors.white,
     fontSize: 18,
-    fontWeight:'bold'
+    fontWeight: 'bold'
   },
   ChangePasswordButtonLabel: {
     color: colors.primary500,
     fontSize: 18,
     textAlign: 'center',
-    
+    fontWeight: 'bold'
+
   },
   ChangePasswordButton: {
-    padding: 16,
-    marginTop: 16
+    paddingVertical: 16,
+    flex: 1,
+    borderColor: colors.primary500,
+    borderWidth: 1,
+    borderRadius: 8
   }
 })
