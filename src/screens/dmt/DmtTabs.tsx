@@ -9,8 +9,19 @@ import { AuthContext } from '../../context/AuthContext';
 import AddSender from './AddSender';
 import RecipientStack from './RecipientTab/ListRecipientTabStack';
 import SendMoney from './SendMoneyTab/SendMoney';
-
+import DMTOtpScreen from './DMTOtpScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const AddSenderStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='addSender' component={AddSender} />
+      <Stack.Screen name='dmtOtpScreen' component={DMTOtpScreen} />
+    </Stack.Navigator>
+  )
+}
+
 const DMTTabs = () => {
   const { userData } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +48,8 @@ const DMTTabs = () => {
         setShowAddSender(false);
       }
     } catch (e) {
-      console.log('Error Fetching Sender for DMT')
+      console.log('Error Fetching Sender for DMT');
+      console.log(e)
     }
   }
 
@@ -50,7 +62,7 @@ const DMTTabs = () => {
     return <Loading label={'Fetching your details'} />
 
   if (!isLoading && showAddSender) {
-    return <AddSender />
+    return <AddSenderStack />
   } else if (!isLoading && !showAddSender) {
     return (
       <Tab.Navigator screenOptions={{

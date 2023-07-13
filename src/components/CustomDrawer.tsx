@@ -41,12 +41,17 @@ const CustomDrawer = (props: any) => {
         fetchWalletBalance()
     }, [])
 
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener('focus', () => {
+    //         console.log('Drawer focus');
+    //     });
+    //     return unsubscribe;
+    // }, []);
+
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            console.log('Drawer focus');
-        });
-        return unsubscribe;
-    }, [])
+        console.log('User Data changed in CustomDrawer');
+        setProfilePicImageError(false);
+    }, [userData])
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContentStyle}>
             <View>

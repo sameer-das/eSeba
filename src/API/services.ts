@@ -119,5 +119,5 @@ export const saveUserKycDetails = (kycDetials: any) => {
 // DMT
 
 export const getSenderInfo = (payload: any) => {
-    return axios.post(`${BASE_URL} / api / DMT / eSenderDetails`, payload)
+    return axios.post(`${BASE_URL}/api/DMT/eSenderDetails`, payload)
 }
