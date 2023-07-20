@@ -17,7 +17,7 @@ const CustomDrawer = (props: any) => {
     const navigation = useNavigation();
 
     const time = new Date().getTime();
-    console.log('CustomDrawer rerun');
+    // console.log('CustomDrawer rerun');
     const fetchWalletBalance = async () => {
         const email = userData.user.user_EmailID
         setIsLoading(true)

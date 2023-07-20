@@ -7,6 +7,8 @@ import SelectBoxWithLabelAndError from '../../components/SelectBoxWithLabelAndEr
 import { useNavigation, useRoute } from '@react-navigation/native'
 import InputWithLabelAndError from '../../components/InputWithLabelAndError'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import AnimatedInput from '../../components/AnimatedInput'
+import ButtonPrimary from '../../components/ButtonPrimary'
 
 
 const SignUpFirst = () => {
@@ -111,28 +113,32 @@ const SignUpFirst = () => {
         <ScrollView>
             <KeyboardAvoidingView enabled style={{ flex: 1, backgroundColor: colors.white }}>
                 <View style={styles.rootContainer}>
-                    <Text style={styles.welcomeText}>About yourself</Text>
+                    <View style={{ marginVertical: 30 }}>
+                        <Text style={styles.welcomeText}>We are happy to know you</Text>
+                    </View>
 
                     {/* User Type */}
-                    <SelectBoxWithLabelAndError listData={userTypeMasterData}
-                        label={'Choolse User Type'}
-                        placeholder={'Select'}
-                        errorMessage={''}
-                        value={formValue.userType.value.name}
-                        optionLable={(curr: any) => { return curr.name }}
-                        onSelectionChange={(item: any) => {
-                            const obj = { ...formValue.userType, value: item }
-                            setFormValue({ ...formValue, userType: obj });
-                        }}
-                    />
+                    <View>
+                        <SelectBoxWithLabelAndError listData={userTypeMasterData}
+                            label={'Choolse User Type'}
+                            placeholder={'Select'}
+                            errorMessage={''}
+                            value={formValue.userType.value.name}
+                            optionLable={(curr: any) => { return curr.name }}
+                            onSelectionChange={(item: any) => {
+                                const obj = { ...formValue.userType, value: item }
+                                setFormValue({ ...formValue, userType: obj });
+                            }}
+                        />
+                    </View>
 
-                    <InputWithLabelAndError
+                    <AnimatedInput
                         value={formValue.firstName.value}
                         errorMessage={formValue.firstName.error}
                         onChangeText={(text: string) => handleInputChange(text, 'firstName')}
                         inputLabel={'Enter First Name'} />
 
-                    <InputWithLabelAndError
+                    <AnimatedInput
                         value={formValue.lastName.value}
                         onChangeText={(text: string) => handleInputChange(text, 'lastName')}
                         inputLabel={'Enter Last Name'}
@@ -150,7 +156,7 @@ const SignUpFirst = () => {
                             setFormValue({ ...formValue, gender: obj });
                         }} />
 
-                    <InputWithLabelAndError
+                    <AnimatedInput
                         value={formValue.mobile.value}
                         errorMessage={formValue.mobile.error}
                         onChangeText={(text: string) => handleInputChange(text, 'mobile')}
@@ -158,19 +164,18 @@ const SignUpFirst = () => {
                         keyboardType={'numeric'}
                         maxLength={10} />
 
-                    <InputWithLabelAndError
+                    <AnimatedInput
                         value={formValue.email.value}
                         errorMessage={formValue.email.error}
                         onChangeText={(text: string) => handleInputChange(text, 'email')}
                         inputLabel={'Enter Email ID'}
                         keyboardType={'email-address'} />
 
+                    <View style={{marginVertical: 20}}>
+                        <ButtonPrimary onPress={handleNextCtaPress} label='Next' buttonLabelStyle={{ textTransform: 'uppercase' }} />
 
+                    </View>
 
-                    <Pressable style={styles.signUpCta} onPress={handleNextCtaPress}>
-                        <Text style={styles.signUpCtaLabel}>Next</Text>
-                        {/* <MaterialIcon name='double-arrow' size={40} color={colors.white} /> */}
-                    </Pressable>
 
                 </View>
 
@@ -183,17 +188,16 @@ export default SignUpFirst
 
 const styles = StyleSheet.create({
     rootContainer: {
-        // flex: 1,
+        flex: 1,
         padding: 8,
         backgroundColor: colors.white,
         height: windowHeight
     },
     welcomeText: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: colors.primary500,
+        fontSize: 20,
+        fontWeight: '400',
+        color: colors.grey,
         textAlign: 'center',
-        marginBottom: 20
     },
 
 

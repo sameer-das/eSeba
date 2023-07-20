@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View, ScrollView, Pressable, Alert, KeyboardAvoidingView } from 'react-native'
 import React, { useContext, useState } from 'react'
-import colors from '../../constants/colors'
-import InputWithLabelAndError from '../../components/InputWithLabelAndError'
+import colors from '../../../constants/colors'
+import InputWithLabelAndError from '../../../components/InputWithLabelAndError'
 import { useNavigation } from '@react-navigation/native'
-import { AuthContext } from '../../context/AuthContext'
+import { AuthContext } from '../../../context/AuthContext'
 
 const DMTOtpScreen = () => {
     const { userData } = useContext(AuthContext);

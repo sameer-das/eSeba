@@ -10,6 +10,8 @@ import InputWithLabelAndError from '../../components/InputWithLabelAndError'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Loading from '../../components/Loading'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import AnimatedInput from '../../components/AnimatedInput'
+import ButtonPrimary from '../../components/ButtonPrimary'
 const SignUpSecond = () => {
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
@@ -208,7 +210,10 @@ const SignUpSecond = () => {
         <ScrollView>
             <KeyboardAvoidingView enabled style={{ flex: 1, backgroundColor: colors.white }}>
                 <View style={styles.rootContainer}>
-                    <Text style={styles.welcomeText}>More About yourself</Text>
+                    <View style={{marginVertical: 30}}>
+
+                    <Text style={styles.welcomeText}>We are happy to know you</Text>
+                    </View>
 
                     <Text style={styles.dobLable}>Choose Date Of Birth</Text>
                     <Pressable style={styles.dobButton} onPress={() => setDatePickerOpen(true)} >
@@ -289,13 +294,13 @@ const SignUpSecond = () => {
                             setFormValue({ ...formValue, block: obj });
                         }} />
 
-                    <InputWithLabelAndError
+                    <AnimatedInput
                         value={formValue.ward.value}
                         onChangeText={(text: string) => handleInputChange(text, 'ward')}
                         inputLabel={'Enter GP/Ward'}
                         errorMessage={formValue.ward.error} />
 
-                    <InputWithLabelAndError
+                    <AnimatedInput
                         value={formValue.pin.value}
                         onChangeText={(text: string) => handleInputChange(text, 'pin')}
                         inputLabel={'Enter PIN'}
@@ -303,10 +308,9 @@ const SignUpSecond = () => {
                         maxLength={6}
                         errorMessage={formValue.pin.error} />
 
-                    <Pressable style={styles.signUpCta} onPress={handleRegisterCtaPress}>
-                        <Text style={styles.signUpCtaLabel}>Register With Us</Text>
-                        <MaterialIcon name='login' size={40} color={colors.white} />
-                    </Pressable>
+                    <View style={{ marginVertical: 20 }}>
+                        <ButtonPrimary onPress={handleRegisterCtaPress} label='Register With Us' buttonLabelStyle={{ textTransform: 'uppercase' }} />
+                    </View>
 
                 </View>
             </KeyboardAvoidingView>
@@ -324,11 +328,10 @@ const styles = StyleSheet.create({
         height: windowHeight
     },
     welcomeText: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: colors.primary500,
+        fontSize: 20,
+        fontWeight: '400',
+        color: colors.grey,
         textAlign: 'center',
-        marginBottom: 20
     },
 
 
@@ -348,12 +351,11 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     dobButton: {
-        borderWidth: 2,
+        borderBottomWidth: 1,
         paddingHorizontal: 8,
         paddingVertical: 11,
-        borderRadius: 8,
         width: '100%',
-        borderColor: colors.primary100,
+        borderBottomColor: colors.primary100,
         marginBottom: 16
     },
     dobText: {
@@ -363,7 +365,7 @@ const styles = StyleSheet.create({
     dobLable: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.primary500,
+        color: colors.grey,
         marginBottom: 4
     }
 })

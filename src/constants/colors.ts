@@ -1,5 +1,5 @@
 const colors = {
-    primary500: '#0e2b6c',
+    primary500: '#333e89',
     primary400: '#26407b',
     primary300: '#3e5589',
     primary200: '#566b98',
@@ -13,7 +13,8 @@ const colors = {
     secondary300: '#eb5d5d',
     secondary200: '#ee7474',
     secondary100: '#f18c8c',
-    success500: '#8EAC50'
+    success500: '#8EAC50',
+    grey: '#666666'
     // FFDD83
     // 98DFD6
 

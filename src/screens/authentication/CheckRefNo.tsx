@@ -1,10 +1,13 @@
-import { StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, Alert, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import colors from '../../constants/colors'
 import { useNavigation } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import { checkRefId } from '../../API/services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnimatedInput from '../../components/AnimatedInput';
+import ButtonPrimary from '../../components/ButtonPrimary';
+import { windowWidth } from '../../utils/dimension';
 
 
 const CheckRefNo = () => {
@@ -66,22 +69,29 @@ const CheckRefNo = () => {
 
     return (
         <View style={styles.rootContainer}>
+            <Image source={require('../../../assets/logos/gpay_logo.jpeg')} style={styles.logo} />
             <Text style={styles.welcomeText} >Register to Start</Text>
-            <View style={styles.card}>
-                <View>
-                    <TextInput style={styles.refNoInput}
-                        value={refNo}
+            <View style={{ width: windowWidth - 60 }} >
+                <View style={{marginTop: 40}}>
+                    <AnimatedInput value={refNo}
                         onChangeText={refInputHandler}
                         keyboardType='numeric'
-                        placeholder='Enter Reference No.' />
-
+                        inputLabel='Reference Number' />
                     {errorLabel && <Text style={styles.errorLabel}>{errorLabel}</Text>}
-
-                    <Text style={styles.informationLable}>If you dont have a valid reference code, please use "555401005338" as reference code!</Text>
                 </View>
-                <Pressable style={styles.verifyCta} onPress={() => proceedHandler()}>
-                    <Text style={styles.verifyCtaLabel}>Verify and Proceed</Text>
-                </Pressable>
+
+                <View style={{ marginTop: 20 }}>
+                    <ButtonPrimary
+                        label='Verify and Proceed'
+                        onPress={() => proceedHandler()}
+                        buttonLabelStyle={{ textTransform: 'uppercase' }}
+                    />
+                </View>
+                <View style={{ marginTop: 40 }}>
+                    <Text style={styles.informationLable}>If you dont have a valid reference code.</Text>
+                    <Text style={styles.informationLable}>Please use "<Text style={{fontWeight: 'bold'}} selectable={true}>555401005338</Text>"</Text>
+                </View>
+
             </View>
         </View>
     )
@@ -92,15 +102,21 @@ export default CheckRefNo
 const styles = StyleSheet.create({
     rootContainer: {
         flex: 1,
-        padding: 8,
         backgroundColor: colors.white,
-        justifyContent: 'center'
+        alignItems: 'center',
+    },
+    logo: {
+        height: 70,
+        width: 70,
+        marginTop: 90,
+        marginBottom: 50,
+        resizeMode: 'contain'
     },
     welcomeText: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: colors.primary500,
-        textAlign: 'center'
+        fontSize: 20,
+        fontWeight: '400',
+        lineHeight: 23,
+        color: colors.grey,
     },
     card: {
         marginTop: 30,
@@ -129,9 +145,10 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     informationLable: {
-        marginVertical: 24,
-        fontSize: 16,
-        color: colors.primary500,
+        fontSize: 15,
+        fontWeight: '400',
+        lineHeight: 17.25,
+        color: colors.grey,
         textAlign: 'center'
     },
     verifyCta: {

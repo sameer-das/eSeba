@@ -6,10 +6,10 @@ import { getSenderInfo } from '../../API/services';
 import Loading from '../../components/Loading';
 import colors from '../../constants/colors';
 import { AuthContext } from '../../context/AuthContext';
-import AddSender from './AddSender';
+import AddSender from './AddSender/AddSender';
 import RecipientStack from './RecipientTab/ListRecipientTabStack';
 import SendMoney from './SendMoneyTab/SendMoney';
-import DMTOtpScreen from './DMTOtpScreen';
+import DMTOtpScreen from './AddSender/DMTOtpScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,7 +54,7 @@ const DMTTabs = () => {
   }
 
   useEffect(() => {
-    senderinfo()
+    // senderinfo()
   }, [])
 
 

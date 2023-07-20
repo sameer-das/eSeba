@@ -4,7 +4,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../constants/colors'
 import { windowHeight, windowWidth } from '../utils/dimension';
 
-const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, label, 
+const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, label,
     placeholder, listData, optionLable }: any) => {
     // const borderStyle = errorMessage === '' ? { borderColor: colors.secondary100 }
     //     : { borderColor: colors.primary100 }
@@ -18,10 +18,11 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
 
     return (
         <>
-            <View style={{ marginVertical: 2 }}>
+            <View style={{}}>
                 <Text style={styles.label}>{label}</Text>
-                <Pressable style={[styles.pressable, borderStyle]} onPress={() => setModalVisible(!modalVisible)}>
+                <Pressable style={[styles.pressable]} onPress={() => {listData.length > 0 && setModalVisible(!modalVisible)}}>
                     <Text style={styles.text}>{value === '' ? placeholder : value}</Text>
+                    <MaterialIcon name='arrow-drop-down' size={30} color={colors.primary500} />
                 </Pressable>
                 <Text style={styles.errorLabel}>{errorMessage}</Text>
             </View>
@@ -33,12 +34,12 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
                         <View>
                             <View style={styles.modalHeader}>
                                 <Text style={styles.modalTitle}>{label}</Text>
-                                <Pressable onPress={() => { setModalVisible(false) }}>
+                                <Pressable onPress={() => {  setModalVisible(false) }}>
                                     <MaterialIcon name='close' size={30} color={colors.secondary300} />
                                 </Pressable>
                             </View>
 
-                            {listData.length > 5 && <TextInput  style={styles.searchBox} placeholder='Search' />}
+                            {listData.length > 5 && <TextInput style={styles.searchBox} placeholder='Search' />}
 
                             <View style={styles.flatListContainer}>
                                 <FlatList data={listData} renderItem={({ item }) => {
@@ -67,11 +68,14 @@ export default SelectBoxWithLabelAndError
 
 const styles = StyleSheet.create({
     pressable: {
-        borderWidth: 2,
+        borderBottomColor: colors.grey,
+        borderBottomWidth: 1,
         paddingHorizontal: 8,
         paddingVertical: 11,
-        borderRadius: 8,
-        width: '100%'
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     text: {
         fontSize: 16,
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.primary500,
+        color: colors.grey,
         marginBottom: 4
     },
     errorLabel: {

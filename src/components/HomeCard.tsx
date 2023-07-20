@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: colors.white,
         fontWeight: '600',
-        marginVertical: 8
+        marginVertical: 8,
+        fontFamily:'Poppins-Thin'
     },
     cardItem: {
         height: Math.floor(windowWidth / 4) - 25,
