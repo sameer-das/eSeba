@@ -1,34 +1,49 @@
 import { Pressable, StyleSheet, Text, View, Image, ScrollView, Alert } from 'react-native'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import colors from '../../../constants/colors'
-import CustomImagePicker from '../../../components/CustomImagePicker'
-import Loading from '../../../components/Loading'
-import { useNavigation } from '@react-navigation/native'
-import { AuthContext } from '../../../context/AuthContext'
-import { saveUserKycDetails } from '../../../API/services'
+import InputWithLabelAndError from '../../../components/InputWithLabelAndError';
+import CustomImagePicker from '../../../components/CustomImagePicker';
+import { AuthContext } from '../../../context/AuthContext';
+import { saveUserKycDetails } from '../../../API/services';
+import { useNavigation } from '@react-navigation/native';
+import Loading from '../../../components/Loading';
+import AnimatedInput from '../../../components/AnimatedInput';
 
-const UpdateProfilePic = () => {
-  const [profileImage, setProfileImage] = useState<any>('');
+
+const UpdateAdhar = () => {
   const { userData, refreshUserDataInContext } = useContext(AuthContext);
   const navigation = useNavigation<any>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateProfilePic = async () => {
-    if (!profileImage) {
-      Alert.alert('Not Found', 'Please upload profile pic!');
+  const [adharNo, setAdharNo] = useState<string>('');
+  const [adharFront, setAdharFront] = useState<any>('');
+  const [adharBack, setAdharBack] = useState<string>('');
+
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     console.log('update adhar focus');
+  //   });
+  //   return unsubscribe;
+  // }, [])
+
+
+  const updateAdhar = async () => {
+    if (!adharNo.trim() || !adharFront || !adharBack) {
+      Alert.alert('Not Found', 'Please enter Adhar No and upload Adhar images to proceed!');
       return;
-    }
+  }
+
 
     const kycDetails = {
       kyC_ID: userData.kycDetail?.kyC_ID || 0,
       user_ID: userData.user.user_ID,
 
-      aadhar_Number: "",
-      aadhar_FontPhoto: "",
-      aadhar_BackPhoto: "",
+      aadhar_Number: adharNo,
+      aadhar_FontPhoto: adharFront,
+      aadhar_BackPhoto: adharBack,
       pancard_Number: "",
       pancard_Photo: "",
-      passport_Photo: profileImage,
+      passport_Photo: "",
       gsT_Number: "",
       gsT_Photo: "",
       center_IndoorPhoto: "",
@@ -40,20 +55,22 @@ const UpdateProfilePic = () => {
       if (data.code === 200 && data.status === 'Success') {
         setIsLoading(false);
         refreshUserDataInContext();
-        Alert.alert('Success', 'Profile Pic updated successfully');
-        setProfileImage('');
+        Alert.alert('Success', 'Adhar details updated successfully');
+        setAdharNo('');
+        setAdharFront('');
+        setAdharBack('');
         // go back to the Document screen 
         navigation.goBack();
       } else {
         setIsLoading(false);
-        Alert.alert('Fail', 'Failed to update profile pic. Please try after sometime.')
+        Alert.alert('Fail', 'Failed to update adhar details. Please try after sometime.')
       }
 
     } catch (e) {
       setIsLoading(false);
-      console.log('Error while uploading KYC docs - PP');
+      console.log('Error while uploading KYC docs - Adhar');
       console.log(e);
-      Alert.alert('Error', 'Error while updating profile pic. Please try after sometime.')
+      Alert.alert('Error', 'Error while updating adhar details. Please try after sometime.')
     } finally {
 
     }
@@ -61,37 +78,44 @@ const UpdateProfilePic = () => {
   }
 
   if (isLoading)
-    return <Loading label={'Updating Profile Pic. Please Wait'} />
+    return <Loading label={'Updating Adhar Details. Please Wait'} />
 
   return (
     <ScrollView style={styles.rootContainer}>
-      <Text style={styles.pageTitle}>Update Your Profile Picture</Text>
+      <Text style={styles.pageTitle}>Update Your Adhar Details</Text>
       <View style={styles.formCard}>
+
+        {/* Adhar number */}
+        <AnimatedInput
+          value={adharNo}
+          onChangeText={(text: string) => setAdharNo(text)}
+          placeholder='Enter Adhar Number'
+          inputLabel='Enter Adhar Number'
+          keyboardType='numeric'
+          maxLength={12}
+        />
         {/* Adhar Front */}
-        <CustomImagePicker value={profileImage} setValue={setProfileImage}
-          placeholder='Tap to upload profile picture' label='Profile Picture' 
-          cropperCircleOverlay={true} useFrontCamera={true}
-          compressImageQuality={0.5} />
+        <CustomImagePicker value={adharFront} setValue={setAdharFront} placeholder='Tap to upload Adhar front side pic' label='Adhar front side pic' />
+
+        {/* Adhar Back */}
+        <CustomImagePicker value={adharBack} setValue={setAdharBack} placeholder='Tap to upload Adhar back side pic' label='Adhar back side pic' />
 
 
-        <Pressable style={styles.uploadButton} onPress={updateProfilePic}>
-          <Text style={styles.uploadButtonText}>Upload Profile Pictute</Text>
+        <Pressable style={styles.uploadButton} onPress={updateAdhar}>
+          <Text style={styles.uploadButtonText}>Upload and Update Details</Text>
         </Pressable>
       </View>
     </ScrollView>
   )
 }
 
-export default UpdateProfilePic
-
+export default UpdateAdhar
 
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
     padding: 8,
     backgroundColor: colors.white,
-
-
   }, pageTitle: {
     fontSize: 24,
     color: colors.primary500,

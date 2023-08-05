@@ -1,19 +1,77 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import React, { useContext, useState } from 'react'
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
+import { registerSenderInfo } from '../../../API/services'
+import AnimatedInput from '../../../components/AnimatedInput'
+import Loading from '../../../components/Loading'
 import colors from '../../../constants/colors'
-import InputWithLabelAndError from '../../../components/InputWithLabelAndError'
-import SelectBoxWithLabelAndError from '../../../components/SelectBoxWithLabelAndError'
+import { AuthContext } from '../../../context/AuthContext'
 
 const AddSender = () => {
+  const navigation = useNavigation<any>();
   const [fullname, setFullname] = useState('');
   const [isNeft, setIsNeft] = useState<boolean>(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+  const { userData } = useContext(AuthContext);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const handleSubmit = async () => {
+    if (fullname === '' || !fullname) {
+      Alert.alert('Invalid Input', 'Please enter your full name.');
+      return;
+    }
+
+
+    const payload = {
+      "requestType": "SenderRegister",
+      "senderMobileNumber": userData.user.mobile_Number,
+      "txnType": isNeft ? 'NEFT' : 'IMPS',
+      "senderName": fullname,
+      "senderPin": userData.personalDetail.user_Pin
+    }
+
+    try {
+      setIsLoading(true)
+      const { data } = await registerSenderInfo(payload);
+      console.log(data);
+      setIsLoading(false);
+      if (data.code === 200 && data.status === 'Success') {
+        if (data.resultDt.responseReason === 'Successful' && data.resultDt.senderMobileNumber && data.resultDt.responseCode == 0) {
+          Alert.alert('Registration Successful.', 'An OTP has been sent to your registered mobile number for verification.',
+            [{
+              text: 'OK',
+              onPress: () => {
+                navigation.replace('dmtOtpScreen', {
+                  "txnType": isNeft ? 'NEFT' : 'IMPS',
+                  "additionalRegData": String(data.resultDt.additionalRegData)
+                })
+              }
+            }])
+        } else {
+          Alert.alert('Fail', 'Failed while sender registration. Please try after sometime')
+        }
+      } else {
+        Alert.alert('Fail', 'Failed while sender registration. Please try after sometime')
+      }
+    } catch (e) {
+      console.log('Error while adding sender');
+      console.log(e);
+      Alert.alert('Error', 'Error while registering sender. Please try after sometime.');
+      setIsLoading(false);
+    }
+
+  }
+
+
+  if (isLoading)
+    return <Loading label='Loading...' />
   return (
     <View style={styles.rootContainer}>
       <Text style={styles.pageHeader}>DMT Sender Registration</Text>
       <View style={styles.formContainer}>
-        <InputWithLabelAndError
+        <AnimatedInput
           value={fullname}
           onChangeText={(text: string) => {
             setFullname(text);
@@ -31,17 +89,17 @@ const AddSender = () => {
           <Text style={styles.label}>Choose Trnasaction Type</Text>
 
           <View style={styles.transTypeButtonContainer}>
-            <Pressable onPress={() => {setIsNeft(false)}} style={[styles.transTypeButton, {backgroundColor: !isNeft ? colors.primary500 : colors.white}]}>
-              <Text style={[styles.transTypeButtonLabel, {color: !isNeft ? colors.white : colors.primary500}]}>IMPS</Text>
+            <Pressable onPress={() => { setIsNeft(false) }} style={[styles.transTypeButton, { backgroundColor: !isNeft ? colors.primary500 : colors.white }]}>
+              <Text style={[styles.transTypeButtonLabel, { color: !isNeft ? colors.white : colors.primary500 }]}>IMPS</Text>
             </Pressable>
-            <Pressable onPress={() => {setIsNeft(true)}} style={[styles.transTypeButton, {backgroundColor: isNeft ? colors.primary500 : colors.white}]}>
-              <Text style={[styles.transTypeButtonLabel, {color: isNeft ? colors.white : colors.primary500}]}>NEFT</Text>
+            <Pressable onPress={() => { setIsNeft(true) }} style={[styles.transTypeButton, { backgroundColor: isNeft ? colors.primary500 : colors.white }]}>
+              <Text style={[styles.transTypeButtonLabel, { color: isNeft ? colors.white : colors.primary500 }]}>NEFT</Text>
             </Pressable>
           </View>
         </View>
 
 
-        <Pressable style={[styles.cta, { backgroundColor: isSubmitDisabled ? colors.primary100 : colors.primary500 }]} disabled={isSubmitDisabled}>
+        <Pressable style={[styles.cta, { backgroundColor: isSubmitDisabled ? colors.primary100 : colors.primary500 }]} disabled={isSubmitDisabled} onPress={handleSubmit}>
           <Text style={styles.ctaLabel}>Submit</Text>
         </Pressable>
 
@@ -57,7 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     padding: 8,
-    paddingTop:32
+    paddingTop: 32
   },
   pageHeader: {
     fontSize: 24,
@@ -90,7 +148,7 @@ const styles = StyleSheet.create({
   },
   transTypeButtonContainer: {
     flexDirection: 'row',
-    height: 60,
+    height: 50,
     justifyContent: 'space-evenly',
     marginTop: 20
 

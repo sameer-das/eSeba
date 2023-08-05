@@ -11,6 +11,7 @@ import InputWithLabelAndError from '../../components/InputWithLabelAndError';
 import { useNavigation } from '@react-navigation/native';
 import SelectBoxWithLabelAndError from '../../components/SelectBoxWithLabelAndError';
 import DatePicker from 'react-native-date-picker';
+import AnimatedInput from '../../components/AnimatedInput';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -129,7 +130,9 @@ const Profile = () => {
       setCurrentGender(_currentGender);
 
 
-      const _currentNomineeRelation = relations.find(rel => rel.id === userData.personalDetail.nomine_Relation)
+      const _currentNomineeRelation = relations.find(rel => rel.id === userData.personalDetail.nomine_Relation);
+      console.log(_currentNomineeRelation);
+      
       setCurrentNomineeRelation(_currentNomineeRelation);
 
 
@@ -156,7 +159,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    console.log('User data changed');
+    // console.log('User data changed');
     populateAll()
   }, [userData])
 
@@ -576,12 +579,12 @@ const Profile = () => {
             {updateType === 'personal' ? <>
 
               <Text style={styles.editFormHeader}>Edit Your Personal Details</Text>
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userPersonalDetailEditForm.firstName.value}
                 errorMessage={userPersonalDetailEditForm.firstName.error}
                 onChangeText={(text: string) => handleInputChange(text, 'firstName')}
                 inputLabel={'Enter First Name'} />
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userPersonalDetailEditForm.lastName.value}
                 errorMessage={userPersonalDetailEditForm.lastName.error}
                 onChangeText={(text: string) => handleInputChange(text, 'lastName')}
@@ -666,13 +669,13 @@ const Profile = () => {
                   setUserPersonalDetailEditForm({ ...userPersonalDetailEditForm, block: obj });
                 }} />
 
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userPersonalDetailEditForm.ward.value}
                 errorMessage={userPersonalDetailEditForm.ward.error}
                 onChangeText={(text: string) => handleInputChange(text, 'ward')}
                 inputLabel={'Enter GP/Ward'} />
 
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userPersonalDetailEditForm.pin.value}
                 errorMessage={userPersonalDetailEditForm.pin.error}
                 keyboardType={'numeric'}
@@ -680,13 +683,13 @@ const Profile = () => {
                 onChangeText={(text: string) => handleInputChange(text, 'pin')}
                 inputLabel={'Enter PIN'} />
 
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userPersonalDetailEditForm.nomineeName.value}
                 errorMessage={userPersonalDetailEditForm.nomineeName.error}
                 onChangeText={(text: string) => handleInputChange(text, 'nomineeName')}
                 inputLabel={'Enter Nominee Name'} />
 
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userPersonalDetailEditForm.nomineeMobile.value}
                 errorMessage={userPersonalDetailEditForm.nomineeMobile.error}
                 onChangeText={(text: string) => handleInputChange(text, 'nomineeMobile')}
@@ -724,22 +727,22 @@ const Profile = () => {
                   setUserBankDetailEditForm({ ...userBankDetailEditForm, bank: obj });
                 }} />
 
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userBankDetailEditForm.accountHolderName.value}
                 errorMessage={userBankDetailEditForm.accountHolderName.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'accountHolderName')}
                 inputLabel={'Enter A/C Holder Name'} />
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userBankDetailEditForm.accountNo.value}
                 errorMessage={userBankDetailEditForm.accountNo.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'accountNo')}
                 inputLabel={'Enter A/C Number'} />
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userBankDetailEditForm.branchName.value}
                 errorMessage={userBankDetailEditForm.branchName.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'branchName')}
                 inputLabel={'Enter Branch Name'} />
-              <InputWithLabelAndError
+              <AnimatedInput
                 value={userBankDetailEditForm.ifsc.value}
                 errorMessage={userBankDetailEditForm.ifsc.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'ifsc')}
@@ -848,12 +851,12 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   dobButton: {
-    borderWidth: 2,
+    borderBottomWidth: 1,
     paddingHorizontal: 8,
     paddingVertical: 11,
-    borderRadius: 8,
+    // borderRadius: 8,
     width: '100%',
-    borderColor: colors.primary100,
+    borderBottomColor: colors.grey,
     marginBottom: 16
   },
   dobText: {
@@ -863,7 +866,7 @@ const styles = StyleSheet.create({
   dobLable: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.primary500,
+    color: colors.grey,
     marginBottom: 4
   }
 })

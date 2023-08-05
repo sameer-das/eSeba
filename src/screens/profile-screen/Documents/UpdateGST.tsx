@@ -7,6 +7,7 @@ import Loading from '../../../components/Loading';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../../context/AuthContext';
 import { saveUserKycDetails } from '../../../API/services';
+import AnimatedInput from '../../../components/AnimatedInput';
 
 const UpdateGST = () => {
 
@@ -72,15 +73,15 @@ const UpdateGST = () => {
         <ScrollView style={styles.rootContainer}>
             <Text style={styles.pageTitle}>Update Your GST Details</Text>
             <View style={styles.formCard}>
-                {/* PAN number */}
-                <InputWithLabelAndError
+                {/* GST number */}
+                <AnimatedInput
                     value={gstn}
                     onChangeText={(text: string) => setGstn(text)}
                     placeholder='Enter GSTN'
                     inputLabel='Enter GSTN'
 
                 />
-                {/* Adhar Front */}
+                {/* GST PIC */}
                 <CustomImagePicker value={gstImage} setValue={setGstImage} placeholder='Tap to upload image of your GST certificate' label='Image of your GST Certificate' />
 
                 <Pressable style={styles.uploadButton} onPress={updateGST}>

@@ -38,7 +38,7 @@ const HomeCard = ({ item }: { item: any }) => {
         const imageUri = imageObj.imageUri;
         return (<Pressable style={styles.cardItem} onPress={() => handleCardItemPress(item)}>
             <Image source={imageUri}
-                style={{ width: 45, height: 45 }} />
+                style={{ width: 36, height: 36 }} />
             <Text style={styles.cardItemLabel}>{item.services_Cat_Name}</Text>
         </Pressable>
         )
@@ -66,8 +66,8 @@ export default HomeCard
 
 const styles = StyleSheet.create({
     homeCards: {
-        backgroundColor: colors.primary500,
-        borderRadius: 8,
+        backgroundColor: colors.homeScreenCardBg,
+        borderRadius: 10,
         marginTop: 8,
         padding: 10,
 
@@ -82,13 +82,12 @@ const styles = StyleSheet.create({
         color: colors.white,
         fontWeight: '600',
         marginVertical: 8,
-        fontFamily:'Poppins-Thin'
     },
     cardItem: {
         height: Math.floor(windowWidth / 4) - 25,
         width: Math.floor(windowWidth / 4) - 25,
-        borderColor: colors.primary500,
-        borderWidth: 1,
+        // borderColor: colors.primary500,
+        // borderWidth: 1,
         marginHorizontal: 8,
         marginVertical: 12,
         alignItems: 'center',

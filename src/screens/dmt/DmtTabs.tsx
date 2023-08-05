@@ -8,11 +8,13 @@ import colors from '../../constants/colors';
 import { AuthContext } from '../../context/AuthContext';
 import AddSender from './AddSender/AddSender';
 import RecipientStack from './RecipientTab/ListRecipientTabStack';
-import SendMoney from './SendMoneyTab/SendMoney';
+import ListRecipientsToSendMoney from './SendMoneyTab/ListRecipientsToSendMoney';
 import DMTOtpScreen from './AddSender/DMTOtpScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SendMoneyForm from './SendMoneyTab/SendMoneyForm';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
 const AddSenderStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -22,9 +24,18 @@ const AddSenderStack = () => {
   )
 }
 
+const SendMoneyStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='listSenderToSend' component={ListRecipientsToSendMoney} />
+      <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
+    </Stack.Navigator>
+  )
+}
+
 const DMTTabs = () => {
   const { userData } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showAddSender, setShowAddSender] = useState(false);
 
   const senderinfo = async () => {
@@ -40,12 +51,12 @@ const DMTTabs = () => {
       console.log(data);
       if (data.code === 200 && data.status === 'Success' && (data.resultDt.senderMobileNumber === 0 || !data.resultDt.senderName)) {
         // sender not found
-        setIsLoading(false)
         setShowAddSender(true);
+        setIsLoading(false)
       } else {
         // sender found
-        setIsLoading(false)
         setShowAddSender(false);
+        setIsLoading(false)
       }
     } catch (e) {
       console.log('Error Fetching Sender for DMT');
@@ -54,7 +65,7 @@ const DMTTabs = () => {
   }
 
   useEffect(() => {
-    // senderinfo()
+    senderinfo()
   }, [])
 
 
@@ -73,7 +84,7 @@ const DMTTabs = () => {
         tabBarLabelStyle: { fontSize: 18, marginBottom: 8 },
         // tabBarShowLabel: false
       }}>
-        <Tab.Screen name="Send" component={SendMoney}
+        <Tab.Screen name="Send" component={SendMoneyStack}
           options={{
             tabBarIcon: ({ focused, color }) => <MaterialIcon name="send" size={25} color={color} />,
           }} />

@@ -2,8 +2,10 @@ import { StyleSheet, Text, View, ScrollView, Pressable, Alert, KeyboardAvoidingV
 import React, { useContext, useState } from 'react'
 import colors from '../../../constants/colors'
 import InputWithLabelAndError from '../../../components/InputWithLabelAndError'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { AuthContext } from '../../../context/AuthContext'
+import { verifySender } from '../../../API/services'
+import Loading from '../../../components/Loading'
 
 const DMTOtpScreen = () => {
     const { userData } = useContext(AuthContext);
@@ -13,22 +15,48 @@ const DMTOtpScreen = () => {
     const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
 
     const regexp = new RegExp('^[0-9]+$');
+    const route = useRoute<any>();
+    console.log(route.params);
 
     const otpSubmitHandler = async () => {
 
 
         try {
             // setIsLoading(true);
-            console.log('Otp found ', otp)
+            console.log('Otp found ', otp);
+            const verifySenderPayload = {
+                "requestType": "VerifySender",
+                "senderMobileNumber": userData.user.mobile_Number,
+                "txnType": route.params.txnType,
+                "otp": String(otp),
+                "additionalRegData": String(route.params.additionalRegData)
+            }
 
-        } catch (e) {
+            setIsLoading(true);
+            const { data } = await verifySender(verifySenderPayload);
+            console.log(data);
             setIsLoading(false);
-            console.log('Error while validating pin');
+            if (data.status === 'Success' && data.code === 200) {
+                if (data.resultDt.responseReason === 'Successful' && data.resultDt.senderMobileNumber) {
+                    Alert.alert('Success', 'Sender Verification Successful.');
+                    navigation.pop(1);
+                } else {
+                    Alert.alert('Fail', 'Failed while verifying sender. Please try after sometime.')
+                }
+            } else {
+                Alert.alert('Fail', 'Failed while verifying sender. Please try after sometime.')
+            }
+        } catch (e) {
+            console.log('Error while verifying sender');
             console.log(e);
-
+            setIsLoading(false);
+            Alert.alert('Error', 'Error while verifying sender. Please try after sometime.')
         }
 
     }
+
+    if(isLoading)
+    return <Loading label='Verifying Sender...'/>
 
     return (
         <ScrollView contentContainerStyle={styles.rootContainer}>

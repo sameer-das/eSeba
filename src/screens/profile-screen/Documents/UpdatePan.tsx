@@ -7,6 +7,7 @@ import { AuthContext } from '../../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { saveUserKycDetails } from '../../../API/services';
 import Loading from '../../../components/Loading';
+import AnimatedInput from '../../../components/AnimatedInput';
 
 const UpdatePan = () => {
 
@@ -73,14 +74,14 @@ const UpdatePan = () => {
             <Text style={styles.pageTitle}>Update Your PAN Details</Text>
             <View style={styles.formCard}>
                 {/* PAN number */}
-                <InputWithLabelAndError
+                <AnimatedInput
                     value={pan}
                     onChangeText={(text: string) => setPan(text)}
                     placeholder='Enter PAN'
                     inputLabel='Enter PAN'
 
                 />
-                {/* Adhar Front */}
+                {/* PAN PIC */}
                 <CustomImagePicker value={panImage} setValue={setPanImage} placeholder='Tap to upload image of your PAN' label='Image of your PAN' />
 
                 <Pressable style={styles.uploadButton} onPress={updatePan}>

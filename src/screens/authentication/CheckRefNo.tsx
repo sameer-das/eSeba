@@ -29,7 +29,7 @@ const CheckRefNo = () => {
             return;
         }
         setIsLoading(true);
-
+        clearAsyncStorageForRefNo();
         try {
             const { data } = await checkRefId(refNo);
             if (data.status === 'Success' && data.code === 200 && data.data === 'S') {
@@ -60,6 +60,22 @@ const CheckRefNo = () => {
         await AsyncStorage.removeItem('regRefNo');
     }
 
+    const onNoRefClick = () => {
+        Alert.alert('Admin', 'Ref Id: 555401005338 will be used and you will be tagged under Admin.',
+            [{
+                text: 'I Agree',
+                onPress: async () => {
+                    await AsyncStorage.setItem('regRefNo', '555401005338');
+                    navigation.push('SignUpFirst');
+                }
+            }, {
+                text: 'No',
+                onPress: () => {
+                    clearAsyncStorageForRefNo();
+                }
+            }])
+    }
+
     useEffect(() => {
         clearAsyncStorageForRefNo()
     }, [])
@@ -72,7 +88,7 @@ const CheckRefNo = () => {
             <Image source={require('../../../assets/logos/gpay_logo.jpeg')} style={styles.logo} />
             <Text style={styles.welcomeText} >Register to Start</Text>
             <View style={{ width: windowWidth - 60 }} >
-                <View style={{marginTop: 40}}>
+                <View style={{ marginTop: 40 }}>
                     <AnimatedInput value={refNo}
                         onChangeText={refInputHandler}
                         keyboardType='numeric'
@@ -87,10 +103,15 @@ const CheckRefNo = () => {
                         buttonLabelStyle={{ textTransform: 'uppercase' }}
                     />
                 </View>
-                <View style={{ marginTop: 40 }}>
-                    <Text style={styles.informationLable}>If you dont have a valid reference code.</Text>
-                    <Text style={styles.informationLable}>Please use "<Text style={{fontWeight: 'bold'}} selectable={true}>555401005338</Text>"</Text>
+                <View style={{ marginTop: 30 }}>
+                    {/* <Text style={styles.informationLable}>If you dont have a valid reference code.</Text>
+                    <Text style={styles.informationLable}>Please use "<Text style={{fontWeight: 'bold'}} selectable={true}>555401005338</Text>"</Text> */}
+
+                    <Pressable onPress={onNoRefClick} style={{ borderColor: colors.primary100, borderWidth: 1, height: 36, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ color: colors.primary400, fontSize: 16, fontWeight: 'bold' }}>Click here if you dont have Ref ID.</Text>
+                    </Pressable>
                 </View>
+
 
             </View>
         </View>

@@ -11,7 +11,7 @@ import BillDetails from '../screens/bbps/BillDetails';
 import FetchBillDetails from '../screens/bbps/FetchBillDetails';
 import ListBillers from '../screens/bbps/ListBillers';
 import Home from '../screens/home/Home';
-import Profile from '../screens/home/Profile';
+import Profile from '../screens/profile-screen/Profile';
 import RechargeWallet from '../screens/wallet/RechargeWallet';
 import Wallet from '../screens/wallet/Wallet';
 import SearchContact from '../screens/prepaid recharge/SearchContact';
@@ -21,14 +21,14 @@ import ProceedToPay from '../screens/prepaid recharge/ProceedToPay';
 import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus';
 import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
 import ListTransactions from '../screens/transactions/ListTransactions';
-import Documents from '../screens/home/Documents/Documents';
+import Documents from '../screens/profile-screen/Documents/Documents';
 import DMTTabs from '../screens/dmt/DmtTabs';
-import ChangePassword from '../screens/home/ChangePassword';
+import ChangePassword from '../screens/profile-screen/ChangePassword';
 import ChangeWalletPin from '../screens/wallet/ChangeWalletPin';
-import UpdateAdhar from '../screens/home/Documents/UpdateAdhar';
-import UpdatePan from '../screens/home/Documents/UpdatePan';
-import UpdateProfilePic from '../screens/home/Documents/UpdateProfilePic';
-import UpdateGST from '../screens/home/Documents/UpdateGST';
+import UpdateAdhar from '../screens/profile-screen/Documents/UpdateAdhar';
+import UpdatePan from '../screens/profile-screen/Documents/UpdatePan';
+import UpdateProfilePic from '../screens/profile-screen/Documents/UpdateProfilePic';
+import UpdateGST from '../screens/profile-screen/Documents/UpdateGST';
 import EnterOtpForPinChange from '../screens/wallet/EnterOtpForPinChange';
 import SetNewWalletPin from '../screens/wallet/SetNewWalletPin';
 import LoginPinScreen from '../screens/common/LoginPinScreen';
@@ -178,8 +178,8 @@ const AppStack = () => {
             {/* <Stack.Screen name="LoginPinScreen" component={LoginPinScreen} options={{ headerShown: false }} /> */}
             <Stack.Screen name='Home' component={DrawNav} options={{ headerShown: false }} />
             <Stack.Screen name='bbpsStack' component={BBPSStack} options={{ headerShown: false }} />
-            <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />
             <Stack.Screen name='prepaidRechargeStack' component={PrepaidRechargeStack} options={{ headerShown: false }} />
+            <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />
             <Stack.Screen name='DMTStack' component={DMTStack} options={{ headerShown: false }} />
             {/* Common Screens */}
             <Stack.Screen name='otpScreen' component={OtpScreen} options={{ headerShown: false }} />

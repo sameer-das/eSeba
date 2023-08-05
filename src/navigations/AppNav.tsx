@@ -3,11 +3,9 @@ import React, { useContext } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Loading from '../components/Loading'
 import { AuthContext, IAuthContext } from '../context/AuthContext'
-import AppStack from './AppStack'
+// import AppStack from './AppStack'
 import AuthStack from './AuthStack'
-import OtpScreen from '../screens/common/OtpScreen'
-import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus'
-import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus'
+import AppStackTab from './AppStackTab'
 
 const AppNav = () => {
     const { isLoading, token, userData } = useContext<IAuthContext>(AuthContext);
@@ -20,7 +18,7 @@ const AppNav = () => {
     return (
         <NavigationContainer>
             <View style={styles.container}>
-                {userData ? <AppStack /> : <AuthStack />}
+                {userData ? <AppStackTab /> : <AuthStack />}
             </View>
         </NavigationContainer>
     )

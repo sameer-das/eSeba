@@ -121,3 +121,23 @@ export const saveUserKycDetails = (kycDetials: any) => {
 export const getSenderInfo = (payload: any) => {
     return axios.post(`${BASE_URL}/api/DMT/eSenderDetails`, payload)
 }
+
+export const getAllDmtBank = () => {
+    return axios.get(`${BASE_URL}/api/DMT/eGetAllDMTBanks`)
+}
+
+export const registerRecipient = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/DMT/eRegisterRecipient`, payload)
+}
+
+export const getAllRecipients = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/DMT/eAllRecipients`, payload);
+}
+
+export const registerSenderInfo = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/DMT/eSenderRegistration`, payload)
+}
+
+export const verifySender = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/DMT/eVerifySender`, payload)
+}
