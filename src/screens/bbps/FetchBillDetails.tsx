@@ -206,11 +206,11 @@ const FetchBillDetails = () => {
                 // check for wallet balance
                 const amount = billerResponse.billAmount / 100;
                 setLoadingLabel('Checking Wallet');
-                // const isWalletOk = await validateWalletBalance(amount, userData.user.user_EmailID);
-                // if (isWalletOk) { //TODO remove !
-                //     console.log('wallet ok');
-                // }
-                await payBill();
+                const isWalletOk = await validateWalletBalance(amount, userData.user.user_EmailID);
+                if (isWalletOk) { 
+                    console.log('wallet ok');
+                    await payBill();
+                }
                 setIsLoading(false);
                 setLoadingLabel('Loading...')
             } else {

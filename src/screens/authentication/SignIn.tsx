@@ -21,7 +21,7 @@ const SignIn = () => {
       <KeyboardAvoidingView style={styles.rootContainer}>
 
 
-        <Image source={require('../../../assets/logos/gpay_logo.jpeg')} style={styles.logo} />
+        <Image source={require('../../../assets/logos/gpay_logo.png')} style={styles.logo} />
 
         <Text style={styles.welcomeText}>Please Login</Text>
         <View style={{ marginTop: 32 }}>

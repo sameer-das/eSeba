@@ -7,7 +7,7 @@ import { AuthContext } from '../../../context/AuthContext'
 import { verifySender } from '../../../API/services'
 import Loading from '../../../components/Loading'
 
-const DMTOtpScreen = () => {
+const DMTAddSenderOtpScreen = () => {
     const { userData } = useContext(AuthContext);
     const [otp, setOtp] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -96,7 +96,7 @@ const DMTOtpScreen = () => {
     )
 }
 
-export default DMTOtpScreen
+export default DMTAddSenderOtpScreen
 
 const styles = StyleSheet.create({
     rootContainer: {

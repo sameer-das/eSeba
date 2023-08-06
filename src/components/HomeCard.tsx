@@ -15,6 +15,9 @@ const HomeCard = ({ item }: { item: any }) => {
         if (item.services_Cat_Name === 'Mobile Prepaid') {
             navigation.navigate('prepaidRechargeStack');
         } else if (item.services_Cat_Name === 'DMT') {
+            await AsyncStorage.setItem('currentServiceDetails', JSON.stringify(
+                { services_id: item.services_ID, services_cat_id: item.services_Cat_ID }
+            ));
             navigation.navigate('DMTStack')
         } else if (['PGDCA', 'DCA', 'Education Fee', 'PAN Card'].includes(item.services_Cat_Name)) {
             // No access as per Avinash from mobile

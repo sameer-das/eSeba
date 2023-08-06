@@ -63,13 +63,20 @@ const ListRecipientsToSendMoney = () => {
         progressViewOffset={0}
         keyExtractor={(item: any) => item.recipientId}
         renderItem={({ item }) => {
-          return (<Pressable 
-          style={{ borderBottomColor: colors.grey, 
-          borderBottomWidth: 0.2, 
-          paddingVertical: 8 }}
-          onPress={() => {
-            navigation.push('sendMoneyForm');
-          }}>
+          return (<Pressable
+            style={{
+              borderBottomColor: colors.grey,
+              borderBottomWidth: 0.2,
+              paddingVertical: 8
+            }}
+            onPress={() => {
+              navigation.push('sendMoneyForm', {
+                acNo: item.bankAccountNumber,
+                recipientName: item.recipientName,
+                recipientId: item.recipientId,
+                bankName: item.bankName
+              });
+            }}>
             <Text style={{ fontSize: 16, color: colors.primary500, fontWeight: 'bold' }}>{item.recipientName}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
               <Text style={{ fontSize: 14, color: colors.primary200, fontWeight: 'bold' }}>AC No: {item.bankAccountNumber}</Text>

@@ -9,9 +9,13 @@ import { AuthContext } from '../../context/AuthContext';
 import AddSender from './AddSender/AddSender';
 import RecipientStack from './RecipientTab/ListRecipientTabStack';
 import ListRecipientsToSendMoney from './SendMoneyTab/ListRecipientsToSendMoney';
-import DMTOtpScreen from './AddSender/DMTOtpScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SendMoneyForm from './SendMoneyTab/SendMoneyForm';
+import ShowConveyanceFee from './SendMoneyTab/ShowConveyanceFee';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DMTAddSenderOtpScreen from './AddSender/DMTAddSenderOtpScreen';
+import DMTSendMoneyPinScreen from './SendMoneyTab/DMTSendMoneyPinScreen';
+import OtpScreen from '../common/OtpScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +23,7 @@ const AddSenderStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name='addSender' component={AddSender} />
-      <Stack.Screen name='dmtOtpScreen' component={DMTOtpScreen} />
+      <Stack.Screen name='dmtAddSenderOtpScreen' component={DMTAddSenderOtpScreen} />
     </Stack.Navigator>
   )
 }
@@ -29,6 +33,8 @@ const SendMoneyStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name='listSenderToSend' component={ListRecipientsToSendMoney} />
       <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
+      <Stack.Screen name='showConveyanceFee' component={ShowConveyanceFee} />
+      <Stack.Screen name='dmtSendMoneyPinScreen' component={OtpScreen} />
     </Stack.Navigator>
   )
 }
@@ -46,6 +52,8 @@ const DMTTabs = () => {
     }
 
     try {
+      await AsyncStorage.removeItem('dmtSenderDetail');
+
       setIsLoading(true);
       const { data } = await getSenderInfo(payload);
       console.log(data);
@@ -55,6 +63,7 @@ const DMTTabs = () => {
         setIsLoading(false)
       } else {
         // sender found
+        await AsyncStorage.setItem('dmtSenderDetail', JSON.stringify(data.resultDt));
         setShowAddSender(false);
         setIsLoading(false)
       }
@@ -82,6 +91,7 @@ const DMTTabs = () => {
         tabBarActiveTintColor: colors.white,
         tabBarInactiveTintColor: colors.primary100,
         tabBarLabelStyle: { fontSize: 18, marginBottom: 8 },
+        tabBarHideOnKeyboard: true
         // tabBarShowLabel: false
       }}>
         <Tab.Screen name="Send" component={SendMoneyStack}

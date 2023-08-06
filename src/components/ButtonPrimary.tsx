@@ -3,12 +3,15 @@ import React from 'react'
 import colors from '../constants/colors'
 
 interface ButtonPrimaryProps {
-    onPress: (event: any) => void, label: string, buttonStyle?: Object, buttonLabelStyle?: Object,
+    onPress: (event: any) => void, label: string,
+    buttonStyle?: Object,
+    buttonLabelStyle?: Object,
+    disabled?: boolean
 }
 
-const ButtonPrimary = ({ onPress, label, buttonStyle, buttonLabelStyle }: ButtonPrimaryProps) => {
+const ButtonPrimary = ({ onPress, label, buttonStyle, buttonLabelStyle, disabled }: ButtonPrimaryProps) => {
     return (
-        <Pressable style={[styles.button, buttonStyle]} onPress={onPress} >
+        <Pressable style={[styles.button, { backgroundColor: disabled ? colors.grey : colors.primary500 }, buttonStyle]} disabled={disabled} onPress={onPress} >
             <Text style={[styles.buttonText, buttonLabelStyle]}>{label}</Text>
         </Pressable>
     )
@@ -24,7 +27,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primary500,
         borderRadius: 4,
         flexDirection: 'row',
-        width:'100%'
+        width: '100%'
     },
     buttonText: {
         color: colors.white,

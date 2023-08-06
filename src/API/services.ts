@@ -141,3 +141,11 @@ export const registerSenderInfo = (payload: any) => {
 export const verifySender = (payload: any) => {
     return axios.post(`${BASE_URL}/api/DMT/eVerifySender`, payload)
 }
+
+export const getConveyanceFee = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/DMT/eCustomerConv`, payload);
+}
+
+export const dmtFundTransfer = (payload: any, serviceId: string, categoryId: string, userId: string) => {
+    return axios.post(`${BASE_URL}/api/DMT/eFundTransfer?serviceId=${serviceId}&categoryId=${categoryId}&userId=${userId}`, payload);
+}

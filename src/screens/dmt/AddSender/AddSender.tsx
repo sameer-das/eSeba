@@ -43,7 +43,7 @@ const AddSender = () => {
             [{
               text: 'OK',
               onPress: () => {
-                navigation.replace('dmtOtpScreen', {
+                navigation.replace('dmtAddSenderOtpScreen', {
                   "txnType": isNeft ? 'NEFT' : 'IMPS',
                   "additionalRegData": String(data.resultDt.additionalRegData)
                 })

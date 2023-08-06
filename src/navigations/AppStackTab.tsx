@@ -30,6 +30,8 @@ import UpdateAdhar from '../screens/profile-screen/Documents/UpdateAdhar';
 import UpdatePan from '../screens/profile-screen/Documents/UpdatePan';
 import UpdateProfilePic from '../screens/profile-screen/Documents/UpdateProfilePic';
 import UpdateGST from '../screens/profile-screen/Documents/UpdateGST';
+import ChangePassword from '../screens/profile-screen/ChangePassword';
+import Wallet from '../screens/wallet/Wallet';
 
 
 const Tab = createBottomTabNavigator();
@@ -141,6 +143,12 @@ const WalletStack = () => {
         }}>
 
         <Stack.Screen
+            name="walletMainScreen"
+            component={Wallet}
+            options={{
+                title: 'My Wallet'
+            }} />
+        <Stack.Screen
             name="rechargeWallet"
             component={RechargeWallet}
             options={{
@@ -184,6 +192,8 @@ const ProfileStack = () => {
         <Stack.Screen name='updatePan' component={UpdatePan} options={{title: 'Update PAN',...profileStackHeaderOption}} />
         <Stack.Screen name='updateProfilePic' component={UpdateProfilePic} options={{title: 'Update Profile Pic',...profileStackHeaderOption}} />
         <Stack.Screen name='updateGst' component={UpdateGST} options={{title: 'Update GSTN',...profileStackHeaderOption}} />
+        <Stack.Screen name='changePassword' component={ChangePassword} options={{title: 'Change Login Password',...profileStackHeaderOption}} />
+
     </Stack.Navigator>
 }
 

@@ -85,7 +85,7 @@ const CheckRefNo = () => {
 
     return (
         <View style={styles.rootContainer}>
-            <Image source={require('../../../assets/logos/gpay_logo.jpeg')} style={styles.logo} />
+            <Image source={require('../../../assets/logos/gpay_logo.png')} style={styles.logo} />
             <Text style={styles.welcomeText} >Register to Start</Text>
             <View style={{ width: windowWidth - 60 }} >
                 <View style={{ marginTop: 40 }}>

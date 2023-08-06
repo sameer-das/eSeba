@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { FlatList, StyleSheet, View, ScrollView, Text } from 'react-native';
+import { FlatList, StyleSheet, View, Pressable, Text } from 'react-native';
 import HomeCard from '../../components/HomeCard';
 import colors from '../../constants/colors';
 import { AuthContext } from '../../context/AuthContext';
@@ -29,6 +29,7 @@ const AllMenus = () => {
 // }
 
 const TopMoneyTransferMenu = () => {
+  const navigation = useNavigation<any>();
   return <>
     <View style={{ height: 186, borderRadius: 10, backgroundColor: colors.homeScreenCardBg, marginHorizontal: 8, marginTop: 12 }}>
       <Text style={{ marginLeft: 8, marginTop: 8, fontSize: 20, lineHeight: 23, color: colors.white, fontWeight: 'bold' }}>Transfer Money</Text>
@@ -53,9 +54,9 @@ const TopMoneyTransferMenu = () => {
     </View>
 
     <View style={styles.walletAwardReferContainer}>
-      <View style={styles.walletAwardReferItem}><Text>1</Text></View>
-      <View style={styles.walletAwardReferItem}><Text>2</Text></View>
-      <View style={styles.walletAwardReferItem}><Text>3</Text></View>
+      <Pressable onPress={() => {navigation.navigate('wallet')}} style={styles.walletAwardReferItem}><Text style={{fontSize: 18, fontWeight:'bold', color: colors.white}}>Wallet</Text></Pressable>
+      <View style={styles.walletAwardReferItem}><Text style={{fontSize: 18, fontWeight:'bold', color: colors.white}}>NA</Text></View>
+      <View style={styles.walletAwardReferItem}><Text style={{fontSize: 18, fontWeight:'bold', color: colors.white}}>NA</Text></View>
     </View>
 
   </>
@@ -106,5 +107,5 @@ const styles = StyleSheet.create({
   },
   flatListContainer: { padding: 8 },
   walletAwardReferContainer: { flexDirection: 'row', height: windowWidth / 3, gap: 8, marginHorizontal: 8, marginTop: 12 },
-  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 16, width: windowWidth / 3, backgroundColor: colors.primary500 }
+  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 16, width: windowWidth / 3, backgroundColor: colors.primary500, justifyContent:'center', alignItems:'center' }
 })
