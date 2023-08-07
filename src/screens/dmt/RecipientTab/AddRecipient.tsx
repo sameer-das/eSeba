@@ -207,6 +207,7 @@ const AddRecipient = () => {
             value={formValue.recipientBank.value.bankName}
 
             optionLable={(curr: any) => { return curr.bankName }}
+            searchKey='bankName'
             errorMessage={formValue.recipientBank.error}
             onSelectionChange={(item: any) => {
               const obj = { ...formValue.recipientBank, value: item, error: '' }

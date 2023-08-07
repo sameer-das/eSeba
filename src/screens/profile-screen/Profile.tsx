@@ -621,6 +621,7 @@ const Profile = () => {
 
                 value={userPersonalDetailEditForm?.gender?.value?.name}
                 optionLable={(curr: any) => { return curr.name }}
+                searchKey='name'
                 onSelectionChange={(item: any) => {
                   const obj = { ...userPersonalDetailEditForm.gender, value: item }
                   setUserPersonalDetailEditForm({ ...userPersonalDetailEditForm, gender: obj });
@@ -634,6 +635,7 @@ const Profile = () => {
                 errorMessage={userPersonalDetailEditForm.state?.error}
                 value={userPersonalDetailEditForm.state?.value?.state_Name}
                 optionLable={(curr: any) => { return curr.state_Name }}
+                searchKey='state_Name'
                 onSelectionChange={(item: any) => {
                   const obj = { ...userPersonalDetailEditForm.state, value: item, error: '' }
                   const district = { ...userPersonalDetailEditForm.district, value: '' }
@@ -649,6 +651,7 @@ const Profile = () => {
                 errorMessage={userPersonalDetailEditForm.district?.error}
                 value={userPersonalDetailEditForm.district?.value?.district_Name}
                 optionLable={(curr: any) => { return curr.district_Name }}
+                searchKey='district_Name'
                 onSelectionChange={(item: any) => {
                   const obj = { ...userPersonalDetailEditForm.district, value: item, error: '' }
                   const block = { ...userPersonalDetailEditForm.block, value: '' }
@@ -664,6 +667,7 @@ const Profile = () => {
                 errorMessage={userPersonalDetailEditForm.block?.error}
                 value={userPersonalDetailEditForm.block?.value?.block_Name}
                 optionLable={(curr: any) => { return curr.block_Name }}
+                searchKey='block_Name'
                 onSelectionChange={(item: any) => {
                   const obj = { ...userPersonalDetailEditForm.block, value: item, error: '' }
                   setUserPersonalDetailEditForm({ ...userPersonalDetailEditForm, block: obj });
@@ -705,6 +709,7 @@ const Profile = () => {
                 errorMessage={userPersonalDetailEditForm?.nomineeRelationship?.error}
                 value={userPersonalDetailEditForm.nomineeRelationship?.value?.name}
                 optionLable={(curr: any) => { return curr.name }}
+                searchKey="name"
                 onSelectionChange={(item: any) => {
                   const obj = { ...userPersonalDetailEditForm.nomineeRelationship, value: item, error: '' }
                   setUserPersonalDetailEditForm({ ...userPersonalDetailEditForm, nomineeRelationship: obj });
@@ -722,6 +727,7 @@ const Profile = () => {
                 errorMessage={userBankDetailEditForm?.bank?.error}
                 value={userBankDetailEditForm?.bank?.value?.bank_Name}
                 optionLable={(curr: any) => { return curr.bank_Name }}
+                searchKey="bank_Name"
                 onSelectionChange={(item: any) => {
                   const obj = { ...userBankDetailEditForm.bank, value: item, error: '' }
                   setUserBankDetailEditForm({ ...userBankDetailEditForm, bank: obj });

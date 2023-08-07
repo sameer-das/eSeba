@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Pressable, Modal, TextInput, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../constants/colors'
 import { windowHeight, windowWidth } from '../utils/dimension';
 
 const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, label,
-    placeholder, listData, optionLable }: any) => {
+    placeholder, listData, optionLable, searchKey }: any) => {
     // const borderStyle = errorMessage === '' ? { borderColor: colors.secondary100 }
     //     : { borderColor: colors.primary100 }
     const borderStyle = { borderColor: colors.primary100 }
@@ -16,11 +16,22 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
         setModalVisible(false);
     }
 
+    const [searchValue, setSearchValue] = useState('');
+    const [filteredListData, setFilteredListData] = useState([]);
+
+    const onSearchChange = (text: string) => {
+        setSearchValue(text);
+        if (!text)
+            setFilteredListData([]);
+        const filtered = listData.filter((curr: any) => curr[searchKey].toLowerCase().includes(text.toLowerCase()));
+        setFilteredListData(filtered);
+    }
+
     return (
         <>
             <View style={{}}>
                 <Text style={styles.label}>{label}</Text>
-                <Pressable style={[styles.pressable]} onPress={() => {listData.length > 0 && setModalVisible(!modalVisible)}}>
+                <Pressable style={[styles.pressable]} onPress={() => { listData.length > 0 && setModalVisible(!modalVisible) }}>
                     <Text style={styles.text}>{value === '' ? placeholder : value}</Text>
                     <MaterialIcon name='arrow-drop-down' size={30} color={colors.primary500} />
                 </Pressable>
@@ -34,15 +45,15 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
                         <View>
                             <View style={styles.modalHeader}>
                                 <Text style={styles.modalTitle}>{label}</Text>
-                                <Pressable onPress={() => {  setModalVisible(false) }}>
+                                <Pressable onPress={() => { setModalVisible(false) }}>
                                     <MaterialIcon name='close' size={30} color={colors.secondary300} />
                                 </Pressable>
                             </View>
 
-                            {listData.length > 5 && <TextInput style={styles.searchBox} placeholder='Search' />}
+                            {listData.length > 5 && <TextInput style={styles.searchBox} onChangeText={onSearchChange} value={searchValue} placeholder='Search' />}
 
                             <View style={styles.flatListContainer}>
-                                <FlatList data={listData} renderItem={({ item }) => {
+                                <FlatList showsVerticalScrollIndicator={true} data={searchValue ? filteredListData : listData} renderItem={({ item }) => {
                                     return (<Pressable style={styles.listItem} onPress={() => handleItemPress(item)}>
                                         <Text style={styles.listItemText}>{optionLable(item)}</Text>
                                     </Pressable>)

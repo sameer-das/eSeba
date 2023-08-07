@@ -129,7 +129,7 @@ const SignUpSecond = () => {
             }
             console.log(registrationPayload);
 
-            // saveUserInfo(registrationPayload);
+            saveUserInfo(registrationPayload);
         }
 
     }
@@ -208,8 +208,8 @@ const SignUpSecond = () => {
 
     return (
         <ScrollView>
-            <KeyboardAvoidingView enabled style={{ flex: 1, backgroundColor: colors.white }}>
-                <View style={styles.rootContainer}>
+            <KeyboardAvoidingView>
+                <View style={styles.rootContainer   }>
                     <View style={{marginVertical: 30}}>
 
                     <Text style={styles.welcomeText}>We are happy to know you</Text>
@@ -246,6 +246,7 @@ const SignUpSecond = () => {
                         errorMessage={formValue.locationType.error}
                         value={formValue.locationType.value.location}
                         optionLable={(curr: any) => { return curr.location }}
+                        searchKey='location'
                         onSelectionChange={(item: any) => {
                             const obj = { ...formValue.locationType, value: item, error: '' }
                             setFormValue({ ...formValue, locationType: obj });
@@ -259,6 +260,7 @@ const SignUpSecond = () => {
                         errorMessage={formValue.state.error}
                         value={formValue.state.value.state_Name}
                         optionLable={(curr: any) => { return curr.state_Name }}
+                        searchKey='state_Name'
                         onSelectionChange={(item: any) => {
                             const obj = { ...formValue.state, value: item, error: '' }
                             const district = { ...formValue.district, value: '' }
@@ -274,6 +276,7 @@ const SignUpSecond = () => {
                         errorMessage={formValue.district.error}
                         value={formValue.district.value.district_Name}
                         optionLable={(curr: any) => { return curr.district_Name }}
+                        searchKey='district_Name'
                         onSelectionChange={(item: any) => {
                             const obj = { ...formValue.district, value: item, error: '' }
                             const block = { ...formValue.block, value: '' }
@@ -289,6 +292,7 @@ const SignUpSecond = () => {
                         errorMessage={formValue.block.error}
                         value={formValue.block.value.block_Name}
                         optionLable={(curr: any) => { return curr.block_Name }}
+                        searchKey='block_Name'
                         onSelectionChange={(item: any) => {
                             const obj = { ...formValue.block, value: item, error: '' }
                             setFormValue({ ...formValue, block: obj });
@@ -308,7 +312,7 @@ const SignUpSecond = () => {
                         maxLength={6}
                         errorMessage={formValue.pin.error} />
 
-                    <View style={{ marginVertical: 20 }}>
+                    <View style={{ marginTop: 20, marginBottom: 40 }}>
                         <ButtonPrimary onPress={handleRegisterCtaPress} label='Register With Us' buttonLabelStyle={{ textTransform: 'uppercase' }} />
                     </View>
 
@@ -325,7 +329,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         padding: 8,
         backgroundColor: colors.white,
-        height: windowHeight
+        // height: windowHeight
     },
     welcomeText: {
         fontSize: 20,

@@ -39,7 +39,7 @@ const CheckRefNo = () => {
                 navigation.push('SignUpFirst');
             } else if (data.status === 'Success' && data.code === 200 && data.data === 'F') {
                 Alert.alert('Not Found',
-                    'The reference number you have entered is invalid. Please use Admin reference code i.e. 555401005338');
+                    'The reference number you have entered is invalid.');
                 setErrorLable('');
             } else {
                 console.log(`Error while calling check ref id URL`);
@@ -63,7 +63,7 @@ const CheckRefNo = () => {
     const onNoRefClick = () => {
         Alert.alert('Admin', 'Ref Id: 555401005338 will be used and you will be tagged under Admin.',
             [{
-                text: 'I Agree',
+                text: 'Agree',
                 onPress: async () => {
                     await AsyncStorage.setItem('regRefNo', '555401005338');
                     navigation.push('SignUpFirst');

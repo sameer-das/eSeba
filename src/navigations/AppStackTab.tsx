@@ -38,7 +38,7 @@ const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
     const { userData } = useContext(AuthContext);
     const navigation = useNavigation<any>();
-    console.log('Home screen render');
+    // console.log('Home screen render');
 
     const CustomHeader = () => {
         return <View style={{ backgroundColor: colors.primary400, height: 75, paddingHorizontal: 12, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -48,8 +48,8 @@ const HomeScreen = () => {
                     uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.passport_Photo}`,
                 }} style={{ height: 50, width: 50, resizeMode: 'center', borderRadius: 8 }} />
                 <View style={{ marginLeft: 8 }}>
-                    <Text style={{ color: colors.white, fontSize: 14, fontWeight: 'bold' }}>Sameer Das</Text>
-                    <Text style={{ color: colors.white, fontSize: 14, }}>Bhubaneswar</Text>
+                    <Text style={{ color: colors.white, fontSize: 14, fontWeight: 'bold' }}>{userData.personalDetail?.user_FName?.trim()}</Text>
+                    <Text style={{ color: colors.white, fontSize: 14, }} selectable={true}>ID: {userData.user.login_Code}</Text>
                 </View>
             </Pressable>
 

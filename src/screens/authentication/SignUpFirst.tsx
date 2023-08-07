@@ -58,7 +58,7 @@ const SignUpFirst = () => {
         } else if (formValue[keyName].pattern !== '' && !(formValue[keyName].pattern.test(text.trim())))
             errorMessage = patternErrorMessage[keyName];
 
-        const obj = { ...formValue[keyName], value: text.trim(), error: errorMessage }
+        const obj = { ...formValue[keyName], value: text, error: errorMessage }
         setFormValue({ ...formValue, [keyName]: obj });
         if (errorMessage !== '')
             setIsfirstPageValidFromChangeHandler(false);
@@ -99,11 +99,11 @@ const SignUpFirst = () => {
             // first page is valid show 2nd page
             await AsyncStorage.setItem('firstFormData', JSON.stringify({
                 "user_Type_ID": +formValue.userType.value.value,
-                "user_FName": formValue.firstName.value,
-                "user_LName": formValue.lastName.value,
+                "user_FName": formValue.firstName.value.trim(),
+                "user_LName": formValue.lastName.value.trim(),
                 "user_Gender": formValue.gender.value.value,
-                "mobile_Number": formValue.mobile.value,
-                "user_EmailID": formValue.email.value,
+                "mobile_Number": formValue.mobile.value.trim(),
+                "user_EmailID": formValue.email.value.trim(),
             }));
             navigation.push('SignUpSecond');
         }
@@ -125,6 +125,7 @@ const SignUpFirst = () => {
                             errorMessage={''}
                             value={formValue.userType.value.name}
                             optionLable={(curr: any) => { return curr.name }}
+                            searchKey='name'
                             onSelectionChange={(item: any) => {
                                 const obj = { ...formValue.userType, value: item }
                                 setFormValue({ ...formValue, userType: obj });
@@ -151,6 +152,7 @@ const SignUpFirst = () => {
 
                         value={formValue.gender.value.name}
                         optionLable={(curr: any) => { return curr.name }}
+                        searchKey='name'
                         onSelectionChange={(item: any) => {
                             const obj = { ...formValue.gender, value: item }
                             setFormValue({ ...formValue, gender: obj });
