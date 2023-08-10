@@ -6,6 +6,7 @@ import colors from '../../../src/constants/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ServicesToPathMapping } from '../../constants/billers-mapping';
 import Loading from '../../components/Loading';
+import { windowHeight } from '../../utils/dimension';
 
 
 
@@ -102,7 +103,10 @@ const ListBillers = () => {
 export default ListBillers
 
 const styles = StyleSheet.create({
-    flatListContainer: {},
+    flatListContainer: {
+        paddingBottom: 50,
+        height: windowHeight - 100
+    },
     searchInputContainer: {
         padding: 12,
         borderBottomColor: colors.primary100,

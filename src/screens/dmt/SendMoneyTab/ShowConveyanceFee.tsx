@@ -57,7 +57,7 @@ const ShowConveyanceFee = () => {
         }
         setIsLoading(true);
         try {
-            const { data } = await dmtFundTransfer(sendMoneyPayload, serviceId, serviceCatId, userData.user.user_ID)
+            const { data } = await dmtFundTransfer(sendMoneyPayload, serviceId, serviceCatId, userData.user.user_EmailID)
             console.log(data);
             setIsLoading(false);
             if (data.code === 200 && data.status === 'Success' && data.resultDt && data.resultDt?.responseCode == 0) {

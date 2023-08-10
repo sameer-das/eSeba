@@ -205,8 +205,8 @@ const Profile = () => {
 
 
   const [userPersonalDetailEditForm, setUserPersonalDetailEditForm] = useState<any>({
-    firstName: { value: '', error: '', pattern: '', required: true },
-    lastName: { value: '', error: '', pattern: '', required: true },
+    firstName: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z ]*$/), required: true },
+    lastName: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z ]*$/), required: true },
     gender: { value: '', error: '', pattern: '', required: true },
     dob: { value: new Date().toISOString(), error: '', pattern: '', required: true },
     state: { value: '', error: '', pattern: '', required: true },
@@ -221,7 +221,7 @@ const Profile = () => {
 
   const [userBankDetailEditForm, setUserBankDetailEditForm] = useState<any>({
     bank: { value: '', error: '', pattern: '', required: true },
-    accountHolderName: { value: '', error: '', pattern: '', required: true },
+    accountHolderName: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z ]*$/), required: true },
     accountNo: { value: '', error: '', pattern: new RegExp(/^[0-9]*$/), required: true },
     branchName: { value: '', error: '', pattern: '', required: true },
     ifsc: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z0-9]+$/), required: true },
@@ -250,7 +250,10 @@ const Profile = () => {
   const patternErrorMessage: any = {
     nomineeMobile: 'Mobile number should be of only 10 digits',
     pin: 'PIN should be of only 6 digits',
-    accountNo: 'A/C number should contain only digits'
+    accountNo: 'A/C number should contain only digits',
+    firstName: 'First name can contain only characters',
+    lastName: 'Last name can contain only characters',
+    accountHolderName: 'Account holder name can contain only characters'
   }
 
   const handleInputChange = (text: string, keyName: string) => {
@@ -261,7 +264,7 @@ const Profile = () => {
     } else if (userPersonalDetailEditForm[keyName].pattern !== '' && !(userPersonalDetailEditForm[keyName].pattern.test(text.trim())))
       errorMessage = patternErrorMessage[keyName];
 
-    const obj = { ...userPersonalDetailEditForm[keyName], value: text.trim(), error: errorMessage }
+    const obj = { ...userPersonalDetailEditForm[keyName], value: text, error: errorMessage }
     setUserPersonalDetailEditForm({ ...userPersonalDetailEditForm, [keyName]: obj });
   }
 
