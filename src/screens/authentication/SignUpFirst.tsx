@@ -18,8 +18,8 @@ const SignUpFirst = () => {
 
     const [formValue, setFormValue] = useState<any>({
         userType: { value: { name: 'End User', value: '1' }, error: '', pattern: '', required: true },
-        firstName: { value: '', error: '', pattern: '', required: true },
-        lastName: { value: '', error: '', pattern: '', required: true },
+        firstName: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z ]*$/), required: true },
+        lastName: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z ]*$/), required: true },
         gender: { value: { name: 'Male', value: 'Male' }, error: '', pattern: '', required: true },
         mobile: { value: '', error: '', pattern: new RegExp(/^((\\+91-?)|0)?[0-9]{10}$/), required: true },
         email: { value: '', error: '', pattern: new RegExp(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/), required: true },
@@ -48,6 +48,8 @@ const SignUpFirst = () => {
     const patternErrorMessage: any = {
         mobile: 'Mobile number should be of only 10 digits',
         email: 'Please enter a valid email id',
+        firstName: 'First name can contain only characters',
+        lastName: 'Last name can contain only characters',
     }
 
     const handleInputChange = (text: string, keyName: string) => {
@@ -120,7 +122,7 @@ const SignUpFirst = () => {
                     {/* User Type */}
                     <View>
                         <SelectBoxWithLabelAndError listData={userTypeMasterData}
-                            label={'Choolse User Type'}
+                            label={'Choose User Type'}
                             placeholder={'Select'}
                             errorMessage={''}
                             value={formValue.userType.value.name}
@@ -147,7 +149,7 @@ const SignUpFirst = () => {
 
                     {/* Gender */}
                     <SelectBoxWithLabelAndError listData={genderMasterData}
-                        label={'Choolse Gender'}
+                        label={'Choose Gender'}
                         placeholder={'Select'}
 
                         value={formValue.gender.value.name}
@@ -173,7 +175,7 @@ const SignUpFirst = () => {
                         inputLabel={'Enter Email ID'}
                         keyboardType={'email-address'} />
 
-                    <View style={{marginVertical: 20}}>
+                    <View style={{ marginVertical: 20 }}>
                         <ButtonPrimary onPress={handleNextCtaPress} label='Next' buttonLabelStyle={{ textTransform: 'uppercase' }} />
 
                     </View>

@@ -10,7 +10,7 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
     //     : { borderColor: colors.primary100 }
     const borderStyle = { borderColor: colors.primary100 }
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-
+    const [modalHeight, setModalHeight] = useState<number>();
     const handleItemPress = (item: any) => {
         onSelectionChange(item);
         setModalVisible(false);
@@ -27,11 +27,25 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
         setFilteredListData(filtered);
     }
 
+    const openModal = () => {
+        console.log('open modal ')
+        let height = 420;
+        if (listData.length > 0) {
+            // if (listData.length < 5) {
+            //     height = listData.length * 50;
+            // }
+            setModalHeight(height)
+            console.log('height ' + height);
+            setModalVisible(!modalVisible)
+        }
+
+    }
+
     return (
         <>
             <View style={{}}>
                 <Text style={styles.label}>{label}</Text>
-                <Pressable style={[styles.pressable]} onPress={() => { listData.length > 0 && setModalVisible(!modalVisible) }}>
+                <Pressable style={[styles.pressable]} onPress={openModal}>
                     <Text style={styles.text}>{value === '' ? placeholder : value}</Text>
                     <MaterialIcon name='arrow-drop-down' size={30} color={colors.primary500} />
                 </Pressable>
@@ -41,7 +55,7 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
             <Modal visible={modalVisible}
                 transparent={true} animationType='fade'>
                 <View style={styles.modalArea}>
-                    <View style={styles.modalBody}>
+                    <View style={[styles.modalBody, { height: listData.length >= 5 ? 430 : (listData.length * 50) + 130 }]}>
                         <View>
                             <View style={styles.modalHeader}>
                                 <Text style={styles.modalTitle}>{label}</Text>
@@ -52,7 +66,7 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
 
                             {listData.length > 5 && <TextInput style={styles.searchBox} onChangeText={onSearchChange} value={searchValue} placeholder='Search' />}
 
-                            <View style={styles.flatListContainer}>
+                            <View style={{ height: listData.length >= 5 ? 250 : (listData.length * 50) }}>
                                 <FlatList showsVerticalScrollIndicator={true} data={searchValue ? filteredListData : listData} renderItem={({ item }) => {
                                     return (<Pressable style={styles.listItem} onPress={() => handleItemPress(item)}>
                                         <Text style={styles.listItemText}>{optionLable(item)}</Text>
@@ -111,11 +125,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     modalBody: {
-        height: (windowHeight / 2) + 40,
         width: windowWidth - 20,
         backgroundColor: colors.white,
         borderRadius: 8,
-        padding: 14,
+        padding: 10,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -124,12 +137,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        justifyContent: 'space-between'
     },
     modalHeader: {
         flexDirection: 'row',
         paddingBottom: 12,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        height: 50
     },
     modalTitle: {
         fontSize: 24,
@@ -137,7 +150,9 @@ const styles = StyleSheet.create({
         color: colors.primary500
     },
     modalFooterColseButton: {
-        paddingVertical: 12,
+        marginTop: 10,
+        height: 50,
+        // paddingVertical: 12,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
@@ -157,16 +172,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.primary500,
         borderRadius: 8,
-        width: '100%'
-    },
-    flatListContainer: {
-        height: (windowHeight / 2) - 160,
-        marginTop: 12
+        width: '100%',
+        height: 50,
     },
     listItem: {
-        paddingVertical: 16,
-        // borderBottomColor: colors.primary100,
-        // borderBottomWidth: 1
+        height: 50,
+        justifyContent: 'center'
     },
     listItemText: {
         color: colors.primary500,

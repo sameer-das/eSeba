@@ -616,7 +616,7 @@ const Profile = () => {
 
               {/* Gender */}
               <SelectBoxWithLabelAndError listData={genderMasterData}
-                label={'Choolse Gender'}
+                label={'Choose Gender'}
                 placeholder={'Select'}
 
                 value={userPersonalDetailEditForm?.gender?.value?.name}
@@ -630,7 +630,7 @@ const Profile = () => {
               {/* State */}
 
               <SelectBoxWithLabelAndError listData={stateMasterData}
-                label={'Choolse State'}
+                label={'Choose State'}
                 placeholder={'Select'}
                 errorMessage={userPersonalDetailEditForm.state?.error}
                 value={userPersonalDetailEditForm.state?.value?.state_Name}
@@ -646,7 +646,7 @@ const Profile = () => {
 
               {/* District */}
               <SelectBoxWithLabelAndError listData={districtMasterData}
-                label={'Choolse District'}
+                label={'Choose District'}
                 placeholder={'Select'}
                 errorMessage={userPersonalDetailEditForm.district?.error}
                 value={userPersonalDetailEditForm.district?.value?.district_Name}
@@ -662,7 +662,7 @@ const Profile = () => {
 
               {/* Block */}
               <SelectBoxWithLabelAndError listData={blockMasterData}
-                label={'Choolse Block'}
+                label={'Choose Block'}
                 placeholder={'Select'}
                 errorMessage={userPersonalDetailEditForm.block?.error}
                 value={userPersonalDetailEditForm.block?.value?.block_Name}

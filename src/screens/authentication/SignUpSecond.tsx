@@ -241,7 +241,7 @@ const SignUpSecond = () => {
 
                     {/* Location Type */}
                     <SelectBoxWithLabelAndError listData={locationTypeMasterData}
-                        label={'Choolse Location Type'}
+                        label={'Choose Location Type'}
                         placeholder={'Select'}
                         errorMessage={formValue.locationType.error}
                         value={formValue.locationType.value.location}
@@ -255,7 +255,7 @@ const SignUpSecond = () => {
 
                     {/* State */}
                     <SelectBoxWithLabelAndError listData={stateMasterData}
-                        label={'Choolse State'}
+                        label={'Choose State'}
                         placeholder={'Select'}
                         errorMessage={formValue.state.error}
                         value={formValue.state.value.state_Name}
@@ -271,7 +271,7 @@ const SignUpSecond = () => {
 
                     {/* District */}
                     <SelectBoxWithLabelAndError listData={districtMasterData}
-                        label={'Choolse District'}
+                        label={'Choose District'}
                         placeholder={'Select'}
                         errorMessage={formValue.district.error}
                         value={formValue.district.value.district_Name}
@@ -287,7 +287,7 @@ const SignUpSecond = () => {
 
                     {/* Block */}
                     <SelectBoxWithLabelAndError listData={blockMasterData}
-                        label={'Choolse Block'}
+                        label={'Choose Block'}
                         placeholder={'Select'}
                         errorMessage={formValue.block.error}
                         value={formValue.block.value.block_Name}

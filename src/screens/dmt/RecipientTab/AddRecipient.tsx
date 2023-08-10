@@ -202,7 +202,7 @@ const AddRecipient = () => {
           />
 
           <SelectBoxWithLabelAndError listData={banks}
-            label={`Choolse Recipient's Bank`}
+            label={`Choose Recipient's Bank`}
             placeholder={'Select'}
             value={formValue.recipientBank.value.bankName}
 
