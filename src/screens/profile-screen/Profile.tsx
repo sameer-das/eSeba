@@ -5,7 +5,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { windowHeight } from '../../utils/dimension';
 import { AuthContext } from '../../context/AuthContext';
 import { useDrawerStatus } from '@react-navigation/drawer';
-import { getBankMaster, getBlocks, getDistrict, getStates, updateUserBankDetails, updateUserPersonalInfo } from '../../API/services';
+import { getBankMaster, getBlocks, getDistrict, getStates, saveUserBankDetails, updateUserBankDetails, updateUserPersonalInfo } from '../../API/services';
 import Loading from '../../components/Loading';
 import InputWithLabelAndError from '../../components/InputWithLabelAndError';
 import { useNavigation } from '@react-navigation/native';
@@ -132,7 +132,7 @@ const Profile = () => {
 
       const _currentNomineeRelation = relations.find(rel => rel.id === userData.personalDetail.nomine_Relation);
       console.log(_currentNomineeRelation);
-      
+
       setCurrentNomineeRelation(_currentNomineeRelation);
 
 
@@ -277,7 +277,7 @@ const Profile = () => {
       errorMessage = patternErrorMessage[keyName];
     }
 
-    const obj = { ...userBankDetailEditForm[keyName], value: text.trim(), error: errorMessage }
+    const obj = { ...userBankDetailEditForm[keyName], value: text, error: errorMessage }
     setUserBankDetailEditForm({ ...userBankDetailEditForm, [keyName]: obj });
   }
 
@@ -405,7 +405,7 @@ const Profile = () => {
   const updateBankDetail = async () => {
     const bankDetails = {
       bank_Detail_Id: userData.bankDetail ? userData.bankDetail.bank_Detail_Id : 0,
-      user_ID: userData.user_ID,
+      user_ID: userData.user.user_ID,
 
       bank_ID: userBankDetailEditForm.bank?.value?.id,
       userAccount_HolderName: userBankDetailEditForm.accountHolderName?.value,
@@ -414,13 +414,23 @@ const Profile = () => {
       user_BranchName: userBankDetailEditForm.branchName?.value,
     };
 
+
+
     console.log(bankDetails);
     try {
       setLoadingMessage('Saving your details');
       setIsLoading(true);
-      // sAve to DB
-      const { data } = await updateUserBankDetails(bankDetails);
-      if (data.code === 200 && data.status === 'Success') {
+      // save to DB
+      let data;
+      if (userData.bankDetail) {
+        const updateBankResp = await updateUserBankDetails(bankDetails);
+        data = updateBankResp.data;
+      }
+      else {
+        const saveBankResp = await saveUserBankDetails(bankDetails);
+        data = saveBankResp.data;
+      }
+      if (data?.code === 200 && data?.status === 'Success') {
         // fetch and set to context 
         console.log(data)
         Alert.alert('Success', 'Bank details has been updated successfully!');
@@ -468,7 +478,7 @@ const Profile = () => {
       {/* Personal Details */}
       <View style={styles.headerContainer}>
 
-        <Text style={styles.header}>Communicaton Details</Text>
+        <Text style={styles.header}>Communication Details</Text>
         {/* <Pressable onPress={() => editPressHandler('communicaton')}>
           <MaterialIcon name='edit' size={25} color={colors.primary500} />
         </Pressable> */}
@@ -737,22 +747,22 @@ const Profile = () => {
                 }} />
 
               <AnimatedInput
-                value={userBankDetailEditForm.accountHolderName.value}
+                value={userBankDetailEditForm.accountHolderName.value || ''}
                 errorMessage={userBankDetailEditForm.accountHolderName.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'accountHolderName')}
                 inputLabel={'Enter A/C Holder Name'} />
               <AnimatedInput
-                value={userBankDetailEditForm.accountNo.value}
+                value={userBankDetailEditForm.accountNo.value || ''}
                 errorMessage={userBankDetailEditForm.accountNo.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'accountNo')}
                 inputLabel={'Enter A/C Number'} />
               <AnimatedInput
-                value={userBankDetailEditForm.branchName.value}
+                value={userBankDetailEditForm.branchName.value || ''}
                 errorMessage={userBankDetailEditForm.branchName.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'branchName')}
                 inputLabel={'Enter Branch Name'} />
               <AnimatedInput
-                value={userBankDetailEditForm.ifsc.value}
+                value={userBankDetailEditForm.ifsc.value || ''}
                 errorMessage={userBankDetailEditForm.ifsc.error}
                 onChangeText={(text: string) => handleInputChangeForBankForm(text, 'ifsc')}
                 inputLabel={'Enter IFSC'} />

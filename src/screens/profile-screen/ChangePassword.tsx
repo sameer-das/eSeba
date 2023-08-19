@@ -32,7 +32,7 @@ const ChangePassword = () => {
     } else if (password[keyName].pattern !== '' && !(password[keyName].pattern.test(text.trim())))
       errorMessage = patternErrorMessage[keyName];
 
-    const obj = { ...password[keyName], value: text.trim(), error: errorMessage }
+    const obj = { ...password[keyName], value: text, error: errorMessage }
     setPassword({ ...password, [keyName]: obj });
   }
 

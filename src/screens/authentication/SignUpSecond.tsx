@@ -58,7 +58,7 @@ const SignUpSecond = () => {
         } else if (formValue[keyName].pattern !== '' && !(formValue[keyName].pattern.test(text.trim())))
             errorMessage = patternErrorMessage[keyName];
 
-        const obj = { ...formValue[keyName], value: text.trim(), error: errorMessage }
+        const obj = { ...formValue[keyName], value: text, error: errorMessage }
         setFormValue({ ...formValue, [keyName]: obj });
     }
 

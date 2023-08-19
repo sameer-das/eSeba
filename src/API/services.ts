@@ -97,6 +97,10 @@ export const updateUserBankDetails = (bankDetails: any) => {
     return axios.post(`${BASE_URL}/api/User/UpdateUserBankDetail`, bankDetails);
 }
 
+export const saveUserBankDetails = (bankDetails: any) => {
+    return axios.post(`${BASE_URL}/api/User/SaveUserBankInfo`, bankDetails);
+}
+
 export const updatePassword = (passwords: any) => {
     return axios.post(`${BASE_URL}/api/User/UpdateUserPWD`, passwords);
 }
@@ -113,6 +117,8 @@ export const generateOtpForWalletPinChange = (userId: string) => {
 export const saveUserKycDetails = (kycDetials: any) => {
     return axios.post(`${BASE_URL}/api/User/UpdateUserKycDetail`, kycDetials);
 }
+
+
 
 
 
