@@ -158,7 +158,7 @@ const AddRecipient = () => {
         if (data.status === 'Success' && data.code === 200) {
           if (data.resultDt.responseReason === 'Successful' && data.resultDt.responseCode == 0) {
             Alert.alert('Success', 'Recipient added successfully.');
-            navigation.goBack();
+            // navigation.goBack();
           } else {
             Alert.alert('Fail', 'Failed while adding recipient. Please try after sometime.')
           }

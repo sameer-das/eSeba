@@ -32,6 +32,11 @@ import UpdateProfilePic from '../screens/profile-screen/Documents/UpdateProfileP
 import UpdateGST from '../screens/profile-screen/Documents/UpdateGST';
 import ChangePassword from '../screens/profile-screen/ChangePassword';
 import Wallet from '../screens/wallet/Wallet';
+import ConfirmRechargePage from '../screens/wallet/ConfirmRechargePage';
+import AddRecipient from '../screens/dmt/RecipientTab/AddRecipient';
+import SearchDMTRecipient from '../screens/TransferMoneyFromHomeScreen/SearchDMTRecipient';
+import SendMoneyForm from '../screens/dmt/SendMoneyTab/SendMoneyForm';
+import ShowConveyanceFee from '../screens/dmt/SendMoneyTab/ShowConveyanceFee';
 
 
 const Tab = createBottomTabNavigator();
@@ -49,7 +54,7 @@ const HomeScreen = () => {
                 }} style={{ height: 50, width: 50, resizeMode: 'center', borderRadius: 8 }} />
                 <View style={{ marginLeft: 8 }}>
                     <Text style={{ color: colors.white, fontSize: 14, fontWeight: 'bold' }}>{userData.personalDetail?.user_FName?.trim()}</Text>
-                    <Text style={{ color: colors.white, fontSize: 14, }} selectable={true}>ID: {userData.user.login_Code}</Text>
+                    <Text style={{ color: colors.white, fontSize: 14, }} selectable={true}>Mob: {userData.user.mobile_Number}</Text>
                 </View>
             </Pressable>
 
@@ -173,6 +178,13 @@ const WalletStack = () => {
             options={{
                 title: 'Set New Wallet PIN'
             }} />
+        <Stack.Screen
+            name="confirmWalletRechargePage"
+            component={ConfirmRechargePage}
+            options={{
+                title: 'Confirm',
+                headerShown: false
+            }} />
 
     </Stack.Navigator>)
 }
@@ -185,18 +197,28 @@ const profileStackHeaderOption = {
 const ProfileStack = () => {
 
     return <Stack.Navigator>
-        <Stack.Screen name='profileMainScreen' component={ProfileMainScreen} options={{title: 'My Details',...profileStackHeaderOption}} />
-        <Stack.Screen name='profile' component={Profile} options={{title: 'My Profile Details',...profileStackHeaderOption}} />
-        <Stack.Screen name='documents' component={Documents} options={{title: 'My Documents',...profileStackHeaderOption}} />
-        <Stack.Screen name='updateAdhar' component={UpdateAdhar} options={{title: 'Update Adhar',...profileStackHeaderOption}} />
-        <Stack.Screen name='updatePan' component={UpdatePan} options={{title: 'Update PAN',...profileStackHeaderOption}} />
-        <Stack.Screen name='updateProfilePic' component={UpdateProfilePic} options={{title: 'Update Profile Pic',...profileStackHeaderOption}} />
-        <Stack.Screen name='updateGst' component={UpdateGST} options={{title: 'Update GSTN',...profileStackHeaderOption}} />
-        <Stack.Screen name='changePassword' component={ChangePassword} options={{title: 'Change Login Password',...profileStackHeaderOption}} />
+        <Stack.Screen name='profileMainScreen' component={ProfileMainScreen} options={{ title: 'My Details', ...profileStackHeaderOption }} />
+        <Stack.Screen name='profile' component={Profile} options={{ title: 'My Profile Details', ...profileStackHeaderOption }} />
+        <Stack.Screen name='documents' component={Documents} options={{ title: 'My Documents', ...profileStackHeaderOption }} />
+        <Stack.Screen name='updateAdhar' component={UpdateAdhar} options={{ title: 'Update Adhar', ...profileStackHeaderOption }} />
+        <Stack.Screen name='updatePan' component={UpdatePan} options={{ title: 'Update PAN', ...profileStackHeaderOption }} />
+        <Stack.Screen name='updateProfilePic' component={UpdateProfilePic} options={{ title: 'Update Profile Pic', ...profileStackHeaderOption }} />
+        <Stack.Screen name='updateGst' component={UpdateGST} options={{ title: 'Update GSTN', ...profileStackHeaderOption }} />
+        <Stack.Screen name='changePassword' component={ChangePassword} options={{ title: 'Change Login Password', ...profileStackHeaderOption }} />
 
     </Stack.Navigator>
 }
 
+const TransferMoneyFromHomeScreenStack = () => {
+    return <Stack.Navigator screenOptions={{
+        headerShown: false
+    }}>
+        <Stack.Screen name='searchDMTRecipient' component={SearchDMTRecipient}/>
+        <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
+        <Stack.Screen name='showConveyanceFee' component={ShowConveyanceFee} />
+        <Stack.Screen name='dmtSendMoneyPinScreen' component={OtpScreen} />
+    </Stack.Navigator>
+}
 
 const Stack = createNativeStackNavigator();
 const AppStackTab = () => {
@@ -208,6 +230,8 @@ const AppStackTab = () => {
             <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />
             <Stack.Screen name='profileStack' component={ProfileStack} options={{ headerShown: false }} />
             <Stack.Screen name='DMTStack' component={DMTStack} options={{ headerShown: false }} />
+            <Stack.Screen name='AddDMTRecipientFromHomeScreem' component={AddRecipient} options={{ headerShown: false }} />
+            <Stack.Screen name='transferMoneyFromHomeScreenStack' component={TransferMoneyFromHomeScreenStack} options={{ headerShown: false }} />
 
             {/* Common Screens */}
             <Stack.Screen name='otpScreen' component={OtpScreen} options={{ headerShown: false }} />

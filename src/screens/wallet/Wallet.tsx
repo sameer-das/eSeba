@@ -17,6 +17,7 @@ const Wallet = ({ navigation }: any) => {
     !withRefresh && setIsLoading(true);
     try {
       const { data } = await getWalletBalance(email);
+      console.log(data)
       if (data.status === 'Success' && data.code === 200) {
         console.log('Wallet Fetched')
         const [walletBalance, commission] = data.data.split(',');

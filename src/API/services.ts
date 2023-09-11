@@ -155,3 +155,11 @@ export const getConveyanceFee = (payload: any) => {
 export const dmtFundTransfer = (payload: any, serviceId: string, categoryId: string, userId: string) => {
     return axios.post(`${BASE_URL}/api/DMT/eFundTransfer?serviceId=${serviceId}&categoryId=${categoryId}&userId=${userId}`, payload);
 }
+
+
+
+export const getEncryptedResponse = (request: string) => {
+    return axios.post(`${BASE_URL}/api/GSKRecharge/eEncryptRequest`, {
+        "data": request
+    }, { responseType: 'text' });
+}

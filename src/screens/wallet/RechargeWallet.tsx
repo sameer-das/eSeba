@@ -2,10 +2,12 @@ import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
 import React, { useContext, useState } from 'react'
 import colors from '../../constants/colors'
 import { AuthContext } from '../../context/AuthContext'
+import { useNavigation } from '@react-navigation/native'
 
 const RechargeWallet = () => {
   const { userData } = useContext(AuthContext);
   const [amount, setAmount] = useState('');
+  const navigation = useNavigation<any>()
 
   return (
     <View style={styles.rootContainer}>
@@ -20,7 +22,10 @@ const RechargeWallet = () => {
       </View>
 
       <Pressable style={styles.rechargeButton} onPress={() => {
+        if (!amount)
+          return;
 
+        navigation.navigate('confirmWalletRechargePage', { amount: amount })
       }}>
         <Text style={styles.rechargeButtonLabel}>Proceed</Text>
       </Pressable>

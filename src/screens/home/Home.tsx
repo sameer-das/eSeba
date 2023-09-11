@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { FlatList, StyleSheet, View, Pressable, Text } from 'react-native';
+import { FlatList, StyleSheet, View, Pressable, Text, Alert } from 'react-native';
 import HomeCard from '../../components/HomeCard';
 import colors from '../../constants/colors';
 import { AuthContext } from '../../context/AuthContext';
@@ -30,18 +30,49 @@ const AllMenus = () => {
 
 const TopMoneyTransferMenu = () => {
   const navigation = useNavigation<any>();
+  const { userData } = useContext(AuthContext);
+  const onTransferMoneyMenuPress = (type: string) => {
+    if (type === 'add_recipient') {
+      navigation.navigate('AddDMTRecipientFromHomeScreem')
+    } else if (type === 'check_balance') {
+      Alert.alert('Coming Soon', 'This feature is currently not available.');
+    } else if (type === 'to_mobile') {
+      const searchBy = 'mobile';
+      navigation.navigate('transferMoneyFromHomeScreenStack', { screen: 'searchDMTRecipient', params: { searchBy } })
+    } else if (type === 'to_account') {
+      const searchBy = 'acno';
+      navigation.navigate('transferMoneyFromHomeScreenStack', { screen: 'searchDMTRecipient', params: { searchBy } })
+    }
+  }
+
   return <>
     <View style={{ height: 186, borderRadius: 10, backgroundColor: colors.homeScreenCardBg, marginHorizontal: 8, marginTop: 12 }}>
       <Text style={{ marginLeft: 8, marginTop: 8, fontSize: 20, lineHeight: 23, color: colors.white, fontWeight: 'bold' }}>Transfer Money</Text>
       <View style={{ height: 127, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-        <View style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg }}></View>
-        <View style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg }}></View>
-        <View style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg }}></View>
-        <View style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg }}></View>
+
+        <Pressable onPress={() => onTransferMoneyMenuPress('to_mobile')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
+          <MaterialIcon name='smartphone' size={32} color={colors.white}/>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>To Mobile</Text>
+          {/* <Text style={{ color: colors.white, textAlign: 'center', fontSize: 16 }}></Text> */}
+        </Pressable>
+        <Pressable onPress={() => onTransferMoneyMenuPress('to_account')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
+          <MaterialIcon name='account-balance' size={32} color={colors.white}/>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>To Account</Text>
+          {/* <Text style={{ color: colors.white, textAlign: 'center', fontSize: 16 }}>Account</Text> */}
+        </Pressable>
+        <Pressable onPress={() => onTransferMoneyMenuPress('add_recipient')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
+          <MaterialIcon name='person-add' size={32} color={colors.white}/>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>Add New</Text>
+          {/* <Text style={{ color: colors.white, textAlign: 'center', fontSize: 16 }}>Recipient</Text> */}
+        </Pressable>
+        <Pressable onPress={() => onTransferMoneyMenuPress('check_balance')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
+          <MaterialIcon name='attach-money' size={32} color={colors.white}/>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>Balance</Text>
+        </Pressable>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 8, paddingVertical: 4, alignItems: 'center', height: 31, backgroundColor: colors.primary500, borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
         <View>
-          <Text>My ID : AV89858464</Text>
+          <Text style={{ color: colors.white }}>My ID : {userData.user.login_Code}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
@@ -54,9 +85,9 @@ const TopMoneyTransferMenu = () => {
     </View>
 
     <View style={styles.walletAwardReferContainer}>
-      <Pressable onPress={() => {navigation.navigate('wallet')}} style={styles.walletAwardReferItem}><Text style={{fontSize: 18, fontWeight:'bold', color: colors.white}}>Wallet</Text></Pressable>
-      <View style={styles.walletAwardReferItem}><Text style={{fontSize: 18, fontWeight:'bold', color: colors.white}}>NA</Text></View>
-      <View style={styles.walletAwardReferItem}><Text style={{fontSize: 18, fontWeight:'bold', color: colors.white}}>NA</Text></View>
+      <Pressable onPress={() => { navigation.navigate('wallet') }} style={styles.walletAwardReferItem}><Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.white }}>Wallet</Text></Pressable>
+      <View style={styles.walletAwardReferItem}><Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.white }}>NA</Text></View>
+      <View style={styles.walletAwardReferItem}><Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.white }}>NA</Text></View>
     </View>
 
   </>
@@ -107,5 +138,5 @@ const styles = StyleSheet.create({
   },
   flatListContainer: { padding: 8 },
   walletAwardReferContainer: { flexDirection: 'row', height: windowWidth / 3, gap: 8, marginHorizontal: 8, marginTop: 12 },
-  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 16, width: windowWidth / 3, backgroundColor: colors.primary500, justifyContent:'center', alignItems:'center' }
+  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 16, width: windowWidth / 3, backgroundColor: colors.primary500, justifyContent: 'center', alignItems: 'center' }
 })
