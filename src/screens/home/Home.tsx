@@ -33,7 +33,7 @@ const TopMoneyTransferMenu = () => {
   const { userData } = useContext(AuthContext);
   const onTransferMoneyMenuPress = (type: string) => {
     if (type === 'add_recipient') {
-      navigation.navigate('AddDMTRecipientFromHomeScreem')
+      navigation.navigate('AddDMTRecipientFromHomeScreen')
     } else if (type === 'check_balance') {
       Alert.alert('Coming Soon', 'This feature is currently not available.');
     } else if (type === 'to_mobile') {
@@ -50,24 +50,34 @@ const TopMoneyTransferMenu = () => {
       <Text style={{ marginLeft: 8, marginTop: 8, fontSize: 20, lineHeight: 23, color: colors.white, fontWeight: 'bold' }}>Transfer Money</Text>
       <View style={{ height: 127, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
 
-        <Pressable onPress={() => onTransferMoneyMenuPress('to_mobile')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
-          <MaterialIcon name='smartphone' size={32} color={colors.white}/>
-          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>To Mobile</Text>
-          {/* <Text style={{ color: colors.white, textAlign: 'center', fontSize: 16 }}></Text> */}
+        <Pressable onPress={() => onTransferMoneyMenuPress('to_mobile')} style={{ height: windowWidth / 4 - 14, width: windowWidth / 4 - 28, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ backgroundColor: colors.transferMoneyIconBg, width: '80%', height: '70%', borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginBottom: 8 }}>
+            <MaterialIcon name='smartphone' size={36} color={colors.white} />
+          </View>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>To Mobile</Text>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>Number</Text>
+
         </Pressable>
-        <Pressable onPress={() => onTransferMoneyMenuPress('to_account')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
-          <MaterialIcon name='account-balance' size={32} color={colors.white}/>
-          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>To Account</Text>
-          {/* <Text style={{ color: colors.white, textAlign: 'center', fontSize: 16 }}>Account</Text> */}
+        <Pressable onPress={() => onTransferMoneyMenuPress('to_account')} style={{ height: windowWidth / 4 - 14, width: windowWidth / 4 - 28, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ backgroundColor: colors.transferMoneyIconBg, width: '80%', height: '70%', borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginBottom: 8 }}>
+            <MaterialIcon name='account-balance' size={36} color={colors.white} />
+          </View>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>To Bank</Text>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>Account</Text>
         </Pressable>
-        <Pressable onPress={() => onTransferMoneyMenuPress('add_recipient')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
-          <MaterialIcon name='person-add' size={32} color={colors.white}/>
-          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>Add New</Text>
-          {/* <Text style={{ color: colors.white, textAlign: 'center', fontSize: 16 }}>Recipient</Text> */}
+        <Pressable onPress={() => onTransferMoneyMenuPress('add_recipient')} style={{ height: windowWidth / 4 - 14, width: windowWidth / 4 - 28, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ backgroundColor: colors.transferMoneyIconBg, width: '80%', height: '70%', borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginBottom: 8 }}>
+            <MaterialIcon name='person-add' size={36} color={colors.white} />
+          </View>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>Add New</Text>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>Recipient</Text>
         </Pressable>
-        <Pressable onPress={() => onTransferMoneyMenuPress('check_balance')} style={{ height: windowWidth / 4 - 28, width: windowWidth / 4 - 28, borderRadius: 25, backgroundColor: colors.transferMoneyIconBg, alignItems: 'center', justifyContent: 'center' }}>
-          <MaterialIcon name='attach-money' size={32} color={colors.white}/>
-          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 13 }}>Balance</Text>
+        <Pressable onPress={() => onTransferMoneyMenuPress('check_balance')} style={{ height: windowWidth / 4 - 14, width: windowWidth / 4 - 28, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ backgroundColor: colors.transferMoneyIconBg, width: '80%', height: '70%', borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginBottom: 8 }}>
+            <MaterialIcon name='attach-money' size={36} color={colors.white} />
+          </View>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>Check</Text>
+          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 14 }}>Balance</Text>
         </Pressable>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 8, paddingVertical: 4, alignItems: 'center', height: 31, backgroundColor: colors.primary500, borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
@@ -75,12 +85,12 @@ const TopMoneyTransferMenu = () => {
           <Text style={{ color: colors.white }}>My ID : {userData.user.login_Code}</Text>
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+        <Pressable style={{ flexDirection: 'row', alignItems: 'center', }} onPress={() => {Alert.alert('Coming Soon', 'This feature is currently not available.')}}>
           <MaterialIcon name='qr-code' size={20} color={colors.white} />
           <Text style={{ fontSize: 14, lineHeight: 16.1, color: colors.white, marginHorizontal: 8 }}>My QR</Text>
           <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
 
-        </View>
+        </Pressable>
       </View>
     </View>
 

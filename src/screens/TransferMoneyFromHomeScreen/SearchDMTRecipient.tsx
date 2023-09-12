@@ -114,7 +114,7 @@ const SearchDMTRecipient = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.white, padding: 8 }}>
-      <Text style={{ textAlign: 'center', fontSize: 24, fontWeight: 'bold', color: colors.primary500 }}>Transfer Money</Text>
+      <Text style={{ textAlign: 'center', fontSize: 24, fontWeight: 'bold', color: colors.primary500, marginTop: 20 }}>Direct Money Transfer</Text>
       <View>
         <AnimatedInput
           value={searchValue}
@@ -131,7 +131,7 @@ const SearchDMTRecipient = () => {
       </View>
 
       <View style={{ marginTop: 16 }}>
-        <Text style={{ color: colors.primary200, fontSize: 14 }}>Please note that, you can search only added the recipients. If you have not added any recipients then please add the recipients in DMT menu.</Text>
+        <Text style={{ color: colors.primary200, fontSize: 14 }}>Please note that, you can search only in the recipients that are already added by you earlier. If you have not added any recipients then please add in DMT menu.</Text>
       </View>
 
       <View style={{ marginVertical: 12 }}>

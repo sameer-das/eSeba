@@ -18,7 +18,8 @@ const ListTransactions = () => {
             if (data.status === 'Success' && data.code === 200 && data.data?.length > 0) {
                 const _formattedData = data.data.map((curr: any) => {
                     return { ...curr, wallet_transaction_Date: new Date(curr.wallet_transaction_Date) }
-                })
+                });
+                // console.log(_formattedData)
                 setTransactions(_formattedData);
             } else {
                 setTransactions([]);
@@ -49,6 +50,9 @@ const ListTransactions = () => {
                 <View style={styles.row}>
                     <Text style={styles.transType}>Type : {item.wallet_transaction_type}</Text>
                     <Text style={styles.transRecall}>Service : {item.wallet_transaction_recall === 'ManiMulti' ? 'Prepaid Recharge' : item.wallet_transaction_recall}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.commission}>Commission Earned: {item.payment_Per_Amount.toFixed(2)}</Text>
                 </View>
             </View>
         )
@@ -106,5 +110,10 @@ const styles = StyleSheet.create({
     transRecall: {
         fontSize: 16,
         color: colors.primary500
+    },
+    commission: {
+        fontSize: 16,
+        color: colors.primary500,
+        fontWeight: '500'
     }
 })

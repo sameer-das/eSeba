@@ -68,9 +68,9 @@ const HomeScreen = () => {
     const TabBarIcon = ({ iconName, label }: any) => {
         return <View style={{ alignItems: 'center' }} >
             <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: colors.primary300, justifyContent: 'center', alignItems: 'center' }}>
-                <MaterialIcon name={iconName} size={25} />
+                <MaterialIcon name={iconName} size={25} color={colors.white} />
             </View>
-            <Text style={{ fontSize: 12 }}>{label}</Text>
+            <Text style={{ fontSize: 12, color: colors.white }}>{label}</Text>
         </View>
     }
     return (
@@ -230,7 +230,7 @@ const AppStackTab = () => {
             <Stack.Screen name='wallet' component={WalletStack} options={{ headerShown: false }} />
             <Stack.Screen name='profileStack' component={ProfileStack} options={{ headerShown: false }} />
             <Stack.Screen name='DMTStack' component={DMTStack} options={{ headerShown: false }} />
-            <Stack.Screen name='AddDMTRecipientFromHomeScreem' component={AddRecipient} options={{ headerShown: false }} />
+            <Stack.Screen name='AddDMTRecipientFromHomeScreen' component={AddRecipient} options={{ headerShown: false }} />
             <Stack.Screen name='transferMoneyFromHomeScreenStack' component={TransferMoneyFromHomeScreenStack} options={{ headerShown: false }} />
 
             {/* Common Screens */}
