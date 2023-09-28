@@ -33,8 +33,6 @@ const HomeCard = ({ item }: { item: any }) => {
     }
 
 
-
-
     const _renderCardItem = ({ item }: { item: any }) => {
         // console.log(item.services_Cat_ImagesName);
         const imageObj = IamgeMapping.find(img => img.name === item.services_Cat_ImagesName)
@@ -71,9 +69,8 @@ const styles = StyleSheet.create({
     homeCards: {
         backgroundColor: colors.homeScreenCardBg,
         borderRadius: 10,
-        marginTop: 8,
+        marginVertical: 6,
         padding: 10,
-
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.5,
@@ -81,7 +78,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     cardTitle: {
-        fontSize: 20,
+        fontSize: 18,
         color: colors.white,
         fontWeight: '600',
         marginVertical: 8,
@@ -89,17 +86,12 @@ const styles = StyleSheet.create({
     cardItem: {
         height: Math.floor(windowWidth / 4) - 25,
         width: Math.floor(windowWidth / 4) - 25,
-        // borderColor: colors.primary500,
-        // borderWidth: 1,
         marginHorizontal: 8,
         marginVertical: 12,
         alignItems: 'center',
-        // backgroundColor: colors.primary500,
-        // padding: 6
-        // textAlign: 'center'
     },
     cardItemLabel: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: '400',
         textAlign: 'center',
         color: colors.white,
