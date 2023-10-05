@@ -157,9 +157,25 @@ export const dmtFundTransfer = (payload: any, serviceId: string, categoryId: str
 }
 
 
-
+// CC avenue
 export const getEncryptedResponse = (request: string) => {
     return axios.post(`${BASE_URL}/api/GSKRecharge/eEncryptRequest`, {
         "data": request
     }, { responseType: 'text' });
+}
+
+
+// Support 
+export const postTicketInfo = (ticket: any) => {
+    return axios.post(`${BASE_URL}/api/User/PostTicketInfo`, ticket);
+}
+
+export const getAllTickets = (emailid: string) => {
+    return axios.get(`${BASE_URL}/api/User/GetSupportDetails?email=${emailid}`);
+}
+
+
+// Forgot password
+export const sendForgotPasswordMail = (email: string) => {
+    return axios.get(`${BASE_URL}/api/User/Forgotpwd?emailid=${email}`);
 }

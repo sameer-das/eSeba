@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Pressable, StyleSheet, Text, KeyboardAvoidingView, View, Image, ScrollView } from 'react-native';
+import { Pressable, StyleSheet, Text, KeyboardAvoidingView, View, Image, ScrollView, Alert } from 'react-native';
 import colors from '../../../src/constants/colors';
 import { AuthContext } from '../../../src/context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -47,6 +47,11 @@ const SignIn = () => {
         <Text style={styles.joinText}>Are you yet to join us ?</Text>
         <Pressable style={styles.signUpLink} onPress={() => SignUp()} >
           <Text style={styles.signUpText}>Register Now</Text>
+        </Pressable>
+        <Pressable style={styles.forgotPassword} onPress={() => {
+          navigation.push('forgotPassword');
+        }} >
+          <Text style={styles.forgotPasswordText}>Forgot Password</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </ScrollView >
@@ -100,7 +105,15 @@ const styles = StyleSheet.create({
   signUpLink: {
     marginTop: 12,
   },
+  forgotPassword: {
+    marginTop: 24,
+  },
   signUpText: {
+    color: colors.primary500,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  forgotPasswordText: {
     color: colors.primary500,
     fontSize: 16,
     textAlign: 'center',

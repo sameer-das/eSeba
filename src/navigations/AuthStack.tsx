@@ -5,6 +5,7 @@ import SignIn from '../screens/authentication/SignIn';
 import CheckRefNo from '../screens/authentication/CheckRefNo';
 import SignUpFirst from '../screens/authentication/SignUpFirst';
 import SignUpSecond from '../screens/authentication/SignUpSecond';
+import ForgotPassword from '../screens/authentication/ForgotPassword';
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
 
@@ -20,6 +21,7 @@ const AuthStack = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUpStack" component={SignUpStack} />
+            <Stack.Screen name="forgotPassword" component={ForgotPassword} />
         </Stack.Navigator>)
 }
 

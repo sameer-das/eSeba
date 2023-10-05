@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Dimensions, FlatList, Image, ImageBackground } from 'react-native'
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, ImageBackground, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../constants/colors';
 import { windowWidth } from '../utils/dimension';
 
@@ -9,44 +9,36 @@ const CarouselComponent = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const CAROUSEL_DURATION = 3000;
     const data = [{
-        title: 'sameer',
+        title: 'carousel1',
         id: '1',
         bg: 'red',
-        image: require('../../assets/carousel/carousel1.png')
+        image: require('../../assets/carousel/carousel1.jpg')
     },
     {
-        title: 'sameer',
+        title: 'carousel2',
         id: '2',
         bg: 'yellow',
-        image: require('../../assets/carousel/carousel2.png')
+        image: require('../../assets/carousel/carousel2.jpg')
     },
     {
-        title: 'sameer',
+        title: 'carousel3',
         id: '3',
         bg: 'green',
-        image: require('../../assets/carousel/carousel3.png')
-    },
-    {
-        title: 'sameer',
-        id: '4',
-        bg: 'cyan',
-        image: require('../../assets/carousel/carousel1.png')
+        image: require('../../assets/carousel/carousel3.jpg')
     }];
     const handleScroll = ((event: any) => {
         const horizontalPosition = event.nativeEvent.contentOffset.x;
         setCurrentIndex(+(horizontalPosition / windowWidth).toFixed(0));
-        console.log(+(horizontalPosition / windowWidth).toFixed(0))
-
     })
+
+    const openWebsite = () => {
+        Linking.openURL('https://esebakendra.com/esk/login')
+    }
     const _renderItem = ({ item, index }: any) => {
         return (
-            <View style={[{ height: '100%', width: windowWidth - 16 }]}>
-                <ImageBackground source={item.image} style={{ width: windowWidth - 16, height: '100%', padding: 4, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: colors.white, fontSize: 18 }}>
-                        Advertise {index + 1}
-                    </Text>
-                </ImageBackground>
-            </View>
+            <Pressable onPress={openWebsite} style={[{ height: '100%', width: windowWidth - 16, alignItems: 'center' }]}>
+                <Image source={item.image} style={{ width: windowWidth - 16, height: '100%', resizeMode: 'cover'}} />
+            </Pressable>
         );
     }
 
@@ -54,15 +46,19 @@ const CarouselComponent = () => {
     const flatListRef = useRef<any>();
 
     useEffect(() => {
-        // setTimeout(() => {
+        // const t = setTimeout(() => {
+        //     console.log(currentIndex);
         //     if (currentIndex === data.length - 1) {
         //         flatListRef.current.scrollToIndex({ index: 0, animation: true })
         //     } else {
         //         flatListRef.current.scrollToIndex({ index: currentIndex + 1, animation: true })
         //     }
-        // }, CAROUSEL_DURATION)
+        // }, CAROUSEL_DURATION);
 
-    })
+        // return () => clearTimeout(t);
+
+    }, []);
+
     return (
         <>
             <FlatList
@@ -81,7 +77,7 @@ const CarouselComponent = () => {
             {/* Indicator */}
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: windowWidth, marginTop: 6 }}>
                 {data.map((curr, index) => {
-                    return <View style={{ width: index === currentIndex ? 20 : 8, height: 8, borderRadius: 4, backgroundColor: colors.grey, marginHorizontal: 4 }}></View>
+                    return <View key={index} style={{ width: index === currentIndex ? 20 : 8, height: 8, borderRadius: 4, backgroundColor: colors.grey, marginHorizontal: 4 }}></View>
                 })}
             </View>
         </>

@@ -2,41 +2,41 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useContext } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../constants/colors';
 import { AuthContext } from '../context/AuthContext';
+import SearchDMTRecipient from '../screens/TransferMoneyFromHomeScreen/SearchDMTRecipient';
 import FetchBillDetails from '../screens/bbps/FetchBillDetails';
 import ListBillers from '../screens/bbps/ListBillers';
 import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
 import OtpScreen from '../screens/common/OtpScreen';
 import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus';
 import DMTTabs from '../screens/dmt/DmtTabs';
-import HelpSupport from '../screens/help-support/HelpSupport';
+import AddRecipient from '../screens/dmt/RecipientTab/AddRecipient';
+import SendMoneyForm from '../screens/dmt/SendMoneyTab/SendMoneyForm';
+import ShowConveyanceFee from '../screens/dmt/SendMoneyTab/ShowConveyanceFee';
+import HelpSupportStack from '../screens/help-support/HelpSupportStack';
 import Home from '../screens/home/Home';
 import MyTeams from '../screens/myTeams/MyTeams';
 import ProceedToPay from '../screens/prepaid recharge/ProceedToPay';
 import SearchContact from '../screens/prepaid recharge/SearchContact';
 import ShowPlans from '../screens/prepaid recharge/ShowPlans';
+import ChangePassword from '../screens/profile-screen/ChangePassword';
+import Documents from '../screens/profile-screen/Documents/Documents';
+import UpdateAdhar from '../screens/profile-screen/Documents/UpdateAdhar';
+import UpdateGST from '../screens/profile-screen/Documents/UpdateGST';
+import UpdatePan from '../screens/profile-screen/Documents/UpdatePan';
+import UpdateProfilePic from '../screens/profile-screen/Documents/UpdateProfilePic';
+import Profile from '../screens/profile-screen/Profile';
 import ProfileMainScreen from '../screens/profile-screen/ProfileMainScreen';
 import ListTransactions from '../screens/transactions/ListTransactions';
 import ChangeWalletPin from '../screens/wallet/ChangeWalletPin';
+import ConfirmRechargePage from '../screens/wallet/ConfirmRechargePage';
 import EnterOtpForPinChange from '../screens/wallet/EnterOtpForPinChange';
 import RechargeWallet from '../screens/wallet/RechargeWallet';
 import SetNewWalletPin from '../screens/wallet/SetNewWalletPin';
-import Profile from '../screens/profile-screen/Profile';
-import Documents from '../screens/profile-screen/Documents/Documents';
-import UpdateAdhar from '../screens/profile-screen/Documents/UpdateAdhar';
-import UpdatePan from '../screens/profile-screen/Documents/UpdatePan';
-import UpdateProfilePic from '../screens/profile-screen/Documents/UpdateProfilePic';
-import UpdateGST from '../screens/profile-screen/Documents/UpdateGST';
-import ChangePassword from '../screens/profile-screen/ChangePassword';
 import Wallet from '../screens/wallet/Wallet';
-import ConfirmRechargePage from '../screens/wallet/ConfirmRechargePage';
-import AddRecipient from '../screens/dmt/RecipientTab/AddRecipient';
-import SearchDMTRecipient from '../screens/TransferMoneyFromHomeScreen/SearchDMTRecipient';
-import SendMoneyForm from '../screens/dmt/SendMoneyTab/SendMoneyForm';
-import ShowConveyanceFee from '../screens/dmt/SendMoneyTab/ShowConveyanceFee';
 
 
 const Tab = createBottomTabNavigator();
@@ -59,8 +59,11 @@ const HomeScreen = () => {
             </Pressable>
 
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
-                <MaterialIcon name="notifications-none" size={35} color={colors.white} />
-                <MaterialIcon name="help-outline" size={35} color={colors.white} />
+                <Pressable onPress={() => { Alert.alert('No Notification!', `You don't have any active notifications!`) }}>
+                    <MaterialIcon name="notifications-none" size={35} color={colors.white} />
+
+                </Pressable>
+                {/* <MaterialIcon name="help-outline" size={35} color={colors.white} /> */}
             </View>
         </View>
     }
@@ -78,14 +81,15 @@ const HomeScreen = () => {
             headerShown: true,
             header: CustomHeader,
             tabBarStyle: { backgroundColor: colors.primary400, height: 70 },
-            tabBarShowLabel: false
+            tabBarShowLabel: false,
+            tabBarHideOnKeyboard: true // hide when keyboard appears 
 
         }}>
             <Tab.Screen name='Home' component={Home}
                 options={{ tabBarIcon: ({ color, size, focused }) => <TabBarIcon color={color} focused={focused} size={size} iconName={'home'} label={'Home'} /> }} />
             <Tab.Screen name='My Team' component={MyTeams}
                 options={{ headerShown: false, tabBarIcon: ({ color, size, focused }) => <TabBarIcon color={color} focused={focused} size={size} iconName={'people'} label={'My Team'} /> }} />
-            <Tab.Screen name='Help' component={HelpSupport}
+            <Tab.Screen name='Help' component={HelpSupportStack}
                 options={{ headerShown: false, tabBarIcon: ({ color, size, focused }) => <TabBarIcon color={color} focused={focused} size={size} iconName={'help-outline'} label={'Help'} /> }} />
             <Tab.Screen name='History' component={ListTransactions}
                 options={{ headerShown: false, tabBarIcon: ({ color, size, focused }) => <TabBarIcon color={color} focused={focused} size={size} iconName={'compare-arrows'} label={'History'} /> }} />
@@ -213,7 +217,7 @@ const TransferMoneyFromHomeScreenStack = () => {
     return <Stack.Navigator screenOptions={{
         headerShown: false
     }}>
-        <Stack.Screen name='searchDMTRecipient' component={SearchDMTRecipient}/>
+        <Stack.Screen name='searchDMTRecipient' component={SearchDMTRecipient} />
         <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
         <Stack.Screen name='showConveyanceFee' component={ShowConveyanceFee} />
         <Stack.Screen name='dmtSendMoneyPinScreen' component={OtpScreen} />

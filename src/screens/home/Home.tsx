@@ -24,7 +24,7 @@ const AllMenus = () => {
 
 
 const Carousel = () => {
-  return <View style={{ height: 175, marginTop: 10, marginHorizontal: 8}}>
+  return <View style={{ height: 200, marginTop: 10, marginHorizontal: 8 }}>
     <CarouselComponent />
   </View>
 }
@@ -102,9 +102,18 @@ const TopMoneyTransferMenu = () => {
     </View>
 
     <View style={styles.walletAwardReferContainer}>
-      <Pressable onPress={() => { navigation.navigate('wallet') }} style={styles.walletAwardReferItem}><Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Wallet</Text></Pressable>
-      <Pressable onPress={() => { Alert.alert('Coming Soon', 'This feature is currently not available.'); }} style={styles.walletAwardReferItem}><Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Rewards</Text></Pressable>
-      <Pressable onPress={() => { Alert.alert('Coming Soon', 'This feature is currently not available.'); }} style={styles.walletAwardReferItem}><Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Refer & Earn</Text></Pressable>
+      <Pressable onPress={() => { navigation.navigate('wallet') }} style={styles.walletAwardReferItem}>
+        <MaterialIcon name='wallet-giftcard' size={36} color={colors.white} />
+        <Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Wallet</Text>
+      </Pressable>
+      <Pressable onPress={() => { Alert.alert('Coming Soon', 'This feature is currently not available.'); }} style={styles.walletAwardReferItem}>
+        <MaterialIcon name='wallet-membership' size={36} color={colors.white} />
+        <Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Rewards</Text>
+      </Pressable>
+      <Pressable onPress={() => { Alert.alert('Coming Soon', 'This feature is currently not available.'); }} style={styles.walletAwardReferItem}>
+        <MaterialIcon name='supervised-user-circle' size={36} color={colors.white} />
+        <Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Refer & Earn</Text>
+      </Pressable>
     </View>
 
   </>
@@ -155,5 +164,5 @@ const styles = StyleSheet.create({
   },
   flatListContainer: { padding: 8 },
   walletAwardReferContainer: { flexDirection: 'row', height: windowWidth / 3 - 32, gap: 8, marginHorizontal: 8, marginTop: 12 },
-  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 32, width: windowWidth / 3, backgroundColor: colors.primary500, justifyContent: 'center', alignItems: 'center' }
+  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 32, width: windowWidth / 3, backgroundColor: colors.primary500, justifyContent: 'center', alignItems: 'center', gap: 6 }
 })
