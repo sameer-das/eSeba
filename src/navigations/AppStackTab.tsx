@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../constants/colors';
@@ -37,21 +37,30 @@ import EnterOtpForPinChange from '../screens/wallet/EnterOtpForPinChange';
 import RechargeWallet from '../screens/wallet/RechargeWallet';
 import SetNewWalletPin from '../screens/wallet/SetNewWalletPin';
 import Wallet from '../screens/wallet/Wallet';
+import EnterPinToHome from './EnterPinToHome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
     const { userData } = useContext(AuthContext);
     const navigation = useNavigation<any>();
-    // console.log('Home screen render');
 
+    let profileUri: any;
+
+    if (!userData.kycDetail.passport_Photo) {
+        profileUri = require('../../assets/images/user-profile2.png');
+    }
+    else {
+
+        profileUri = { uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.passport_Photo}` }
+    }
     const CustomHeader = () => {
-        return <View style={{ backgroundColor: colors.primary400, height: 75, paddingHorizontal: 12, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        // console.log('In CustomHeader URL ' + profileUri.uri);
+        return <View style={{ backgroundColor: colors.primary400, height: 60, paddingHorizontal: 12, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
             <Pressable onPress={() => { navigation.navigate('profileStack') }} style={{ flex: 5, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Image source={{
-                    uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.passport_Photo}`,
-                }} style={{ height: 50, width: 50, resizeMode: 'center', borderRadius: 8 }} />
+                <Image source={profileUri} style={{ height: 50, width: 50, resizeMode: 'center', borderRadius: 8 }} />
                 <View style={{ marginLeft: 8 }}>
                     <Text style={{ color: colors.white, fontSize: 14, fontWeight: 'bold' }}>{userData.personalDetail?.user_FName?.trim()}</Text>
                     <Text style={{ color: colors.white, fontSize: 14, }} selectable={true}>Mob: {userData.user.mobile_Number}</Text>
@@ -80,7 +89,7 @@ const HomeScreen = () => {
         <Tab.Navigator screenOptions={{
             headerShown: true,
             header: CustomHeader,
-            tabBarStyle: { backgroundColor: colors.primary400, height: 70 },
+            tabBarStyle: { backgroundColor: colors.primary400, height: 60 },
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true // hide when keyboard appears 
 
@@ -228,6 +237,7 @@ const Stack = createNativeStackNavigator();
 const AppStackTab = () => {
     return (
         <Stack.Navigator >
+            <Stack.Screen name='EnterPinToHome' component={EnterPinToHome} options={{ headerShown: false }} />
             <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name='bbpsStack' component={BBPSStack} options={{ headerShown: false }} />
             <Stack.Screen name='prepaidRechargeStack' component={PrepaidRechargeStack} options={{ headerShown: false }} />

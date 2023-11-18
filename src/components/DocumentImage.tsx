@@ -12,6 +12,8 @@ const DocumentImage = ({ imageUrl }: any) => {
         </View>
     }
 
+    // console.log('In Document image URL ' + imageUrl)
+
     return (<>
         {/* If ImageUrl is there and error is there show error message with image */}
         {imageUrl && error && <View style={{ position: 'absolute' }}>

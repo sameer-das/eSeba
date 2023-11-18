@@ -87,7 +87,6 @@ const SendMoneyForm = () => {
           value={amount}
           onChangeText={amountChangeHandler}
           inputLabel={`Enter Amount`}
-          placeholder='0.00'
           style={{ fontSize: 30 }}
           keyboardType='numeric'
         />

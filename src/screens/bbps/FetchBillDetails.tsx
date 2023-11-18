@@ -128,7 +128,7 @@ const FetchBillDetails = () => {
                 "customerMobile": "9777117452",
                 "customerEmail": "info.gskindiaorg@gmail.com",
                 "customerAdhaar": "",
-                "customerPan": ""
+                "customerPan": `${userData.kycDetail.pancard_Number} | ${userData.personalDetail.user_FName} ${userData.personalDetail.user_LName}`
             },
             "billerId": (route.params as any).blr_id,
             "inputParams": {
@@ -315,7 +315,7 @@ const FetchBillDetails = () => {
                 "customerMobile": "9777117452",
                 "customerEmail": "info.gskindiaorg@gmail.com",
                 "customerAdhaar": "",
-                "customerPan": ""
+                "customerPan": `${userData.kycDetail.pancard_Number} | ${userData.personalDetail.user_FName} ${userData.personalDetail.user_LName}`
             },
             "billerId": (route.params as any).blr_id,
             "inputParams": {

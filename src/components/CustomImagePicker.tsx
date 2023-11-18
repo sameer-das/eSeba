@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, Pressable, Image, Modal } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Image, Modal, PermissionsAndroid } from 'react-native'
 import React, { useState } from 'react'
 import colors from '../constants/colors'
 import ImagePicker from 'react-native-image-crop-picker';
 import { windowWidth } from '../utils/dimension';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+
 
 interface ImagePickerProps {
     value: string,
@@ -17,8 +18,9 @@ interface ImagePickerProps {
 const CustomImagePicker = ({ value, setValue, placeholder, label, cropperCircleOverlay, useFrontCamera, compressImageQuality }: ImagePickerProps) => {
 
     const [modalVisible, setModalVisible] = useState(false)
-    const openGallery = () => {
+    const openGallery = async () => {
         setModalVisible(false);
+
         ImagePicker.openPicker({
             freeStyleCropEnabled: true,
             cropping: true,
@@ -33,28 +35,45 @@ const CustomImagePicker = ({ value, setValue, placeholder, label, cropperCircleO
             // console.log(image.size);
             setValue('data:image/jpeg;base64,' + image.data)
         }).catch(x => {
+            console.log('Error in openPicker')
             console.log(x);
         });
     }
-    const openCamera = () => {
+    const openCamera = async () => {
         setModalVisible(false);
-        ImagePicker.openCamera({
-            freeStyleCropEnabled: true,
-            cropping: true,
-            includeBase64: true,
-            cropperActiveWidgetColor: colors.primary500,
-            cropperCircleOverlay: cropperCircleOverlay || false, // add circle for cropping
-            mediaType: 'photo',
-            useFrontCamera: useFrontCamera || false,
-            compressImageQuality: compressImageQuality || 0.3,
-            // cropperToolbarColor: colors.primary500,
-            // cropperToolbarWidgetColor: colors.white
-        }).then((image: any) => {
-            // console.log(image);
-            setValue('data:image/jpeg;base64,' + image.data)
-        }).catch(x => {
-            console.log(x);
-        });
+        // const cameraPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+                title: 'Camera Permission',
+                message:
+                    'ESeba needs access to your camera',
+                buttonNeutral: 'Ask Me Later',
+                buttonNegative: 'Cancel',
+                buttonPositive: 'OK',
+            },)
+            console.log(granted);
+
+        // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            ImagePicker.openCamera({
+                freeStyleCropEnabled: true,
+                cropping: true,
+                includeBase64: true,
+                cropperActiveWidgetColor: colors.primary500,
+                cropperCircleOverlay: cropperCircleOverlay || false, // add circle for cropping
+                mediaType: 'photo',
+                useFrontCamera: useFrontCamera || false,
+                compressImageQuality: compressImageQuality || 0.3,
+                // cropperToolbarColor: colors.primary500,
+                // cropperToolbarWidgetColor: colors.white
+            }).then((image: any) => {
+                // console.log(image);
+                setValue('data:image/jpeg;base64,' + image.data)
+            }).catch(x => {
+                console.log('Error in openCamera')
+                console.log(x);
+            });
+        // }
+
     }
 
     const openPickerOption = () => {
@@ -86,17 +105,17 @@ const CustomImagePicker = ({ value, setValue, placeholder, label, cropperCircleO
                             <Text style={modal.modalHeaderText}>Choose from</Text>
                         </View>
                         <Pressable style={modal.option} onPress={openCamera}>
-                            <MaterialIcon name='image' size={40} color={colors.primary500} />
+                            <MaterialIcon name='photo-camera' size={40} color={colors.primary500} />
                             <Text style={modal.optionLabel}>Camera</Text>
                         </Pressable>
                         <Pressable style={modal.option} onPress={openGallery}>
-                            <MaterialIcon name='photo-camera' size={40} color={colors.primary500} />
+                            <MaterialIcon name='image' size={40} color={colors.primary500} />
                             <Text style={modal.optionLabel}>Gallery</Text>
                         </Pressable>
 
                         <View style={modal.bottomContainer}>
                             <Pressable onPress={() => setModalVisible(false)}>
-                                <Text style={modal.closeLabel}>Close</Text>    
+                                <Text style={modal.closeLabel}>Close</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -144,17 +163,17 @@ const modal = StyleSheet.create({
     },
     bottomContainer: {
         flex: 1,
-        alignItems:'center',
-        justifyContent:'center',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderTopColor: '#ccc',
-        borderTopWidth:0.5
+        borderTopWidth: 0.5
         // borderColor: 'red',
         // borderWidth: 1
     },
     closeLabel: {
         fontSize: 18,
         color: colors.secondary500,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     }
 })
 

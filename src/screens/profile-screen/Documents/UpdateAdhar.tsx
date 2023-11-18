@@ -89,7 +89,6 @@ const UpdateAdhar = () => {
         <AnimatedInput
           value={adharNo}
           onChangeText={(text: string) => setAdharNo(text)}
-          placeholder='Enter Adhar Number'
           inputLabel='Enter Adhar Number'
           keyboardType='numeric'
           maxLength={12}

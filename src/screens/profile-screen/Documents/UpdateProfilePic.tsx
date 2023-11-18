@@ -39,7 +39,7 @@ const UpdateProfilePic = () => {
       const { data } = await saveUserKycDetails(kycDetails);
       if (data.code === 200 && data.status === 'Success') {
         setIsLoading(false);
-        refreshUserDataInContext();
+        await refreshUserDataInContext();
         Alert.alert('Success', 'Profile Pic updated successfully');
         setProfileImage('');
         // go back to the Document screen 
@@ -69,7 +69,7 @@ const UpdateProfilePic = () => {
       <View style={styles.formCard}>
         {/* Profile PIC */}
         <CustomImagePicker value={profileImage} setValue={setProfileImage}
-          placeholder='Tap to upload profile picture' label='Profile Picture' 
+          placeholder='Tap to upload profile picture' label='Profile Picture'
           cropperCircleOverlay={true} useFrontCamera={true}
           compressImageQuality={0.5} />
 

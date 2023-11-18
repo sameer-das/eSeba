@@ -8,6 +8,7 @@ import CarouselComponent from '../../components/Carousel';
 import { windowWidth } from '../../utils/dimension';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Carousel2 from '../../components/Carousel2';
 
 
 const AllMenus = () => {
@@ -24,8 +25,9 @@ const AllMenus = () => {
 
 
 const Carousel = () => {
-  return <View style={{ height: 200, marginTop: 10, marginHorizontal: 8 }}>
+  return <View style={{ height: 160, marginTop: 10, marginHorizontal: 8 }}>
     <CarouselComponent />
+    {/* <Carousel2 /> */}
   </View>
 }
 
@@ -103,15 +105,15 @@ const TopMoneyTransferMenu = () => {
 
     <View style={styles.walletAwardReferContainer}>
       <Pressable onPress={() => { navigation.navigate('wallet') }} style={styles.walletAwardReferItem}>
-        <MaterialIcon name='wallet-giftcard' size={36} color={colors.white} />
+        <MaterialIcon name='wallet-giftcard' size={32} color={colors.white} />
         <Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Wallet</Text>
       </Pressable>
       <Pressable onPress={() => { Alert.alert('Coming Soon', 'This feature is currently not available.'); }} style={styles.walletAwardReferItem}>
-        <MaterialIcon name='wallet-membership' size={36} color={colors.white} />
+        <MaterialIcon name='wallet-membership' size={32} color={colors.white} />
         <Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Rewards</Text>
       </Pressable>
       <Pressable onPress={() => { Alert.alert('Coming Soon', 'This feature is currently not available.'); }} style={styles.walletAwardReferItem}>
-        <MaterialIcon name='supervised-user-circle' size={36} color={colors.white} />
+        <MaterialIcon name='supervised-user-circle' size={32} color={colors.white} />
         <Text style={{ fontSize: 14, fontWeight: 'bold', color: colors.white }}>Refer & Earn</Text>
       </Pressable>
     </View>
@@ -163,6 +165,6 @@ const styles = StyleSheet.create({
     marginLeft: 8
   },
   flatListContainer: { padding: 8 },
-  walletAwardReferContainer: { flexDirection: 'row', height: windowWidth / 3 - 32, gap: 8, marginHorizontal: 8, marginTop: 12 },
-  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 32, width: windowWidth / 3, backgroundColor: colors.primary500, justifyContent: 'center', alignItems: 'center', gap: 6 }
+  walletAwardReferContainer: { flexDirection: 'row', height: windowWidth / 3 - 60, gap: 18, marginHorizontal: 8, marginTop: 12 },
+  walletAwardReferItem: { flex: 1, borderRadius: 12, height: windowWidth / 3 - 60, width: windowWidth / 3, backgroundColor: colors.primary500, justifyContent: 'center', alignItems: 'center', }
 })

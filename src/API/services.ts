@@ -179,3 +179,9 @@ export const getAllTickets = (emailid: string) => {
 export const sendForgotPasswordMail = (email: string) => {
     return axios.get(`${BASE_URL}/api/User/Forgotpwd?emailid=${email}`);
 }
+
+
+// Carousel Images
+export const getCarouselData = () => {
+    return axios.get(`${BASE_URL}/api/User/GetAdvertisement`);
+}

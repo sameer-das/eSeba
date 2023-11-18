@@ -4,13 +4,16 @@ import { getTransactionHistory } from '../../API/services';
 import { AuthContext } from '../../context/AuthContext';
 import Loading from '../../components/Loading';
 import colors from '../../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const ListTransactions = () => {
     const [transactions, setTransactions] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { userData } = useContext(AuthContext);
+    const navigation = useNavigation<any>();
 
     const getTransactons = async () => {
+        // console.log('Get Transaction')
         try {
             setIsLoading(true);
             const { data } = await getTransactionHistory(userData.user.user_EmailID);
@@ -32,9 +35,19 @@ const ListTransactions = () => {
         }
 
     }
+
+    // useEffect(() => {
+    //     console.log('Fetch history')
+    //     getTransactons();
+    // }, [])
+
     useEffect(() => {
-        getTransactons();
-    }, [])
+        // console.log('List Transactions Focused')
+        const unsubscribe = navigation.addListener('focus', async () => {
+            await getTransactons();
+        });
+        return unsubscribe;
+    }, []);
 
     const TransactionItem = ({ item }: any) => {
         return (
@@ -45,7 +58,7 @@ const ListTransactions = () => {
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.transAmount}>₹ {item.wallet_Amount}</Text>
-                    <Text style={[styles.transStatus, {color: colors.primary500}]}>{item.wallet_transaction_Status}</Text>
+                    <Text style={[styles.transStatus, { color: colors.primary500 }]}>{item.wallet_transaction_Status}</Text>
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.transType}>Type : {item.wallet_transaction_type}</Text>

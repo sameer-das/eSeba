@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View, PermissionsAndroid } from 'react-native';
 import DocumentImage from '../../../components/DocumentImage';
 import colors from '../../../constants/colors';
 import { AuthContext } from '../../../context/AuthContext';
@@ -12,19 +12,39 @@ const Documents = () => {
 
   const time = new Date().getTime();
   console.log('Documents rerun')
-  const editButtonPressHandler = (type: string) => {
-    // console.log('Presses ' + type)
-    if (type === 'adhar') {
-      navigation.navigate('updateAdhar');
-    } else if (type === 'pan') {
-      navigation.navigate('updatePan');
-    } else if (type === 'profilepic') {
-      navigation.navigate('updateProfilePic');
-    } else if (type === 'gst') {
-      navigation.navigate('updateGst');
+  const editButtonPressHandler = async (type: string) => {
+
+    let checkStorage = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
+    let checkCamera = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA)
+    console.log(checkStorage, checkCamera);
+
+    if (!checkCamera) {
+      let permissionCamera = await PermissionsAndroid
+        .request(PermissionsAndroid.PERMISSIONS.CAMERA)
+      console.log(permissionCamera)
+      checkCamera = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA)
+    }
+
+    if (!checkStorage) {
+      let permissionExt = await PermissionsAndroid
+        .request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
+      console.log(permissionExt)
+      checkStorage = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
+    }
+
+
+    if (checkCamera || checkStorage) {
+      if (type === 'adhar') {
+        navigation.navigate('updateAdhar');
+      } else if (type === 'pan') {
+        navigation.navigate('updatePan');
+      } else if (type === 'profilepic') {
+        navigation.navigate('updateProfilePic');
+      } else if (type === 'gst') {
+        navigation.navigate('updateGst');
+      }
     }
   }
-
 
   const ImageLoader = <View style={{ position: 'absolute' }}>
     <ActivityIndicator size={40} color={colors.primary100} />
@@ -42,7 +62,7 @@ const Documents = () => {
           </Pressable>
         </Pressable>
         <View style={styles.imageContainer}>
-          <DocumentImage imageUrl={`${userData.kycDetail?.passport_Photo}&time=${time}`}  />
+          <DocumentImage imageUrl={`${userData.kycDetail?.passport_Photo}`} />
         </View>
       </View>
 

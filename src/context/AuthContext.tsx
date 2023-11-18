@@ -90,8 +90,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
         const userInfoResp = await getUserInfo(userID);
         if (userInfoResp.data.status === 'Success' && userInfoResp.data.code === 200) {
             await AsyncStorage.removeItem('userData');
-            // console.log('in auth context')
-            // console.log(userInfoResp.data.data);
+            // console.log('in auth context kk')
+            // console.log(JSON.stringify(userInfoResp.data.data));
             setUserData(() => {return userInfoResp.data.data});
             await AsyncStorage.setItem('userData', JSON.stringify(userInfoResp.data.data));
         } else {
