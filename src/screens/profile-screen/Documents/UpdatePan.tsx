@@ -77,7 +77,6 @@ const UpdatePan = () => {
                 <AnimatedInput
                     value={pan}
                     onChangeText={(text: string) => setPan(text)}
-                    placeholder='Enter PAN'
                     inputLabel='Enter PAN'
 
                 />

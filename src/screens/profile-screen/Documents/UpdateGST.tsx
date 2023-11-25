@@ -77,7 +77,6 @@ const UpdateGST = () => {
                 <AnimatedInput
                     value={gstn}
                     onChangeText={(text: string) => setGstn(text)}
-                    placeholder='Enter GSTN'
                     inputLabel='Enter GSTN'
 
                 />

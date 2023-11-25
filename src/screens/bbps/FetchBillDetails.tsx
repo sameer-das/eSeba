@@ -83,6 +83,7 @@ const FetchBillDetails = () => {
     const fetchBill = async (bbpsFetchBillBody: any) => {
         console.log('fetching bill')
         setLoadingLabel('Fetching Bill');
+        // console.log(bbpsFetchBillBody)
         setIsLoading(true)
         try {
             const { data } = await bbpsFetchBill(bbpsFetchBillBody);
@@ -128,7 +129,8 @@ const FetchBillDetails = () => {
                 "customerMobile": "9777117452",
                 "customerEmail": "info.gskindiaorg@gmail.com",
                 "customerAdhaar": "",
-                "customerPan": `${userData.kycDetail.pancard_Number} | ${userData.personalDetail.user_FName} ${userData.personalDetail.user_LName}`
+                // if amount is more than 50000 send customer pan
+                "customerPan": +billerResponse.billAmount >= 5000000 ? `${userData.kycDetail.pancard_Number} | ${userData.personalDetail.user_FName} ${userData.personalDetail.user_LName}`: "",
             },
             "billerId": (route.params as any).blr_id,
             "inputParams": {
@@ -315,7 +317,7 @@ const FetchBillDetails = () => {
                 "customerMobile": "9777117452",
                 "customerEmail": "info.gskindiaorg@gmail.com",
                 "customerAdhaar": "",
-                "customerPan": `${userData.kycDetail.pancard_Number} | ${userData.personalDetail.user_FName} ${userData.personalDetail.user_LName}`
+                "customerPan": ""
             },
             "billerId": (route.params as any).blr_id,
             "inputParams": {
