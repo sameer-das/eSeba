@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, BackHandler, Image } from 'react-native'
+import { StyleSheet, Text, View, BackHandler, Image, Pressable } from 'react-native'
 import React, { useEffect } from 'react'
 import colors from '../../constants/colors'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -32,6 +32,11 @@ const PrepaidTransactionStatus = () => {
                 <Text style={styles.headerLabel}>Your Recharge Status</Text>
                 <Text style={styles.message}>{(route.params as any).message}</Text>
             </View>
+
+            <Pressable onPress={() => {navigation.navigate('HomeScreen')}}
+             style={{marginTop: 40, width: '70%', padding: 12, borderColor: colors.white, borderWidth:2, alignItems:'center'}}>
+                <Text style={{color: colors.white, fontSize: 18, fontWeight:'bold'}}>Go to Home Page</Text>
+            </Pressable>
         </View>
     )
 }

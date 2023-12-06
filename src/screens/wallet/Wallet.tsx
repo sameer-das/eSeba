@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, Alert, RefreshControl, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Alert, RefreshControl, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import colors from '../../constants/colors';
 import { AuthContext } from '../../context/AuthContext';
@@ -9,12 +9,13 @@ import Loading from '../../components/Loading';
 const Wallet = ({ navigation }: any) => {
   const { userData } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [showLoadingText, setShowLoadingText] = useState(false);
   const [walletBalance, setWalletBallance] = useState('');
   const [commissionEarned, setCommissionEarned] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchWalletBalance = async (email: string, withRefresh: boolean) => {
-    !withRefresh && setIsLoading(true);
+    setShowLoadingText(true);
     try {
       const { data } = await getWalletBalance(email);
       console.log(data)
@@ -39,17 +40,24 @@ const Wallet = ({ navigation }: any) => {
         }
       }])
     } finally {
-      !withRefresh && setIsLoading(false);
       withRefresh && setRefreshing(false);
+      setShowLoadingText(false);
     }
   }
 
   // fetch wallet balance
+  // useEffect(() => {
+  //   fetchWalletBalance(userData.user.user_EmailID, false)
+  // }, [])
+
+
   useEffect(() => {
-    fetchWalletBalance(userData.user.user_EmailID, false)
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('Wallet focus fetch balance');
+      fetchWalletBalance(userData.user.user_EmailID, false)
+    });
+    return unsubscribe;
   }, [])
-
-
 
   if (isLoading) {
     return (<Loading label={"Brewing at back"} />)
@@ -57,7 +65,8 @@ const Wallet = ({ navigation }: any) => {
 
 
   const onRefresh = () => {
-    setRefreshing(true)
+    setRefreshing(true);
+    console.log('Pull Refresh fetch balance');
     fetchWalletBalance(userData.user.user_EmailID, true);
   }
 
@@ -106,7 +115,8 @@ const Wallet = ({ navigation }: any) => {
       <View style={styles.topCardContainer}>
         <View style={styles.innerCard}>
           <Text style={styles.cardTitle}>Wallet Balance</Text>
-          <Text style={styles.cardValue}>₹ {walletBalance}</Text>
+          {showLoadingText ? <ActivityIndicator size={30} color={colors.white}/> : <Text style={styles.cardValue}>₹ {walletBalance}</Text>}
+
         </View>
         <View style={styles.innerCard}>
           <Text style={styles.cardTitle}>Commission Earned</Text>

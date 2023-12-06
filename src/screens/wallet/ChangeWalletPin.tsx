@@ -136,7 +136,7 @@ const ChangeWalletPin = () => {
                         maxLength={4}
                         textAlign={'center'}
                         onChangeText={(text: string) => handleInputChange(text, 'currentPassword')}
-                        inputLabel={'Enter Current Password'}
+                        inputLabel={'Enter Current Wallet PIN'}
                         style={{ letterSpacing: 40 }}
                         keyboardType={'number-pad'}
                         autoFocus />
@@ -149,7 +149,7 @@ const ChangeWalletPin = () => {
                         maxLength={4}
                         textAlign={'center'}
                         onChangeText={(text: string) => handleInputChange(text, 'newPassword')}
-                        inputLabel={'Enter New Password'}
+                        inputLabel={'Enter New Wallet PIN'}
                         keyboardType={'number-pad'}
                         style={{ letterSpacing: 40 }} />
                     <InputWithLabelAndError
@@ -161,7 +161,7 @@ const ChangeWalletPin = () => {
                         maxLength={4}
                         textAlign={'center'}
                         onChangeText={(text: string) => handleInputChange(text, 'confirmPassword')}
-                        inputLabel={'Confirm Password'}
+                        inputLabel={'Confirm New     Wallet PIN'}
                         keyboardType={'number-pad'}
                         style={{ letterSpacing: 40 }} />
 

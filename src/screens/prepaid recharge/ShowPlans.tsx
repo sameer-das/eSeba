@@ -89,7 +89,8 @@ const ShowPlans = () => {
           placeholder='Search plan or validity' 
           keyboardType='default'
           value={planSearchText}
-          onChangeText={planSearchHandler} />
+          onChangeText={planSearchHandler}
+          placeholderTextColor={colors.primary300} />
         </View>
         <FlatList showsVerticalScrollIndicator={false} data={filteredPlanDetails}
           renderItem={({ item }) => <MobilePlanCard item={item} handlePress={onPlanPress} />} />

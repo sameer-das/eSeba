@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, Pressable, Alert } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, Appearance, Pressable, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import colors from '../../constants/colors'
 import { windowHeight } from '../../utils/dimension'
@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import AnimatedInput from '../../components/AnimatedInput'
 import ButtonPrimary from '../../components/ButtonPrimary'
 const SignUpSecond = () => {
+    const colorScheme = Appearance.getColorScheme();
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
 
@@ -31,7 +32,7 @@ const SignUpSecond = () => {
         lastName: 'Please enter last name',
         mobile: 'Please enter mobile no',
         email: 'Please enter email',
-        pin: 'Please enter PIN',
+        pin: 'Please enter PIN Code',
         locationType: 'Please choose location type',
         state: 'Please choose state',
         district: 'Please choose district',
@@ -225,7 +226,7 @@ const SignUpSecond = () => {
                         mode='date'
                         open={datePickerOpen}
                         date={new Date(formValue.dob.value)}
-                        textColor={colors.primary500}
+                        textColor={colorScheme === null || colorScheme === 'light' ? colors.primary500 : colors.white}
                         title={null}
                         maximumDate={new Date()}
                         onConfirm={(date) => {
@@ -307,7 +308,7 @@ const SignUpSecond = () => {
                     <AnimatedInput
                         value={formValue.pin.value}
                         onChangeText={(text: string) => handleInputChange(text, 'pin')}
-                        inputLabel={'Enter PIN'}
+                        inputLabel={'Enter PIN Code'}
                         keyboardType={'numeric'}
                         maxLength={6}
                         errorMessage={formValue.pin.error} />

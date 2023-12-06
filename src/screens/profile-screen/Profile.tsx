@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, ScrollView, Modal, KeyboardAvoidingView, Alert } from 'react-native'
+import { StyleSheet, Text, View, Pressable, ScrollView, Modal, Appearance, KeyboardAvoidingView, Alert } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import colors from '../../constants/colors'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -14,6 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import AnimatedInput from '../../components/AnimatedInput';
 
 const Profile = () => {
+  const colorScheme = Appearance.getColorScheme();
   const navigation = useNavigation();
 
   const [openModal, setOpenModal] = useState(false);
@@ -235,7 +236,7 @@ const Profile = () => {
     lastName: 'Please enter last name',
     mobile: 'Please enter mobile no',
     email: 'Please enter email',
-    pin: 'Please enter PIN',
+    pin: 'Please enter PIN Code',
     ward: 'Please enter GP/Ward',
     nomineeName: 'Pleased enter nominiee name',
     nomineeMobile: 'Pleased enter nominiee mobile no',
@@ -513,7 +514,7 @@ const Profile = () => {
           <Text style={styles.lable}>District</Text>
           <Text style={styles.lable}>Block</Text>
           <Text style={styles.lable}>GP/Ward</Text>
-          <Text style={styles.lable}>PIN</Text>
+          <Text style={styles.lable}>PIN Code</Text>
           <Text style={styles.break}></Text>
           <Text style={styles.lable}>Nominee Name</Text>
           <Text style={styles.lable}>Relation</Text>
@@ -613,7 +614,7 @@ const Profile = () => {
                 mode='date'
                 open={datePickerOpen}
                 date={new Date(userPersonalDetailEditForm.dob.value)}
-                textColor={colors.primary500}
+                textColor={colorScheme === null || colorScheme === 'light' ? colors.primary500 : colors.white}
                 title={null}
                 maximumDate={new Date()}
                 onConfirm={(date) => {
@@ -698,7 +699,7 @@ const Profile = () => {
                 keyboardType={'numeric'}
                 maxLength={6}
                 onChangeText={(text: string) => handleInputChange(text, 'pin')}
-                inputLabel={'Enter PIN'} />
+                inputLabel={'Enter PIN Code'} />
 
               <AnimatedInput
                 value={userPersonalDetailEditForm.nomineeName.value}
