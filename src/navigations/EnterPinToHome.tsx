@@ -29,7 +29,7 @@ const EnterPinToHome = () => {
                 console.log('pin ok');
                 // check for wallet balance
                 setIsLoading(false);
-                setLoadingLabel('Loading...')
+                setLoadingLabel('Loading...');
                 navigation.replace('HomeScreen');
             } else {
                 Alert.alert('Invalid Pin', 'You have entered a wrong PIN!');
@@ -131,7 +131,7 @@ const EnterPinToHome = () => {
             if (t)
                 clearTimeout(t)
         }
-        
+
     }, [isTouchIDAuthSuccess]);
 
     const showPopupForTouchId = () => {

@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../constants/colors';
@@ -39,13 +39,17 @@ import SetNewWalletPin from '../screens/wallet/SetNewWalletPin';
 import Wallet from '../screens/wallet/Wallet';
 import EnterPinToHome from './EnterPinToHome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AboutEPayMain from '../screens/About ePay/AboutEPayMain';
+import PolicyDetails from '../screens/About ePay/PolicyDetails';
+import Notification from '../screens/notification/Notification';
 
 
 const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
     const { userData } = useContext(AuthContext);
-    const navigation = useNavigation<any>();
-
+    // const navigation = useNavigation<any>();
+    // const router = useRoute();
+    // console.log(router.params);
     let profileUri: any;
 
     if (!userData.kycDetail.passport_Photo) {
@@ -56,6 +60,9 @@ const HomeScreen = () => {
         profileUri = { uri: `https://api.esebakendra.com/api/User/Download?fileName=${userData.kycDetail?.passport_Photo}` }
     }
     const CustomHeader = () => {
+        const navigation = useNavigation<any>();
+
+  
         // console.log('In CustomHeader URL ' + profileUri.uri);
         return <View style={{ backgroundColor: colors.primary400, height: 60, paddingHorizontal: 12, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
@@ -68,11 +75,9 @@ const HomeScreen = () => {
             </Pressable>
 
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
-                <Pressable onPress={() => { Alert.alert('No Notification!', `You don't have any active notifications!`) }}>
+                <Pressable onPress={() => { navigation.push('notification') }}>
                     <MaterialIcon name="notifications-none" size={35} color={colors.white} />
-
                 </Pressable>
-                {/* <MaterialIcon name="help-outline" size={35} color={colors.white} /> */}
             </View>
         </View>
     }
@@ -219,6 +224,9 @@ const ProfileStack = () => {
         <Stack.Screen name='updateGst' component={UpdateGST} options={{ title: 'Update GSTN', ...profileStackHeaderOption }} />
         <Stack.Screen name='changePassword' component={ChangePassword} options={{ title: 'Change Login Password', ...profileStackHeaderOption }} />
 
+        <Stack.Screen name='aboutEPayMain' component={AboutEPayMain} options={{ title: 'About e-Pay', ...profileStackHeaderOption }} />
+        <Stack.Screen name='policyDetails' component={PolicyDetails} options={{ title: 'e-Pay Policies', ...profileStackHeaderOption }} />
+
     </Stack.Navigator>
 }
 
@@ -246,6 +254,7 @@ const AppStackTab = () => {
             <Stack.Screen name='DMTStack' component={DMTStack} options={{ headerShown: false }} />
             <Stack.Screen name='AddDMTRecipientFromHomeScreen' component={AddRecipient} options={{ headerShown: false }} />
             <Stack.Screen name='transferMoneyFromHomeScreenStack' component={TransferMoneyFromHomeScreenStack} options={{ headerShown: false }} />
+            <Stack.Screen name='notification' component={Notification} options={{ headerShown: true, title: 'Notifications', headerStyle: { backgroundColor: colors.primary500 }, headerTintColor: colors.white }} />
 
             {/* Common Screens */}
             <Stack.Screen name='otpScreen' component={OtpScreen} options={{ headerShown: false }} />

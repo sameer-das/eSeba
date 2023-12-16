@@ -34,6 +34,10 @@ const ProfileMainScreen = () => {
                 <Text style={styles.profileButtonLanbel}>Change Password</Text>
                 <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
             </Pressable>
+            <Pressable style={styles.profileButton} onPress={() => { navigation.push('aboutEPayMain') }}>
+                <Text style={styles.profileButtonLanbel}>About e-Pay</Text>
+                <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
+            </Pressable>
         </View>
         <Pressable style={styles.profileButton} onPress={onLogout}>
             <Text style={styles.profileButtonLanbel}>Logout</Text>

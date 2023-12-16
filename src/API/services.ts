@@ -185,3 +185,9 @@ export const sendForgotPasswordMail = (email: string) => {
 export const getCarouselData = () => {
     return axios.get(`${BASE_URL}/api/User/GetAdvertisement`);
 }
+
+
+// Notification
+export const getNotifications = () => {
+    return axios.get(`${BASE_URL}/api/User/GetNotifications`);
+}

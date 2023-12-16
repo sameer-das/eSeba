@@ -6,14 +6,16 @@ import CheckRefNo from '../screens/authentication/CheckRefNo';
 import SignUpFirst from '../screens/authentication/SignUpFirst';
 import SignUpSecond from '../screens/authentication/SignUpSecond';
 import ForgotPassword from '../screens/authentication/ForgotPassword';
+import PolicyDetails from '../screens/About ePay/PolicyDetails';
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
 
     const SignUpStack = () => {
         return (<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='CheckRefNo'>
-            <Stack.Screen name="CheckRefNo" component={CheckRefNo} />
-            <Stack.Screen name="SignUpFirst" component={SignUpFirst} />
+            {/* <Stack.Screen name="CheckRefNo" component={CheckRefNo} />
+            <Stack.Screen name="SignUpFirst" component={SignUpFirst} /> */}
             <Stack.Screen name="SignUpSecond" component={SignUpSecond} />
+            <Stack.Screen name="termsAndConditions" component={PolicyDetails} />
         </Stack.Navigator>)
     }
     

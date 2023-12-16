@@ -20,9 +20,9 @@ const ListTransactions = () => {
 
             if (data.status === 'Success' && data.code === 200 && data.data?.length > 0) {
                 const _formattedData = data.data.map((curr: any) => {
-                    return { ...curr, wallet_transaction_Date: new Date(curr.wallet_transaction_Date) }
+                    return { ...curr, wallet_transaction_Date: new Date(curr.wallet_transaction_Date), trans_details: getTransDetails(curr) }
                 });
-                // console.log(_formattedData)
+                console.log(_formattedData)
                 setTransactions(_formattedData);
             } else {
                 setTransactions([]);
@@ -36,6 +36,40 @@ const ListTransactions = () => {
 
     }
 
+    const getObjFromXml = (str: string) => {
+        function getParam(paramName: string) {
+          let startIndex = str.indexOf(`<${paramName}>`);
+          let endIndex = str.indexOf(`</${paramName}>`);
+          const key = str.slice(startIndex + paramName.length + 2, endIndex);
+          str = str.slice(endIndex + 2 + paramName.length + 1);
+          return key;
+        }
+        const result: any = {};
+        while (str.length > 0) {
+          let key = getParam('paramName');
+          let val = getParam('paramValue');
+          result[key] = val;
+        }    
+        return result;
+      }
+
+
+    const getTransDetails = (trans: any) => {
+        let ret: string = '';
+        if (trans.wallet_transaction_recall === 'ManiMulti') {
+          const json = JSON.parse(trans.wallet_transaction_Logfile)
+          ret = `Mobile No. : ${json.mn}`;
+        }
+        else if (trans.wallet_transaction_recall === 'BBPS') {
+          const x = trans.wallet_transaction_Logfile;
+          const str = x.slice(x.indexOf('<paramName>'), x.lastIndexOf('</paramValue>') + 13);
+          const res = getObjFromXml(str);
+          for (let k in res) {
+            ret = ret + `${k} : ${res[k]}`
+          }
+        }
+        return ret
+      }
     // useEffect(() => {
     //     console.log('Fetch history')
     //     getTransactons();
@@ -64,6 +98,9 @@ const ListTransactions = () => {
                     <Text style={styles.transType}>Type : {item.wallet_transaction_type}</Text>
                     <Text style={styles.transRecall}>Service : {item.wallet_transaction_recall === 'ManiMulti' ? 'Prepaid Recharge' : item.wallet_transaction_recall}</Text>
                 </View>
+                {item.trans_details && <View style={styles.row}>
+                    <Text style={styles.commission}>Txn Details : {item.trans_details}</Text>
+                </View>}
                 <View style={styles.row}>
                     <Text style={styles.commission}>Commission Earned: {item.payment_Per_Amount.toFixed(2)}</Text>
                 </View>

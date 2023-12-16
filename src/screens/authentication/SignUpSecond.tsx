@@ -12,10 +12,14 @@ import Loading from '../../components/Loading'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import AnimatedInput from '../../components/AnimatedInput'
 import ButtonPrimary from '../../components/ButtonPrimary'
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+
 const SignUpSecond = () => {
     const colorScheme = Appearance.getColorScheme();
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
+
+    const [isTnCAccepted, setIsTnCAccepted] = useState(false)
 
     const [formValue, setFormValue] = useState<any>({
         locationType: { value: '', error: '', pattern: '', required: true },
@@ -210,10 +214,10 @@ const SignUpSecond = () => {
     return (
         <ScrollView>
             <KeyboardAvoidingView>
-                <View style={styles.rootContainer   }>
-                    <View style={{marginVertical: 30}}>
+                <View style={styles.rootContainer}>
+                    <View style={{ marginVertical: 30 }}>
 
-                    <Text style={styles.welcomeText}>We are happy to know you</Text>
+                        <Text style={styles.welcomeText}>We are happy to know you</Text>
                     </View>
 
                     <Text style={styles.dobLable}>Choose Date Of Birth</Text>
@@ -313,8 +317,27 @@ const SignUpSecond = () => {
                         maxLength={6}
                         errorMessage={formValue.pin.error} />
 
+                    <View style={{ alignItems: 'center' }}>
+                        <Pressable
+                            style={{ width: '100%', alignItems: 'center', paddingVertical: 16, marginBottom:12 }} onPress={() => {
+                                navigation.navigate('termsAndConditions', {policy:'terms-and-conditions'})
+                            }}>
+                            <Text style={{ color: colors.primary500, fontSize: 18, fontWeight: 'bold', textDecorationLine: 'underline' }}>Read Terms and Conditions</Text>
+                        </Pressable>
+
+                        <BouncyCheckbox
+                            fillColor={colors.primary500}
+                            textStyle={{ color: colors.primary500, fontSize: 16, textDecorationLine: "none" }}
+                            text="I accept the terms and conditions."
+                            isChecked={isTnCAccepted}
+                            onPress={(isChecked: boolean) => {
+                                setIsTnCAccepted(isChecked)
+                            }} />
+                    </View>
+
                     <View style={{ marginTop: 20, marginBottom: 40 }}>
-                        <ButtonPrimary onPress={handleRegisterCtaPress} label='Register With Us' buttonLabelStyle={{ textTransform: 'uppercase' }} />
+
+                        <ButtonPrimary disabled={!isTnCAccepted} onPress={handleRegisterCtaPress} label='Register With Us' buttonLabelStyle={{ textTransform: 'uppercase' }} />
                     </View>
 
                 </View>
