@@ -10,7 +10,7 @@ import SearchDMTRecipient from '../screens/TransferMoneyFromHomeScreen/SearchDMT
 import FetchBillDetails from '../screens/bbps/FetchBillDetails';
 import ListBillers from '../screens/bbps/ListBillers';
 import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
-import OtpScreen from '../screens/common/OtpScreen';
+// import OtpScreen from '../screens/common/OtpScreen';
 import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus';
 import DMTTabs from '../screens/dmt/DmtTabs';
 import AddRecipient from '../screens/dmt/RecipientTab/AddRecipient';
@@ -42,6 +42,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AboutEPayMain from '../screens/About ePay/AboutEPayMain';
 import PolicyDetails from '../screens/About ePay/PolicyDetails';
 import Notification from '../screens/notification/Notification';
+import { windowHeight, windowWidth } from '../utils/dimension';
+import NewOtpScreen from '../screens/common/NewOtpScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -83,9 +85,10 @@ const HomeScreen = () => {
     }
 
     const TabBarIcon = ({ iconName, label }: any) => {
-        return <View style={{ alignItems: 'center' }} >
-            <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: colors.primary300, justifyContent: 'center', alignItems: 'center' }}>
-                <MaterialIcon name={iconName} size={25} color={colors.white} />
+        // For Tab and mobile
+        return <View style={{ alignItems: 'center', width: windowWidth > 768 ? (windowWidth / 8) : (windowWidth / 6) }} >
+            <View style={{ width: windowWidth / 16, height: windowWidth / 16, borderRadius: 18, backgroundColor: colors.primary300, justifyContent: 'center', alignItems: 'center' }}>
+                <MaterialIcon name={iconName} size={windowWidth / 20} color={colors.white} />
             </View>
             <Text style={{ fontSize: 12, color: colors.white }}>{label}</Text>
         </View>
@@ -94,7 +97,7 @@ const HomeScreen = () => {
         <Tab.Navigator screenOptions={{
             headerShown: true,
             header: CustomHeader,
-            tabBarStyle: { backgroundColor: colors.primary400, height: 60 },
+            tabBarStyle: { backgroundColor: colors.primary400, height: windowHeight / 14 },
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true // hide when keyboard appears 
 
@@ -237,7 +240,7 @@ const TransferMoneyFromHomeScreenStack = () => {
         <Stack.Screen name='searchDMTRecipient' component={SearchDMTRecipient} />
         <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
         <Stack.Screen name='showConveyanceFee' component={ShowConveyanceFee} />
-        <Stack.Screen name='dmtSendMoneyPinScreen' component={OtpScreen} />
+        <Stack.Screen name='dmtSendMoneyPinScreen' component={NewOtpScreen} />
     </Stack.Navigator>
 }
 
@@ -257,7 +260,7 @@ const AppStackTab = () => {
             <Stack.Screen name='notification' component={Notification} options={{ headerShown: true, title: 'Notifications', headerStyle: { backgroundColor: colors.primary500 }, headerTintColor: colors.white }} />
 
             {/* Common Screens */}
-            <Stack.Screen name='otpScreen' component={OtpScreen} options={{ headerShown: false }} />
+            <Stack.Screen name='otpScreen' component={NewOtpScreen} options={{ headerShown: false }} />
             <Stack.Screen name='prepaidTransSuccess' component={PrepaidTransactionStatus} options={{ headerShown: false }} />
             <Stack.Screen name='bbpsTxnStatus' component={BBPSTransactionStatus} options={{ headerShown: false }} />
         </Stack.Navigator>

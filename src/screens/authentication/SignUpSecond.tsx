@@ -320,7 +320,7 @@ const SignUpSecond = () => {
                     <View style={{ alignItems: 'center' }}>
                         <Pressable
                             style={{ width: '100%', alignItems: 'center', paddingVertical: 16, marginBottom:12 }} onPress={() => {
-                                navigation.navigate('termsAndConditions', {policy:'terms-and-conditions'})
+                                navigation.navigate('termsAndConditions', { policy:'terms-and-conditions.html' })
                             }}>
                             <Text style={{ color: colors.primary500, fontSize: 18, fontWeight: 'bold', textDecorationLine: 'underline' }}>Read Terms and Conditions</Text>
                         </Pressable>

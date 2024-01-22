@@ -104,8 +104,8 @@ const ProceedToPay = () => {
                 const isWalletOk = await validateWalletBalance(+item.amount, userData.user.user_EmailID);
                 if (isWalletOk) {
                     console.log('wallet ok');
+                    const rechargeResp = await goForRecharge();
                 }
-                const rechargeResp = await goForRecharge();
             } else {
                 // incorrect pin
                 Alert.alert('Invalid Pin', 'You have entered a wrong PIN!');
@@ -133,9 +133,11 @@ const ProceedToPay = () => {
     useEffect(() => {
         const pin = (route.params as any)?.pin;
         if ((route.params as any)?.pin) {
-            console.log('otp found in prepaid' + pin);
-            if (pin !== '')
+            console.log('otp found in prepaid ' + pin);
+            if (pin !== '') {
                 onPinInput(pin);
+            }
+            navigation.setParams({pin: ''}) // Reset PIN 
         }
     }, [(route.params as any)?.pin])
 

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, BackHandler, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import colors from '../../constants/colors';
 import { windowHeight } from '../../utils/dimension';
 
@@ -9,14 +9,14 @@ const BBPSTransactionStatus = () => {
     const [txnStatus, setTxnStatus] = useState<any>({});
     const navigation = useNavigation<any>();
 
-
     const readAsynchStorage = async () => {
         //  
         const _bbpsTxnStatus = await AsyncStorage.getItem('bbpsTxnStatus') || '{}';
-        setTxnStatus(JSON.parse(_bbpsTxnStatus));
+        setTxnStatus(JSON.parse(_bbpsTxnStatus).resp);
+        // console.log('------ in BBPS TXN Status Page -------')
+        // console.log(JSON.parse(_bbpsTxnStatus).resp)
     }
     const handleBackButton = () => {
-        // console.log('back button pressed'); 
         navigation.popToTop(); // goes to the main screen
         return true; // do not default go back if true
     }
@@ -41,7 +41,7 @@ const BBPSTransactionStatus = () => {
 
                 <Text style={styles.header}>You Bill Payment Status</Text>
                 <Text style={styles.text}>Transaction {txnStatus?.responseReason}</Text>
-                {txnStatus?.respAmount && <Text style={styles.amount}>₹ {txnStatus?.respAmount / 100}</Text>}
+                {txnStatus?.respAmount && <Text style={styles.amount}>₹ {txnStatus?.respAmount}</Text>}
                 {txnStatus?.respCustomerName && <Text style={styles.details}>Name:  {txnStatus?.respCustomerName}</Text>}
                 {txnStatus?.txnRefId && <Text style={styles.details}>Ref Id:  {txnStatus?.txnRefId}</Text>}
             </View>

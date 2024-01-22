@@ -88,6 +88,7 @@ const EnterPinToHome = () => {
             if (pin !== '') {
                 // console.log('pin is ' + route.params.pin)
                 onPinInput(pin)
+                navigation.setParams({pin: ''}) // Reset PIN 
             }
         }
     }, [(route.params as any)?.pin])

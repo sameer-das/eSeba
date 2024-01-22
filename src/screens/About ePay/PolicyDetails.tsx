@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import React from 'react'
-import { windowHeight } from '../../utils/dimension'
 import { WebView } from 'react-native-webview';
 import colors from '../../constants/colors';
 import { useRoute } from '@react-navigation/native';
@@ -13,8 +12,8 @@ const PolicyDetails = () => {
     <View style={styles.container}>
     <WebView
          style={{ flex: 1 }}
-         originWhitelist={['https://esebakendra.com', 'https://secure.ccavenue.com']}
-         source={{ uri: `https://esebakendra.com/esk/about/${route.params?.policy}` }}
+         originWhitelist={['https://epay.ind.in/']}
+         source={{ uri: `https://epay.ind.in/${route.params?.policy}` }}
          domStorageEnabled
          javaScriptEnabled
          allowUniversalAccessFromFileURLs

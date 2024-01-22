@@ -8,19 +8,19 @@ const AboutEPayMain = () => {
     return (
         <View style={{ flex: 1, backgroundColor: colors.white, padding: 8 }}>
             <View style={{ marginTop: 16 }}>
-                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'about-us' }) }}>
+                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'about-us.html' }) }}>
                     <Text style={styles.profileButtonLanbel}>About Us</Text>
                     {/* <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} /> */}
                 </Pressable>
-                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'privacy-policy' }) }}>
+                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'privacy-policy.html' }) }}>
                     <Text style={styles.profileButtonLanbel}>Privacy Policy</Text>
                     {/* <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} /> */}
                 </Pressable>
-                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'terms-and-conditions' }) }}>
+                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'terms-and-conditions.html' }) }}>
                     <Text style={styles.profileButtonLanbel}>Terms and Conditions</Text>
                     {/* <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} /> */}
                 </Pressable>
-                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'return-and-refund-policy' }) }}>
+                <Pressable style={styles.profileButton} onPress={() => { navigation.push('policyDetails', { policy: 'return-and-refund-policy.html' }) }}>
                     <Text style={styles.profileButtonLanbel}>Refund and Return Policy</Text>
                     {/* <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} /> */}
                 </Pressable>

@@ -12,8 +12,8 @@ const AuthStack = () => {
 
     const SignUpStack = () => {
         return (<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='CheckRefNo'>
-            {/* <Stack.Screen name="CheckRefNo" component={CheckRefNo} />
-            <Stack.Screen name="SignUpFirst" component={SignUpFirst} /> */}
+            <Stack.Screen name="CheckRefNo" component={CheckRefNo} />
+            <Stack.Screen name="SignUpFirst" component={SignUpFirst} />
             <Stack.Screen name="SignUpSecond" component={SignUpSecond} />
             <Stack.Screen name="termsAndConditions" component={PolicyDetails} />
         </Stack.Navigator>)

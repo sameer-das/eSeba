@@ -7,43 +7,52 @@ import { PermissionsAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 
+const uniqByKeepLast = (data: any[], key: Function) => {
+    return [...new Map(
+        data.map(x => [key(x), x])
+    ).values()]
+}
+
+const getContactsArray = (contacts: any[]) => {
+    const result: any[] = [];
+    
+    contacts.forEach((contact: any) => {
+        const con = contact.phoneNumbers.map((phno: any) => {
+            return { name: contact.displayName, number: phno.number.replace(/-|\s/g, "") };;
+        });        
+        result.push(...con);
+    });
+
+    const unSortedUniqueArray = uniqByKeepLast(result, (it: any) => it.number.substr(-10));
+    unSortedUniqueArray.sort((a, b) => {
+        if (a.name > b.name)
+            return 1
+        else
+            return -1
+    })
+    return unSortedUniqueArray;
+}
+
+
+
 const SearchContact = () => {
     const navigation = useNavigation<any>();
 
     const { userData } = useContext(AuthContext);
     const [mobileNo, setMobileNo] = useState('');
+
     const [contactList, setContactList] = useState<any[]>([]);
-    const [filteredContactList, setFilteredContactList] = useState<any[]>([]);
+    const [filteredContactList, setFilteredContactList] = useState<any[]>(contactList);
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const getContactsArray = (contacts: any[]) => {
-        const result: any[] = [];
-        
-        contacts.forEach((contact: any) => {
-            const con = contact.phoneNumbers.map((phno: any) => {
-                return { name: contact.givenName, number: phno.number.replace(/-|\s/g, "") }
-            })
-            result.push(...con);
-        });
-        const unSortedUniqueArray = uniqByKeepLast(result, (it: any) => it.number.substr(-10));
-        unSortedUniqueArray.sort((a, b) => {
-            if (a.name > b.name)
-                return 1
-            else
-                return -1
-        })
-        return unSortedUniqueArray;
-    }
-
-    const uniqByKeepLast = (data: any[], key: Function) => {
-        return [...new Map(
-            data.map(x => [key(x), x])
-        ).values()]
-    }
+   
+ 
 
     const contactPressHandler = (item: any) => {
         navigation.push('showPlan', {...item})
     }
+
     const contactItem = ({ item }: any) => {
         return (
             <Pressable onPress={() => contactPressHandler(item)} style={styles.contactItem}>
@@ -53,22 +62,17 @@ const SearchContact = () => {
         )
     }
 
-    const filterList = (searchText: string) => {
-        if (searchText.toLowerCase() === '') {
-            setFilteredContactList(contactList);
-        }
-        else {
-            const result = contactList.filter(contact => {
-                return contact.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                    contact.number.toLowerCase().includes(searchText.toLowerCase())
-            })
-            setFilteredContactList(result)
-        }
-    }
+    useEffect(() => {
+        const result = contactList.filter(contact => {
+            return contact.name.toLowerCase().includes(mobileNo.toLowerCase()) ||
+                contact.number.toLowerCase().includes(mobileNo.toLowerCase())
+        });
+        setFilteredContactList(result);
+    }, [contactList, mobileNo])
 
-    const searchHandler = (searchText: string) => {
+
+    const onSearchMobileNo = (searchText: string) => {
         setMobileNo(searchText);
-        filterList(searchText.trim());
     }
 
     const newContactPressHandler = () => {
@@ -89,7 +93,6 @@ const SearchContact = () => {
                 .then((contacts) => {
                     const contactArray = getContactsArray(contacts);
                     setContactList(contactArray);
-                    setFilteredContactList(contactArray);
                     setIsLoading(false);
                 })
                 .catch((e) => {
@@ -116,7 +119,7 @@ const SearchContact = () => {
                         placeholder='Number or Name'
                         value={mobileNo}
                         autoFocus
-                        onChangeText={searchHandler} />
+                        onChangeText={onSearchMobileNo} />
                 </View>
             </View>
 

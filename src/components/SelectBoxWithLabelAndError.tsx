@@ -17,15 +17,17 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
     }
 
     const [searchValue, setSearchValue] = useState('');
-    const [filteredListData, setFilteredListData] = useState([]);
+    const [filteredListData, setFilteredListData] = useState(listData);
 
     const onSearchChange = (text: string) => {
-        setSearchValue(text);
-        if (!text)
-            setFilteredListData([]);
-        const filtered = listData.filter((curr: any) => curr[searchKey].toLowerCase().includes(text.toLowerCase()));
-        setFilteredListData(filtered);
+        setSearchValue(text);       
     }
+
+    useEffect(() => {
+        const filtered = listData.filter((curr: any) => curr[searchKey].toLowerCase().includes(searchValue.toLowerCase()));
+        setFilteredListData(filtered);
+    }, [searchValue, listData]);
+
 
     const openModal = () => {
         console.log('open modal ')

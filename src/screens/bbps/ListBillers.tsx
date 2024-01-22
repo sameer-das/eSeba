@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Alert, TextInput, FlatList, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Alert, TextInput, FlatList, Pressable, Appearance } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { getAllBillers } from '../../../src/API/services';
 // import { getAllBillers } from '../../API/services-fake';
@@ -28,8 +28,11 @@ const Biller = (props: any) => {
 
 
 const ListBillers = () => {
+    const colorScheme = Appearance.getColorScheme();
+    // console.log('Color Scheme : ' + colorScheme)
     const [billers, setBillers] = useState([]);
-    const [filteredBillers, setFilteredBillers] = useState([]);
+    const [filteredBillers, setFilteredBillers] = useState(billers);
+
     const [searchValue, setSearchValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +42,7 @@ const ListBillers = () => {
     const callAPI = async (searchValue: string) => {
         try {
             setIsLoading(true);
-            console.log('calling api')
+            // console.log('calling api')
             const resp: any = await getAllBillers(searchValue);
             // console.log(resp)
             const {data} = resp;
@@ -71,15 +74,13 @@ const ListBillers = () => {
 
     }, [])
 
-    const searchHandler = (searchValue: string) => {
-        setSearchValue(searchValue);
-        if(searchValue === '') {
-            setFilteredBillers(billers);
-        } else {
+    useEffect(() => {
             const filteredValue = billers.filter((item: any) => item.blr_name.toLowerCase().includes(searchValue.toLowerCase()))
             setFilteredBillers(filteredValue)
-        }
+    },[searchValue, billers])
 
+    const searchHandler = (searchValue: string) => {
+        setSearchValue(searchValue);
     }
 
     if(isLoading) {
@@ -89,7 +90,8 @@ const ListBillers = () => {
     return (
         <View>
             <View style={styles.searchInputContainer}>
-                <TextInput style={styles.searchInput} placeholder='Search Biller'
+                <TextInput style={styles.searchInput} placeholder='Search Biller' 
+                    placeholderTextColor={ colorScheme === null || colorScheme === 'light' ? colors.primary500 : colors.primary500}
                     onChangeText={(val: string) => searchHandler(val)}
                     value={searchValue} />
             </View>

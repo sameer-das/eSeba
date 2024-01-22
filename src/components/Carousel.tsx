@@ -88,11 +88,11 @@ const CarouselComponent = () => {
         timer = setInterval(() => {
             if (currentIndex === data.length - 1) {
                 setCurrentIndex(0);
-                flatListRef.current.scrollToIndex({ animated: true, index: 0 })
+                flatListRef?.current?.scrollToIndex({ animated: true, index: 0 })
             } else {
                 setCurrentIndex(x => x + 1)
                 if (currentIndex < data.length)
-                    flatListRef.current.scrollToIndex({ animated: true, index: +currentIndex + 1 })
+                    flatListRef?.current?.scrollToIndex({ animated: true, index: +currentIndex + 1 })
             }
         }, CAROUSEL_DURATION)
     }
@@ -105,7 +105,7 @@ const CarouselComponent = () => {
 
 
     if (carouselData.length === 0) {
-        return <View style={{ height: 160, backgroundColor: colors.primary500, justifyContent: 'center', alignItems: 'center' }}>
+        return <View style={{ height: '100%', backgroundColor: colors.primary500, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size={30} color={colors.white} />
             <Text style={{ color: colors.white, fontSize: 14 }}>Fetching Latest Deals</Text>
         </View>

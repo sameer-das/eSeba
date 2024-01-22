@@ -101,9 +101,11 @@ const ShowConveyanceFee = () => {
     useEffect(() => {
         const pin = (route.params as any)?.pin;
         if ((route.params as any)?.pin) {
-            console.log('otp Found in DMT show conv screen ' + pin);
+            console.log('otp Found in DMT show conv screen ' + pin); // Reset PIN 
             if (pin !== '')
                 validatePinAndWalletBalance(pin)
+
+            navigation.setParams({ pin: '' })
         }
     }, [(route.params as any)?.pin])
 

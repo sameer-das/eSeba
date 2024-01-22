@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, FlatList, Image, Pressable, Alert } from 'react-native'
 import React, { useState } from 'react'
 import colors from '../constants/colors';
-import { windowWidth } from '../utils/dimension';
+import { windowHeight, windowWidth } from '../utils/dimension';
 import { useNavigation } from '@react-navigation/native';
 import { IamgeMapping } from '../constants/billers-mapping';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,7 +19,7 @@ const HomeCard = ({ item }: { item: any }) => {
                 { services_id: item.services_ID, services_cat_id: item.services_Cat_ID }
             ));
             navigation.navigate('DMTStack')
-        } else if (['PGDCA', 'DCA', 'Education Fee', 'PAN Card'].includes(item.services_Cat_Name)) {
+        } else if (['PGDCA', 'DCA', 'PAN Card'].includes(item.services_Cat_Name)) {
             // No access as per Avinash from mobile
             Alert.alert('Limited Access', 'Please register as a retailer to avail these services. For more information, please contact us at Toll-Free No 1800 8904 368')
         }
@@ -38,8 +38,9 @@ const HomeCard = ({ item }: { item: any }) => {
         const imageObj = IamgeMapping.find(img => img.name === item.services_Cat_ImagesName)
         const imageUri = imageObj.imageUri;
         return (<Pressable style={styles.cardItem} onPress={() => handleCardItemPress(item)}>
+            {/* For tab and mobile */}
             <Image source={imageUri}
-                style={{ width: 36, height: 36 }} />
+                style={{ width: windowWidth > 500 ? (windowWidth / 20) : 36, height: windowWidth > 500 ? (windowWidth / 20) : 36 }} /> 
             <Text style={styles.cardItemLabel}>{item.services_Cat_Name}</Text>
         </Pressable>
         )
@@ -47,10 +48,11 @@ const HomeCard = ({ item }: { item: any }) => {
 
     // calculation for dynamic height
     const noOfRow = Math.floor(item.services.length / 4) + 1;
-    const height = (Math.floor(windowWidth / 4) * noOfRow) + 60
-
+    {/* For tab and mobile */}
+    const tabHeight = noOfRow > 1 ?  ((Math.floor(windowWidth / 4) - 80) * noOfRow) + 120 : Math.floor(windowWidth / 4);
+    const mobileHeight = noOfRow > 1 ?  (60 * noOfRow) + 140 : 140;
     return (
-        <View style={[styles.homeCards, { height: height }]}>
+        <View style={[styles.homeCards, { height:windowHeight > 900 ? tabHeight : mobileHeight}]}>
             <Text style={styles.cardTitle}>{item.services_Name}</Text>
             <FlatList
                 data={item.services}
@@ -84,14 +86,18 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
     cardItem: {
-        height: Math.floor(windowWidth / 4) - 25,
-        width: Math.floor(windowWidth / 4) - 25,
+        // For tab and mobile
+        height: windowWidth > 500 ? Math.floor(windowWidth / 4) - 80 : 70,
+        width: windowWidth > 500 ? Math.floor(windowWidth / 4) - 25 : 70,
         marginHorizontal: 8,
-        marginVertical: 12,
+        marginVertical: 8,
         alignItems: 'center',
+        justifyContent:'center',
+        // backgroundColor: 'cyan'
     },
     cardItemLabel: {
-        fontSize: 12,
+        // For tab and mobile
+        fontSize: windowWidth > 500 ? (windowWidth / 60) : 12,
         fontWeight: '400',
         textAlign: 'center',
         color: colors.white,

@@ -14,7 +14,7 @@ const ShowPlans = () => {
   const route = useRoute();
 
   const [planDetails, setPlanDetails] = useState<any[]>([]);
-  const [filteredPlanDetails, setFilteredPlanDetails] =  useState<any[]>([]);
+  const [filteredPlanDetails, setFilteredPlanDetails] = useState<any[]>(planDetails);
   const [planSearchText, setPlanSearchText] = useState<string>('');
 
   const [isLoading, setIsLoading] = useState(false)
@@ -50,34 +50,32 @@ const ShowPlans = () => {
     getMobileDetails()
   }, []);
 
+  useEffect(() => {
+    const filterd = planDetails.filter((plan: any) => {
+      const _searchText = planSearchText.toLowerCase().trim();
+      return plan.amount.toString().toLowerCase().indexOf(_searchText) >= 0 ||
+        plan.description.toLowerCase().indexOf(_searchText) >= 0 ||
+        plan.validity.toLowerCase().indexOf(_searchText) >= 0 ||
+        plan.planName.toLowerCase().indexOf(_searchText) >= 0
+    })
+    setFilteredPlanDetails(filterd);
+  }, [planDetails, planSearchText])
 
-  if (isLoading)
-    return <Loading label={'Hang tight! We are fetching the details!'} />
 
 
   const onPlanPress = async (item: any) => {
-    console.log(item);
     await AsyncStorage.setItem('rechargePlan', JSON.stringify(item))
     navigation.navigate('proceedToPay');
   }
 
-  console.log(planDetails[0])
+
   const planSearchHandler = (searchText: string) => {
-    const _searchText = searchText.toLowerCase().trim();
-    console.log(_searchText)
-    if(_searchText === '')
-      setFilteredPlanDetails(planDetails);
-    else {
-      const filterd = planDetails.filter((plan:any) =>{
-        return plan.amount.toString().toLowerCase().indexOf(_searchText) >= 0 || 
-          plan.description.toLowerCase().indexOf(_searchText) >= 0 ||
-          plan.validity.toLowerCase().indexOf(_searchText) >= 0 ||
-          plan.planName.toLowerCase().indexOf(_searchText) >= 0
-      })
-      setFilteredPlanDetails(filterd);
-    }    
     setPlanSearchText(searchText);
   }
+
+    
+  if (isLoading)
+    return <Loading label={'Hang tight! We are fetching the details!'} />
 
   return (
     <View style={styles.rootContainer}>
@@ -85,12 +83,12 @@ const ShowPlans = () => {
 
       <View style={styles.listContainer}>
         <View style={styles.searchboxContainer}>
-          <TextInput style={styles.searchboxInput} 
-          placeholder='Search plan or validity' 
-          keyboardType='default'
-          value={planSearchText}
-          onChangeText={planSearchHandler}
-          placeholderTextColor={colors.primary300} />
+          <TextInput style={styles.searchboxInput}
+            placeholder='Search plan or validity'
+            keyboardType='default'
+            value={planSearchText}
+            onChangeText={planSearchHandler}
+            placeholderTextColor={colors.primary300} />
         </View>
         <FlatList showsVerticalScrollIndicator={false} data={filteredPlanDetails}
           renderItem={({ item }) => <MobilePlanCard item={item} handlePress={onPlanPress} />} />
