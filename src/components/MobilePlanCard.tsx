@@ -2,9 +2,9 @@ import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React from 'react'
 import colors from '../constants/colors'
 
-const MobilePlanCard = ({ item, handlePress, uniqueKey }: any) => {
+const MobilePlanCard = ({ item, handlePress }: any) => {
 
-    return (<Pressable style={styles.planCard} onPress={() => handlePress(item)} key={uniqueKey}>
+    return (<Pressable style={styles.planCard} onPress={() => handlePress(item)}>
         <Text style={styles.planName}>{item.planName}</Text>
         <View style={styles.planContainer}>
             <Text style={styles.planAmount}>₹ {item.amount}</Text>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     },
     validity: {
         fontSize: 14,
-        fontWeight:'bold',
+        fontWeight: 'bold',
         paddingLeft: 18,
         color: colors.primary500
     },

@@ -1,14 +1,16 @@
-import { FlatList, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import colors from '../../constants/colors';
+import React, { useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { TabBar, TabView } from 'react-native-tab-view';
 import MobilePlanCard from '../../components/MobilePlanCard';
+import colors from '../../constants/colors';
 
 
 const TabPanel = ({ plan, handlePress }: any) => {
     return (<ScrollView style={{ flex: 1 }} scrollEnabled showsVerticalScrollIndicator={false} >
-        {plan?.plans.map((curr: any, index: number) => {
-            return <MobilePlanCard item={curr} uniqueKey={index} handlePress={handlePress} />
+        {plan?.plans.map((curr: any) => {
+            return <View key={curr.planName + curr.amount + curr.validity}>
+                <MobilePlanCard item={curr} handlePress={handlePress} />
+            </View>
         })}
     </ScrollView>)
 }
@@ -39,7 +41,7 @@ const PlanTabView = ({ plans, handlePress }: any) => {
     const renderTabBar = (props: any) => {
         return <TabBar
             {...props}
-            indicatorStyle={{ backgroundColor: colors.white,height: 4 }}
+            indicatorStyle={{ backgroundColor: colors.white, height: 4 }}
             style={{ backgroundColor: colors.primary500 }}
             scrollEnabled={true}
             tabStyle={{ width: 150 }}
