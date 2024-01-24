@@ -2,13 +2,12 @@ import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React from 'react'
 import colors from '../constants/colors'
 
-const MobilePlanCard = ({ item, handlePress }: any) => {
+const MobilePlanCard = ({ item, handlePress, uniqueKey }: any) => {
 
-
-    return (<Pressable style={styles.planCard} onPress={() => handlePress(item)}>
+    return (<Pressable style={styles.planCard} onPress={() => handlePress(item)} key={uniqueKey}>
         <Text style={styles.planName}>{item.planName}</Text>
         <View style={styles.planContainer}>
-            <Text style={styles.planAmount}>{item.amount}</Text>
+            <Text style={styles.planAmount}>₹ {item.amount}</Text>
             <Text style={styles.validity}> Validy : {item.validity}</Text>
         </View>
         <View>
@@ -21,33 +20,26 @@ export default MobilePlanCard
 
 const styles = StyleSheet.create({
     planCard: {
-        marginVertical: 6,
-        // shadowColor: '#ccc',
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.5,
-        // shadowRadius: 4,
-        // elevation: 2,
+        marginTop: 12,
         borderColor: colors.primary500,
         borderWidth: 1,
         borderRadius: 4,
-        // borderLeftColor: colors.primary500,
-        borderLeftWidth: 12,
-        paddingLeft: 16,
-        paddingVertical: 8,
-        paddingRight: 8,
+        borderLeftColor: colors.primary500,
+        borderLeftWidth: 6,
+        padding: 8
 
     },
     planName: {
-        fontSize: 18,
+        fontSize: 14,
         color: colors.primary500,
         fontWeight: 'bold',
     },
     planAmount: {
-        fontSize: 36,
+        fontSize: 28,
         fontWeight: 'bold',
         color: colors.primary500,
         paddingRight: 18,
-        borderRightColor: colors.primary300,
+        borderRightColor: colors.primary500,
         borderRightWidth: 2
     },
     planContainer: {
@@ -57,8 +49,9 @@ const styles = StyleSheet.create({
     },
     validity: {
         fontSize: 14,
+        fontWeight:'bold',
         paddingLeft: 18,
-        color: colors.primary400
+        color: colors.primary500
     },
     details: {
         fontSize: 14,

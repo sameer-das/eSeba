@@ -60,9 +60,9 @@ const NewOtpScreen = () => {
                 <Pressable onPress={() => onKeyPress('7')} style={styles.key}><Text style={styles.keyText}>7</Text></Pressable>
                 <Pressable onPress={() => onKeyPress('8')} style={styles.key}><Text style={styles.keyText}>8</Text></Pressable>
                 <Pressable onPress={() => onKeyPress('9')} style={styles.key}><Text style={styles.keyText}>9</Text></Pressable>
-                <Pressable onPress={() => onKeyPress('back')} style={styles.key}><Text><MaterialIcon name='backspace' size={36} color={colorScheme === 'light' ? colors.primary500 : colors.white} /></Text></Pressable>
+                <Pressable onPress={() => onKeyPress('back')} style={styles.key}><Text><MaterialIcon name='backspace' size={28} color={colorScheme === 'light' ? colors.primary500 : colors.white} /></Text></Pressable>
                 <Pressable onPress={() => onKeyPress('0')} style={styles.key}><Text style={styles.keyText}>0</Text></Pressable>
-                <Pressable disabled={pin.length != 4} onPress={() => onKeyPress('enter')} style={styles.key}><Text><MaterialIcon name='check-circle-outline' size={36} color={ pin.length === 4 ? (colorScheme === 'light' ? colors.primary500 : colors.white) : colors.primary200} /></Text></Pressable>
+                <Pressable disabled={pin.length != 4} onPress={() => onKeyPress('enter')} style={styles.key}><Text><MaterialIcon name='check-circle-outline' size={28} color={ pin.length === 4 ? (colorScheme === 'light' ? colors.primary500 : colors.white) : colors.primary200} /></Text></Pressable>
             </View>
         </View>
     )

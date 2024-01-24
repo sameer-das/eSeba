@@ -33,12 +33,12 @@ const ContactAndOperatorDetailCard = () => {
 
                 <View style={{ flexDirection: 'row', gap: 20, marginTop: 24 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <MaterialIcon name='signal-cellular-alt' size={30} color={colors.primary500} />
+                        <MaterialIcon name='signal-cellular-alt' size={30} color={colors.white} />
                         <Text style={styles.mobileOperatorLabel}> {mobileDetails?.currentOperator}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <MaterialIcon name='location-on' size={30} color={colors.primary500} />
+                        <MaterialIcon name='location-on' size={30} color={colors.white} />
                         <Text style={styles.mobileCircleLable}> {mobileDetails?.currentLocation}</Text>
                     </View>
                 </View>
@@ -55,7 +55,7 @@ export default ContactAndOperatorDetailCard
 const styles = StyleSheet.create({
     mobileDetials: {
         padding: 8,
-        backgroundColor: colors.primary200,
+        backgroundColor: colors.primary500,
         borderRadius: 8,
         flexDirection: 'row',
         alignItems: 'center',
