@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useRef, useEffect, useContext } from 'react';
 import { WebView } from 'react-native-webview';
 import 'react-native-get-random-values';
@@ -38,9 +38,18 @@ const ConfirmRechargePage = () => {
         <WebView
             style={{ flex: 1, borderWidth: 2, borderColor: 'red' }}
             ref={webviewRef}
-            originWhitelist={['https://esebakendra.com', 'https://secure.ccavenue.com']}
+            // originWhitelist={['https://esebakendra.com', 'https://secure.ccavenue.com']}
             source={{ uri: `https://esebakendra.com/esk/ccavenuemobile?email=${userData.user.user_EmailID}&mobile=${userData.user.mobile_Number}&amount=${(route.params as any).amount}&redirectUrl=${redirect_url}` }}
-            // source={{ uri: `https://esebakendra.com/esk/ccavenuemobilestatus` }}
+
+            onNavigationStateChange={(event) => {
+                // console.log(event);
+                console.log('Navigation changed :: ' + event.url);
+                    if (event.url.includes("upi://pay?pa")) {
+                        Linking.openURL(event.url);
+                    } else {
+                        console.log('Normal url')
+                    }              
+            }}
             domStorageEnabled
             javaScriptEnabled
             allowUniversalAccessFromFileURLs
@@ -50,8 +59,8 @@ const ConfirmRechargePage = () => {
             cacheEnabled={false}
             startInLoadingState
             renderLoading={() => {
-                return (<View style={{flex: 1}}>
-                    <ActivityIndicator size={'large'} color={colors.primary500}/>
+                return (<View style={{ flex: 1 }}>
+                    <ActivityIndicator size={'large'} color={colors.primary500} />
                 </View>)
             }}
         />

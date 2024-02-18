@@ -8,7 +8,7 @@ const BillDetails = ({ billerResponse, proceedToPay, inputParams, additionalInfo
 
     const payHandler = () => {
         console.log('Proceed to pay clicked');
-        if(additionalInfo) {
+        if (additionalInfo) {
             proceedToPay(+amount * 100);
         } else {
             proceedToPay(billerResponse.billAmount)
@@ -32,11 +32,11 @@ const BillDetails = ({ billerResponse, proceedToPay, inputParams, additionalInfo
             // console.log(serviceDetails);
         }
         read();
-    },[])
+    }, [])
 
     useEffect(() => {
-        if(amount) {
-            if(+amount > 0) {
+        if (amount) {
+            if (+amount > 0) {
                 setDisabled(false)
             } else {
                 setDisabled(true)
@@ -47,12 +47,12 @@ const BillDetails = ({ billerResponse, proceedToPay, inputParams, additionalInfo
     }, [amount]);
 
     let additionalInfoRow;
-    // For Fast tag dont show add biillerresponse amount to additionalinfo amount
+    // For Fast tag dont add biillerresponse amount to additionalinfo amount
     // add more conditions
-    if(currentServiceDetails?.services_cat_id == 23 && currentServiceDetails?.services_id == 4) {
-        additionalInfoRow = <Text style={styles.bill_details_value}>₹ {+additionalInfo?.info[0].infoValue}</Text>
+    if (currentServiceDetails?.services_cat_id == 23 && currentServiceDetails?.services_id == 4) {
+        additionalInfoRow = <Text style={styles.bill_details_value}>₹ {+(additionalInfo?.info[0].infoValue.split(',').join(''))}</Text>
     } else {
-        additionalInfoRow = <Text style={styles.bill_details_value}>₹ {+additionalInfo?.info[0].infoValue + (+billerResponse?.billAmount / 100)}</Text>
+        additionalInfoRow = <Text style={styles.bill_details_value}>₹ {+(additionalInfo?.info[0].infoValue.split(',').join('')) + (+billerResponse?.billAmount / 100)}</Text>
     }
 
     return (
@@ -112,16 +112,11 @@ const BillDetails = ({ billerResponse, proceedToPay, inputParams, additionalInfo
             </View>
 
 
-            {additionalInfo
-                ?
-                <Pressable style={[styles.confirm_cta, disabled ? {backgroundColor:colors.primary100} : {}]} onPress={payHandler}  disabled={disabled}>
-                    <Text style={styles.confirm_cta_text}>Proceed to pay</Text>
-                </Pressable>
-                :
-                <Pressable style={styles.confirm_cta} onPress={payHandler}>
-                    <Text style={styles.confirm_cta_text}>Proceed to pay normal</Text>
-                </Pressable>
-            }
+            <Pressable style={[styles.confirm_cta, disabled ? { backgroundColor: colors.primary100 } : {}]} onPress={payHandler} disabled={disabled}>
+                <Text style={styles.confirm_cta_text}>Proceed to pay</Text>
+            </Pressable>
+
+
 
         </View>
     )
@@ -137,7 +132,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 8,
         elevation: 5,
-    
+
     },
     card_center_vertical: {
         justifyContent: 'center'
@@ -146,7 +141,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        flexWrap:'wrap'
+        flexWrap: 'wrap'
     },
     paramName: {
         fontSize: 14,

@@ -63,7 +63,7 @@ const Profile = () => {
     { id: 'mother', name: 'Mother' },
     { id: 'spouse', name: 'Spouse' },
     { id: 'son', name: 'Son' },
-    { id: 'daughter', name: 'Dauhgter' },
+    { id: 'daughter', name: 'Daughter' },
     { id: 'sibling', name: 'Sibling' },
   ];
 

@@ -1,13 +1,32 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { StyleSheet, Text, View, TextInput, Pressable, NativeModules, DeviceEventEmitter } from 'react-native'
+import React, { useContext, useState, useEffect } from 'react'
 import colors from '../../constants/colors'
 import { AuthContext } from '../../context/AuthContext'
 import { useNavigation } from '@react-navigation/native'
+const { CCAvenueBridgeModule } = NativeModules;
 
 const RechargeWallet = () => {
   const { userData } = useContext(AuthContext);
   const [amount, setAmount] = useState('');
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    const eventListener = DeviceEventEmitter.addListener('EventReminder', event => {
+      // console.log(event.eventProperty) //  
+
+      if(event.eventProperty === 'move_to_top') {
+        navigation.popToTop();
+      }
+
+    });
+
+    // Removes the listener once unmounted
+    return () => {
+      console.log('Native event listener removed in RechargeWallet component');
+      eventListener.remove();
+    };
+
+  }, []);
 
   return (
     <View style={styles.rootContainer}>
@@ -24,8 +43,16 @@ const RechargeWallet = () => {
       <Pressable style={styles.rechargeButton} onPress={() => {
         if (!amount)
           return;
+        // navigation.navigate('confirmWalletRechargePage', { amount: amount })
 
-        navigation.navigate('confirmWalletRechargePage', { amount: amount })
+        const redirect_url: string = `https://api.esebakendra.com/api/GSKRecharge/CCAvenueCallBack`;
+        const CCAVENUE_URL = `https://esebakendra.com/esk/ccavenuemobile?email=${userData.user.user_EmailID}&mobile=${userData.user.mobile_Number}&amount=${amount}&redirectUrl=${redirect_url}`
+        // console.log('PAYMENT_URL : ' + CCAVENUE_URL);
+        CCAvenueBridgeModule
+          .openWebView(CCAVENUE_URL, (err: any, message: string) => {
+            if (err) return;
+            console.log('Messsage from java ' + message)
+          });
       }}>
         <Text style={styles.rechargeButtonLabel}>Proceed</Text>
       </Pressable>
