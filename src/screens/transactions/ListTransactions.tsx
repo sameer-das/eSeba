@@ -22,7 +22,7 @@ const ListTransactions = () => {
                 const _formattedData = data.data.map((curr: any) => {
                     return { ...curr, wallet_transaction_Date: new Date(curr.wallet_transaction_Date), trans_details: getTransDetails(curr) }
                 });
-                console.log(_formattedData)
+                // console.log(_formattedData)
                 setTransactions(_formattedData);
             } else {
                 setTransactions([]);

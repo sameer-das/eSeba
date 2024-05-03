@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useState, useEffect } from "react";
 import { getUserInfo, validateUser } from "../API/services";
 import { Alert } from 'react-native';
+import {decode} from 'base-64';
+
 export const AuthContext = createContext<IAuthContext>({
     userData: null,
     isLoading: false,
@@ -41,14 +43,16 @@ export const AuthProvider = ({ children }: { children: any }) => {
             const resp = await validateUser(credentials);
             // console.log(resp.data);
             if (resp.data.status === 'Success' && resp.data.data && resp.data?.data?.userDetais && resp.data?.data?.userDetais?.user_ID) {
+                await AsyncStorage.setItem('token', resp.data.data?.tokens?.token);
+                setToken(resp.data.data?.tokens?.token);
                 // call user Info 
                 const userInfoResp = await getUserInfo(resp.data.data.userDetais.user_ID);
                 if (userInfoResp.data.status === 'Success' && userInfoResp.data.code === 200) {
                     await AsyncStorage.setItem('userData', JSON.stringify(userInfoResp.data.data));
-                    await AsyncStorage.setItem('token', 'xxxxxxxxxxxxxxxx');
+                    
                     const menuCategories = getFormattedServices(resp.data.data);
                     await AsyncStorage.setItem('menuCategories', JSON.stringify(menuCategories));
-                    setToken('xxxxxxxxxxxxxxxx');
+                    
                     setMenuCategories(menuCategories);
                     setUserData(userInfoResp.data.data);
                     setIsLoading(false);
@@ -111,7 +115,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
         setUserData(null);
         setMenuCategories(null);
         await AsyncStorage.setItem('userData', '');
-        await AsyncStorage.setItem('token', '');
+        await AsyncStorage.removeItem('token');
         await AsyncStorage.setItem('menuCategories', '');
     }
 
@@ -125,12 +129,25 @@ export const AuthProvider = ({ children }: { children: any }) => {
             if (userData === '' || !userData || menuCategories === '' || token === '') {
                 console.log('Login Not Found')
                 clearAsyncStorageForUserData();
-            }
-            else {
-                console.log('Login Found')
+            } else if(token) {
+                console.log('Token found')
+                const _payload = token.split('.')[1];
+                const payload = decode(_payload);
+                const expiry = (JSON.parse(payload)).exp;
+                if(Math.floor((new Date).getTime() / 1000) >  expiry) {
+                    console.log('Token invalid');
+                    logout();
+                }     
+                console.log('Token valid')
                 setUserData(JSON.parse(userData));
                 setToken(JSON.stringify(token));
                 setMenuCategories(JSON.parse(menuCategories));
+
+            } else {
+                // console.log('Login Found')
+                // setUserData(JSON.parse(userData));
+                // setToken(JSON.stringify(token));
+                // setMenuCategories(JSON.parse(menuCategories));
             }
             setIsLoading(false);
         } catch (e) {

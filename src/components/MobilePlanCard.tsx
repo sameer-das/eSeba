@@ -8,7 +8,10 @@ const MobilePlanCard = ({ item, handlePress }: any) => {
         <Text style={styles.planName}>{item.planName}</Text>
         <View style={styles.planContainer}>
             <Text style={styles.planAmount}>₹ {item.amount}</Text>
-            <Text style={styles.validity}> Validy : {item.validity}</Text>
+            <View>
+                <Text style={styles.validity}> Validy : {item.validity}</Text>
+                <Text style={styles.validity}> Talktime : {item.talktime}</Text>
+            </View>
         </View>
         <View>
             <Text style={styles.details} numberOfLines={5}>{item.description}</Text>

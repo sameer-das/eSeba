@@ -1,6 +1,18 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const BASE_URL = `https://api.esebakendra.com`;
+
+axios.interceptors.request.use(async (config) => {
+    console.log(config.url);
+    if (config.url?.includes('ValidateUser') && !config.url?.includes('ValidateUserTPin')) {
+        return config;
+    } else {
+        const token = await AsyncStorage.getItem('token');
+        config.headers.Authorization = `Bearer ${token}`;
+        return config;
+    }
+})
 
 const GET_ALL_BILLERS = '/api/GSKRecharge/eBBPSBillerInfoByCategory';
 export const getAllBillers = (category: string) => {
@@ -119,6 +131,11 @@ export const saveUserKycDetails = (kycDetials: any) => {
 }
 
 
+export const getAdharDetails = (adhar: any) => {
+    return axios.post(`${BASE_URL}/api/User/GetAdharaDetails`, adhar);
+}
+
+
 
 
 
@@ -190,4 +207,9 @@ export const getCarouselData = () => {
 // Notification
 export const getNotifications = () => {
     return axios.get(`${BASE_URL}/api/User/GetNotifications`);
+}
+
+
+export const getPreviousTransations = (email: string, serviceId: number, serviceCatId: number) => {
+    return axios.get(`${BASE_URL}/api/GSKRecharge/GetPreviousTransactions?emailid=${email}&serviceId=${serviceId}&categoryId=${serviceCatId}`);
 }

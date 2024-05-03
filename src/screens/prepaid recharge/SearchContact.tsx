@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Pressable, FlatList } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, FlatList, Image } from 'react-native'
 import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import colors from '../../constants/colors';
@@ -6,6 +6,10 @@ import Contacts from 'react-native-contacts';
 import { PermissionsAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Loading from '../../components/Loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getPreviousTransations } from '../../API/services';
+import { windowHeight } from '../../utils/dimension';
+import { MobileOperatorLogoMapping } from '../../constants/mobile-operator-logo-mapping';
 
 const uniqByKeepLast = (data: any[], key: Function) => {
     return [...new Map(
@@ -15,11 +19,11 @@ const uniqByKeepLast = (data: any[], key: Function) => {
 
 const getContactsArray = (contacts: any[]) => {
     const result: any[] = [];
-    
+
     contacts.forEach((contact: any) => {
         const con = contact.phoneNumbers.map((phno: any) => {
             return { name: contact.displayName, number: phno.number.replace(/-|\s/g, "") };;
-        });        
+        });
         result.push(...con);
     });
 
@@ -46,11 +50,11 @@ const SearchContact = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-   
- 
+
+
 
     const contactPressHandler = (item: any) => {
-        navigation.push('showPlan', {...item})
+        navigation.push('showPlan', { ...item })
     }
 
     const contactItem = ({ item }: any) => {
@@ -76,7 +80,62 @@ const SearchContact = () => {
     }
 
     const newContactPressHandler = () => {
-        navigation.push('showPlan', {number:mobileNo, name: 'Unknow'})
+        navigation.push('showPlan', { number: mobileNo, name: 'Unknow' })
+    }
+
+    const [prevTrans, setPrevTrans] = useState([]);
+    const [showPrevTrans, setShowPrevTrans] = useState(true);
+
+    const callApi = async () => {
+        const PREPAID_RECHARGE_OPERATOR = [
+            { "op": 1, "provider": "AirTel" },
+            { "op": 604, "provider": "airtel up east" },
+            { "op": 2, "provider": "BSNL" },
+            { "op": 32, "provider": "BSNL Special" },
+            { "op": 505, "provider": "DOCOMO RECHARGE" },
+            { "op": 506, "provider": "DOCOMO SPECIAL" },
+            { "op": 4, "provider": "Idea" },
+            { "op": 167, "provider": "Jio" },
+            { "op": 5, "provider": "Vodafone" }
+        ]
+
+        // console.log('In getPreviousTransactions search contact')
+        const prevTransResp: any = await getPreviousTransations(userData.user.user_EmailID, 1, 1);
+        if (prevTransResp.data['code'] === 200 && prevTransResp.data["status"] === "Success") {
+            const arr = prevTransResp.data['data'].map((trans: any) => {
+                const json = getTransDetailsAsJSON(trans);
+                let operatorDetails: any;
+                let foundOp: any;
+                if (json) {
+                    operatorDetails = PREPAID_RECHARGE_OPERATOR.find(curr => +curr.op === +json.op)
+                    foundOp = MobileOperatorLogoMapping.find((op: any) => op.name.includes(operatorDetails?.provider?.trim().toLowerCase()))
+                }
+                // Assign Name from contact list
+                const foundContact = contactList.find(c => c.number === json.mn);
+                // console.log(foundContact);
+                return {
+                    // data: json,
+                    trans_id: json.wallet_transaction_ID,
+                    amount: json?.amt,
+                    mn: json?.mn,
+                    op: json?.op,
+                    operatorDetails,
+                    logo: foundOp && foundOp.imageUri,
+                    name: foundContact ? foundContact.name : 'Unknown'
+                }
+            })
+            // console.log(JSON.stringify(arr))
+            setPrevTrans(arr)
+        }
+    }
+
+    const getTransDetailsAsJSON = (trans: any) => {
+        const removedSlash = trans['wallet_transaction_request']?.replace(new RegExp('/', 'g'), '');
+        if (removedSlash) {
+            return JSON.parse(removedSlash)
+        } else {
+            return undefined;
+        }
     }
 
 
@@ -99,19 +158,64 @@ const SearchContact = () => {
                     console.log(e);
                     setIsLoading(false);
                 });
-        })
-            .catch((error) => {
-                console.error('Permission error: ', error);
-            });
+        }).catch((error) => {
+            console.error('Permission error: ', error);
+        });
     }, []);
 
+    useEffect(() => {
+        if(contactList.length > 0) {
+            console.log('Contact List Popullated, fetch Prev Trans')
+            callApi()
+        }
+    }, [contactList.length])
 
-    if(isLoading)
-       return <Loading label={'Reading your contacts'}/>
+    if (isLoading)
+        return <Loading label={'Reading your contacts'} />
 
     return (
         <View style={styles.rootContainer}>
-            <View style={styles.inputContainer}>
+
+            {prevTrans.length > 0 && <View style={{ maxHeight: windowHeight * 0.3 }}>
+                <View style={{ flexDirection: 'row', justifyContent: showPrevTrans ? 'space-between' : 'flex-end', alignItems: 'center' }}>
+                    {showPrevTrans && <Text style={{ fontSize: 18, color: colors.primary500, fontWeight: 'bold', paddingVertical: 6, textDecorationLine: 'underline' }}>Recent Recharges</Text>}
+                    <Pressable onPress={() => { setShowPrevTrans(!showPrevTrans) }}>
+                        <Text style={{ fontSize: 18, color: colors.primary500, fontWeight: 'bold', textDecorationLine: 'underline' }}>{showPrevTrans ? 'Hide' : 'Show Prev. Transaction'}</Text>
+                    </Pressable>
+                    {/* 9124433901 */}
+                </View>
+                {showPrevTrans && <View>
+                    <FlatList data={prevTrans} renderItem={({ item }: any) => {
+                        return <Pressable key={item.trans_id}
+                            onPress={() => {
+                                console.log('pressed ' + JSON.stringify(item))
+                                navigation.push('showPlan', { number: item.mn, name: item.name })
+                            }}
+                            style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                borderBottomColor: colors.primary100,
+                                alignItems: 'center',
+                                paddingVertical: 8,
+                                paddingHorizontal: 4
+                            }}>
+                            <View>
+                                <Image source={item?.logo}
+                                    style={{ width: 40, height: 40 }} />
+                            </View>
+                            <View style={{ marginLeft: 16 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                                    <Text style={{ color: colors.primary500, fontSize: 16, fontWeight: 'bold', width: '50%' }}>₹ {item.amount}</Text>
+                                    <Text style={{ color: colors.primary500, fontSize: 16, fontWeight: 'bold', width: '50%' }}>No. {item.mn}</Text>
+                                </View>
+                                <Text style={{ color: colors.primary500, fontSize: 14 }}>{item.name}</Text>
+                            </View>
+                        </Pressable>
+                    }} />
+                </View>}
+            </View>}
+            {/* Adjust margin according to prevtrans array */}
+            <View style={[styles.inputContainer, { marginTop: prevTrans.length > 0 ? (showPrevTrans ? 40 : 8) : 0 }]}>
                 <Text style={styles.inputLabel}>Please enter mobile or name</Text>
                 <View style={styles.mobileNoInput}>
                     {/* <Text style={styles.countryCode}>+91</Text> */}
@@ -126,7 +230,7 @@ const SearchContact = () => {
 
             <View style={{ flex: 1 }}>
                 {filteredContactList.length > 0 ?
-                    <FlatList showsVerticalScrollIndicator={false} data={filteredContactList} renderItem={contactItem} /> :
+                    <FlatList showsVerticalScrollIndicator={true} data={filteredContactList} renderItem={contactItem} /> :
                     <Pressable onPress={newContactPressHandler} style={styles.typedNumberContainer}>
                         <Text style={styles.newNumberLable}>New Number</Text>
                         <Text style={styles.typedNumber}>+91 {mobileNo}</Text>
@@ -145,12 +249,12 @@ const styles = StyleSheet.create({
         padding: 8
     },
     inputContainer: {
-        marginTop: 8
+        backgroundColor: colors.white
     },
     inputLabel: {
         fontSize: 18,
         color: colors.primary500,
-        marginVertical: 4,
+        // marginVertical: 4,
         fontWeight: 'bold'
     },
     mobileNoInput: {
@@ -169,7 +273,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: colors.primary500,
         fontWeight: 'bold',
-        width:'100%'
+        width: '100%'
     },
 
     typedNumberContainer: {

@@ -29,6 +29,8 @@ const FetchBillDetails = () => {
 
     const [amountToBePaid, setAmountToBePaid] = useState(0)
 
+    const [isBillFetchRequired, setIsBillFetchRequired] = useState(true);
+
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
     // console.log('in fetch bill details' + (route.params as any).blr_id);
@@ -42,16 +44,39 @@ const FetchBillDetails = () => {
             if (data.status === 'Success' && data.code === 200 && data?.resultDt?.resultDt?.billerId.length > 0) {
                 const _billerInfo = data?.resultDt?.resultDt?.billerInputParams.paramInfo;
 
-                console.log(data?.resultDt?.resultDt.billerName);
+                // console.log(data?.resultDt?.resultDt.billerName);
+                if (data?.resultDt?.resultDt?.billerFetchRequiremet === 'NOT_SUPPORTED') {
+                    const findIndex = _billerInfo.findIndex((curr: any) => curr.paramName === 'Amount')
+                    // if Amount field is not there then push else dont
+                    if (findIndex === -1) {
+                        _billerInfo.push({ "dataType": "NUMERIC", "isOptional": false, "paramName": "Amount" })
+                    }
+                    setIsBillFetchRequired(false);
+                }
+
+                // console.log(data?.resultDt?.resultDt?.billerFetchRequiremet);
                 AsyncStorage.setItem('currentBillerName', data?.resultDt?.resultDt.billerName)
 
                 // _billerInfo.push({ "dataType": "ALPHANUMERIC", "isOptional": false, "paramName": "Consumer Name" })
-                console.log(_billerInfo)
+                // console.log('-------------------------')
+                // console.log(_billerInfo)
                 if (_billerInfo.length > 0) {
                     const obj: any = {};
-                    _billerInfo.forEach((c: any) => {
-                        return obj[c.paramName] = '';
-                    });
+
+                    if ((route.params as any)?.inputParam) {
+                        _billerInfo.forEach((c: any) => {
+                        //    console.log((route.params as any)?.inputParam)
+                            const found = (route.params as any)?.inputParam.find((curr: any) => {
+                                return curr.paramName.replace(new RegExp('/', 'g'), '') == c.paramName.replace(new RegExp('/', 'g'), '')
+                            })
+                            // console.log('Found -->> ', JSON.stringify(found) )
+                            return obj[c.paramName] = found ? found['paramValue'] : '' ;
+                        });
+                    } else {
+                        _billerInfo.forEach((c: any) => {                           
+                            return obj[c.paramName] = '';
+                        });
+                    }
                     setBillerInfo(obj);
                     setButtonDisabled(false);
                     setRawBillerInfo(_billerInfo);
@@ -83,15 +108,15 @@ const FetchBillDetails = () => {
     }
 
     const fetchBill = async (bbpsFetchBillBody: any) => {
-        console.log('fetching bill')
+        // console.log('fetching bill')
         setLoadingLabel('Fetching Bill');
         // console.log(bbpsFetchBillBody)
         setIsLoading(true)
         try {
             const { data } = await bbpsFetchBill(bbpsFetchBillBody);
             if (data.status === 'Success' && data.code === 200) {
-                console.log(data?.resultDt.requestID);
-                console.log(data?.resultDt.data);
+                // console.log(data?.resultDt.requestID);
+                // console.log(data?.resultDt.data);
 
                 setRequestID(data?.resultDt.requestID);
                 setBillerResponse(data?.resultDt.data?.billerResponse);
@@ -115,7 +140,7 @@ const FetchBillDetails = () => {
     const payBill = async () => {
         const sd = await AsyncStorage.getItem('currentServiceDetails') as string;
         const serviceDetails = JSON.parse(sd);
-        console.log(serviceDetails)
+        // console.log(serviceDetails)
         setLoadingLabel('Making Payment. Dont press back  or close the application!');
         setIsLoading(true);
 
@@ -167,13 +192,18 @@ const FetchBillDetails = () => {
                 ]
             }
         }
-        console.log(JSON.stringify(payBillPayload));
-        console.log({ requestID, catid: serviceDetails.services_cat_id, serv_id: serviceDetails.services_id })
 
+        // If bill fetch is not required go for direct pay 
+        // dont add billerresponse addtionalinfo
+        if (!isBillFetchRequired) {
+            delete payBillPayload.billerResponse;
+            delete payBillPayload.additionalInfo;
+            payBillPayload.paymentMethod.quickPay = 'Y'
+        }
 
         try {
             const { data } = await bbpsPayBill(requestID, payBillPayload, serviceDetails.services_cat_id, serviceDetails.services_id, userData.user.user_EmailID)
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
 
             await AsyncStorage.removeItem('bbpsTxnStatus');
             await AsyncStorage.setItem('bbpsTxnStatus', JSON.stringify({
@@ -278,10 +308,13 @@ const FetchBillDetails = () => {
     }
 
     const getDynamicFields = () => {
-        // console.log('in getDynamicFields')
-        // console.log(billerInfo)
+
         if (Object.keys(billerInfo).length === 0)
             return null
+
+        console.log('Inside getDynamicFields')
+        console.log(billerInfo)
+        console.log((route.params as any).inputParam)
 
         return Object.keys(billerInfo).map((curr) => {
             return (<View key={curr} style={styles.inputContainer}>
@@ -290,6 +323,45 @@ const FetchBillDetails = () => {
                     value={billerInfo[curr]} onChangeText={(val) => handleInputChange(curr, val)} />
             </View>)
         })
+    }
+
+    const billPayWithoutBillFetch = () => {
+        console.log('proceed')
+        let proceed: boolean = true;
+        Object.keys(billerInfo).forEach(curr => {
+            const bi = rawBillerInfo.find((binfo: any) => {
+                return binfo.paramName === curr;
+            })
+
+            if (!bi.isOptional && billerInfo[curr] === '') {
+                Alert.alert('Invalid Input', `Please provide value for ${curr}`);
+                proceed = false;
+            }
+        });
+
+        if (!proceed)
+            return;
+        const input = [];
+
+        for (let k in billerInfo) {
+            if (k === 'Amount') {
+                if ((route.params as any).blr_id != 'SUND00000NAT02') {
+                    // dont add amount for sunTV
+                    continue;
+                }
+            }
+            input.push({
+                "paramName": k,
+                "paramValue": billerInfo[k]
+            });
+        }
+
+        // setAmountToBePaid(+billerInfo['Amount'])
+
+        // keep it for future use 
+        setInputParams(input);
+
+        proceedToPay(String(+billerInfo['Amount'] * 100));
     }
 
 
@@ -371,11 +443,13 @@ const FetchBillDetails = () => {
                 </View>
             </View>
 
-            <Pressable style={[styles.confirm_cta, buttonDisabled ? styles.cta_disable : null]}
+            {isBillFetchRequired ? <Pressable style={[styles.confirm_cta, buttonDisabled ? styles.cta_disable : null]}
                 disabled={buttonDisabled}
                 onPress={confirmButtonHandler}>
                 <Text style={styles.confirm_cta_text}>Confirm</Text>
-            </Pressable>
+            </Pressable> : <Pressable onPress={billPayWithoutBillFetch} style={[styles.confirm_cta, buttonDisabled ? styles.cta_disable : null]}>
+                <Text style={styles.confirm_cta_text}>Proceed</Text>
+            </Pressable>}
 
         </View >
     )

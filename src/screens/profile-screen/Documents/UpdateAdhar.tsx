@@ -4,7 +4,7 @@ import colors from '../../../constants/colors'
 import InputWithLabelAndError from '../../../components/InputWithLabelAndError';
 import CustomImagePicker from '../../../components/CustomImagePicker';
 import { AuthContext } from '../../../context/AuthContext';
-import { saveUserKycDetails } from '../../../API/services';
+import { getAdharDetails, saveUserKycDetails } from '../../../API/services';
 import { useNavigation } from '@react-navigation/native';
 import Loading from '../../../components/Loading';
 import AnimatedInput from '../../../components/AnimatedInput';
@@ -18,20 +18,30 @@ const UpdateAdhar = () => {
   const [adharNo, setAdharNo] = useState<string>('');
   const [adharFront, setAdharFront] = useState<any>('');
   const [adharBack, setAdharBack] = useState<string>('');
+  const [isAdharValidated, setIsAdharValidated] = useState(false)
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     console.log('update adhar focus');
-  //   });
-  //   return unsubscribe;
-  // }, [])
+  const validateAdharNumber = () => {
+    if (adharNo.trim() === '') {
+      Alert.alert('Enter Adhar Number', 'Please enter valid adhar number.')
+      return false;
+    }
+    if (!/^[0-9]*$/.test(adharNo.trim()) || adharNo.trim().length != 12) {
+      Alert.alert('Invalid Adhar Number', 'Please enter valid adhar number.')
+      return false;
+    }
 
+    return true;
+  }
 
   const updateAdhar = async () => {
-    if (!adharNo.trim() || !adharFront || !adharBack) {
-      Alert.alert('Not Found', 'Please enter Adhar No and upload Adhar images to proceed!');
+    // If adhar is not validated then return here
+    if (!validateAdharNumber()) {
       return;
-  }
+    }
+    if (adharFront === '' || adharBack === '') {
+      Alert.alert('Upload Adhar Photos', 'Please upload adhar front side and back side photos.')
+      return;
+    }
 
 
     const kycDetails = {
@@ -74,11 +84,62 @@ const UpdateAdhar = () => {
     } finally {
 
     }
+  }
+
+  const verifyAdharNumber = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await getAdharDetails({
+        "adharaNumber": adharNo.trim(),
+        "userId": userData.user.user_ID
+      })
+      console.log(data)
+      if (data.code === 200 && data.status === "Success" && data?.data?.data) {
+        setIsAdharValidated(true);
+        Alert.alert('Success', 'The entered adhar number has been validated successfully.')
+      } else {
+        setIsAdharValidated(false);
+        Alert.alert('Fail', 'Adhar number validation failed. Please try after sometime.')
+      }
+    } catch (err) {
+      console.log(err);
+      setIsAdharValidated(false);
+      Alert.alert('Error', 'Error while validating adhar number. Please try after sometime.')
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const verifyAdharPressHandler = () => {
+    // If adhar is not validated then return here
+    if (!validateAdharNumber()) {
+      return;
+    }
+
+    Alert.alert('Confirm',
+      `Please confirm if the adhar no. ${adharNo} is correct and belongs to you. This will be validated against UIDAI records.`,
+      [{
+        text: 'Confirm',
+        onPress: () => {
+          console.log('Confirmed');
+          verifyAdharNumber()
+        }
+      }, {
+        text: 'Cancel',
+        onPress: () => {
+          console.log('Cancelled')
+          return;
+        }
+      }]);
 
   }
 
+  const updateAdharPressHandler = () => {
+    updateAdhar()
+  }
+
   if (isLoading)
-    return <Loading label={'Updating Adhar Details. Please Wait'} />
+    return <Loading />
 
   return (
     <ScrollView style={styles.rootContainer}>
@@ -100,9 +161,14 @@ const UpdateAdhar = () => {
         <CustomImagePicker value={adharBack} setValue={setAdharBack} placeholder='Tap to upload Adhar back side pic' label='Adhar back side pic' />
 
 
-        <Pressable style={styles.uploadButton} onPress={updateAdhar}>
-          <Text style={styles.uploadButtonText}>Upload and Update Details</Text>
-        </Pressable>
+        {isAdharValidated ?
+          <Pressable style={styles.uploadButton} onPress={updateAdharPressHandler}>
+            <Text style={styles.uploadButtonText}>Update and Upload Adhar</Text>
+          </Pressable>
+          :
+          <Pressable style={styles.uploadButton} onPress={verifyAdharPressHandler}>
+            <Text style={styles.uploadButtonText}>Verify Adhar</Text>
+          </Pressable>}
       </View>
     </ScrollView>
   )
@@ -122,9 +188,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   formCard: {
-    marginTop: 24
+    marginTop: 12,
+    flex: 1
   },
-  imageUploadSection: { marginBottom: 20 },
   adharFrontPicContainer: {
     height: 180,
     borderColor: colors.primary500,
@@ -171,7 +237,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     backgroundColor: colors.primary500,
     alignItems: 'center',
-    borderRadius: 8
+    borderRadius: 8,
+    marginBottom: 12
   },
   uploadButtonText: {
     color: colors.white,

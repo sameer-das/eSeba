@@ -30,8 +30,8 @@ const DocumentImage = ({ imageUrl }: any) => {
                 uri: `https://api.esebakendra.com/api/User/Download?fileName=${imageUrl}`,
             }}
             style={[{ height: '100%', width: '100%', resizeMode: 'contain' }]}
-            onLoadStart={() => { console.log('Loading Start'); setLoading(true); setError(false) }}
-            onLoadEnd={() => { console.log('Lading End'); setError(false); setLoading(false); }}
+            onLoadStart={() => { setLoading(true); setError(false) }}
+            onLoadEnd={() => { setError(false); setLoading(false); }}
             onError={() => { console.log('Error'); setError(true); setLoading(false); }} />
     </>
 
