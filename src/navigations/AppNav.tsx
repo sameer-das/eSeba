@@ -9,7 +9,7 @@ import AppStackTab from './AppStackTab'
 import colors from '../constants/colors'
 
 const AppNav = () => {
-    const { isLoading, token, userData } = useContext<IAuthContext>(AuthContext);
+    const { isLoading, userData } = useContext<IAuthContext>(AuthContext);
 
 
     const Splash = () => {

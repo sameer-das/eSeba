@@ -48,4 +48,5 @@ export const IamgeMapping: any[] = [
   { name: 'Education Fee.svg', imageUri: require('../../assets/compresspng/Education-Fee.png'), },
   { name: 'Municipality fees.svg', imageUri: require('../../assets/compresspng/Municipality-fees.png'), },
   { name: 'Pancard.svg', imageUri: require('../../assets/compresspng/Pancard.png'), },
+  { name: 'pmfby.svg', imageUri: require('../../assets/compresspng/pmfby.png'), },
 ]

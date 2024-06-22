@@ -5,14 +5,14 @@ import { AuthContext } from '../../../src/context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import AnimatedInput from '../../components/AnimatedInput';
 import ButtonPrimary from '../../components/ButtonPrimary';
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 const SignIn = () => {
   const { login } = useContext(AuthContext);
   const navigation = useNavigation<any>();
 
   const [loginId, setLoginId] = useState<string | undefined>('');
   const [password, setPassword] = useState<string | undefined>('');
-
+  const [showPassword, setShowPassword] = useState(false);
   const SignUp = () => {
     navigation.navigate('SignUpStack');
   }
@@ -33,18 +33,31 @@ const SignIn = () => {
           </View>
           <View style={[styles.inputContainer, { width: 266 }]}>
             <AnimatedInput inputLabel="Password"
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               autoCapitalize="none"
               autoCorrect={false}
               value={password}
               onChangeText={(val: string) => setPassword(val)} />
           </View>
+          <Pressable style={{}} onPress={() => setShowPassword(show => !show)}>
+            {showPassword ?
+              <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center', gap: 6}}>
+                <FontAwesome size={14} style={{}} name='eye-slash' />
+                <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 14 }}>Hide Password</Text>
+              </View>
+              :
+              <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center', gap: 6}}>
+                <FontAwesome size={14} style={{}} name='eye' />
+                <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 14 }}>Show Password</Text>
+              </View>
+            }
+          </Pressable>
         </View>
         <ButtonPrimary onPress={() => login(loginId, password)}
           label='Login'
-          buttonStyle={{ width: 266, marginTop: 20 }} buttonLabelStyle={{ textTransform: 'uppercase' }} />
+          buttonStyle={{ width: 266, marginTop: 28 }} buttonLabelStyle={{ textTransform: 'uppercase' }} />
 
-        <Text style={styles.joinText}>Are you yet to join us ?</Text>
+        <Text style={styles.joinText}>Haven't you joined us?</Text>
         <Pressable style={styles.signUpLink} onPress={() => SignUp()} >
           <Text style={styles.signUpText}>Register Now</Text>
         </Pressable>
@@ -124,7 +137,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.grey,
 
-    marginTop: 100
+    marginTop: 50
   }
 
 })

@@ -22,6 +22,8 @@ const HomeCard = ({ item }: { item: any }) => {
         } else if (['PGDCA', 'DCA', 'PAN Card'].includes(item.services_Cat_Name)) {
             // No access as per Avinash from mobile
             Alert.alert('Limited Access', 'Please register as a retailer to avail these services. For more information, please contact us at Toll-Free No 1800 8904 368')
+        } else if (['PMFBY'].includes(item.services_Cat_Name)) {
+            Alert.alert('Coming Soon', 'This feature is not yet available.')
         }
 
         else {
@@ -36,7 +38,7 @@ const HomeCard = ({ item }: { item: any }) => {
     const _renderCardItem = ({ item }: { item: any }) => {
         // console.log(item.services_Cat_ImagesName);
         const imageObj = IamgeMapping.find(img => img.name === item.services_Cat_ImagesName)
-        const imageUri = imageObj.imageUri;
+        const imageUri = imageObj?.imageUri;
         return (<Pressable style={styles.cardItem} onPress={() => handleCardItemPress(item)}>
             {/* For tab and mobile */}
             <Image source={imageUri}

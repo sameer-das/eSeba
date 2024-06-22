@@ -9,6 +9,7 @@ axios.interceptors.request.use(async (config) => {
         return config;
     } else {
         const token = await AsyncStorage.getItem('token');
+        console.log(token)
         config.headers.Authorization = `Bearer ${token}`;
         return config;
     }
@@ -212,4 +213,30 @@ export const getNotifications = () => {
 
 export const getPreviousTransations = (email: string, serviceId: number, serviceCatId: number) => {
     return axios.get(`${BASE_URL}/api/GSKRecharge/GetPreviousTransactions?emailid=${email}&serviceId=${serviceId}&categoryId=${serviceCatId}`);
+}
+
+
+
+export const getUserVerifiedAdharaDetails = (userId: number) => {
+    return axios.get(`${BASE_URL}/api/User/GetAadharaDetail?userId=${userId}`)
+}
+
+
+export const getUserVerifiedPanDetail = (userId: number) => {
+    return axios.get(`${BASE_URL}/api/User/GetPanDetail?userId=${userId}`)
+}
+
+
+export const generateOtpForAdharValidate = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/User/GenerateOTPForAadharaValidation`, payload)
+}
+
+
+export const verifyOtpForAdhar = (userId:number, payload:any) => {
+  return axios.post(`${BASE_URL}/api/User/AadharaOTPSubmit?uId=${userId}`, payload)
+}
+
+
+export const verifyPanDetails = (userId:number, payload:any) => {
+  return axios.post(`${BASE_URL}/api/User/GetPanDetails?uId=${userId}`, payload)
 }

@@ -213,9 +213,9 @@ const ListPrevTransactions = ({ billers, onLayout }: any) => {
                         style={{ width: 40, height: 40 }} />}
                 </View>
                 <View style={{ marginLeft: 16 }}>
-                    {!item?.logo?.logo && <Text>{item.biller.blr_name}</Text>}
+                    {!item?.logo?.logo && <Text style={{color: colors.primary500, fontSize: 14 }}>{item.biller.blr_name}</Text>}
                     <Text style={{ color: colors.primary500, fontSize: 16, fontWeight:'bold' }}>₹ {item.amount}</Text>
-                    <Text style={{ color: colors.primary500, fontSize: 16 }}>{item.inputParam[0]?.paramValue}</Text>
+                    <Text style={{ color: colors.primary500, fontSize: 14 }}>{item.inputParam[0]?.paramValue}</Text>
                 </View>
             </Pressable>
         }} />

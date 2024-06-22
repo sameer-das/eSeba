@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useState, useEffect } from "react";
 import { getUserInfo, validateUser } from "../API/services";
 import { Alert } from 'react-native';
-import {decode} from 'base-64';
+import { decode } from 'base-64';
 
 export const AuthContext = createContext<IAuthContext>({
     userData: null,
@@ -11,8 +11,8 @@ export const AuthContext = createContext<IAuthContext>({
     menuCategories: null,
     login: () => { },
     logout: () => { },
-    refreshUserDataInContext: () => {},
-    getFreshUserData: () => {}
+    refreshUserDataInContext: () => { },
+    getFreshUserData: () => { }
 });
 export interface IAuthContext {
     userData: any | null,
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
         const credentials = { userid: loginId, password: password };
         try {
             const resp = await validateUser(credentials);
-            // console.log(resp.data);
+            console.log(resp.data);
             if (resp.data.status === 'Success' && resp.data.data && resp.data?.data?.userDetais && resp.data?.data?.userDetais?.user_ID) {
                 await AsyncStorage.setItem('token', resp.data.data?.tokens?.token);
                 setToken(resp.data.data?.tokens?.token);
@@ -49,10 +49,10 @@ export const AuthProvider = ({ children }: { children: any }) => {
                 const userInfoResp = await getUserInfo(resp.data.data.userDetais.user_ID);
                 if (userInfoResp.data.status === 'Success' && userInfoResp.data.code === 200) {
                     await AsyncStorage.setItem('userData', JSON.stringify(userInfoResp.data.data));
-                    
+
                     const menuCategories = getFormattedServices(resp.data.data);
                     await AsyncStorage.setItem('menuCategories', JSON.stringify(menuCategories));
-                    
+
                     setMenuCategories(menuCategories);
                     setUserData(userInfoResp.data.data);
                     setIsLoading(false);
@@ -75,20 +75,16 @@ export const AuthProvider = ({ children }: { children: any }) => {
     }
 
     const logout = () => {
-        setIsLoading(true);
-        // set time out is given to show loader only 
-        setTimeout(async () => {
-            clearAsyncStorageForUserData();
-        }, 1000)
+        clearAsyncStorageForUserData();
     }
 
     const refreshUserDataInContext = async (userId?: number) => {
         let userID;
-        if(!userId) {
+        if (!userId) {
             // read from current AsyncStorage 
             const _userData = await AsyncStorage.getItem('userData') || '{}';
             userID = JSON.parse(_userData).user.user_ID
-        }  else {
+        } else {
             userID = userId;
         }
         const userInfoResp = await getUserInfo(userID);
@@ -96,23 +92,23 @@ export const AuthProvider = ({ children }: { children: any }) => {
             await AsyncStorage.removeItem('userData');
             // console.log('in auth context kk')
             // console.log(JSON.stringify(userInfoResp.data.data));
-            setUserData(() => {return userInfoResp.data.data});
+            setUserData(() => { return userInfoResp.data.data });
             await AsyncStorage.setItem('userData', JSON.stringify(userInfoResp.data.data));
         } else {
             // setUserData(null);
         }
     }
 
-    const getFreshUserData =async () => {
+    const getFreshUserData = async () => {
         const x = await AsyncStorage.getItem('userData') || '{}';
         return JSON.parse(x);
 
     }
 
     const clearAsyncStorageForUserData = async () => {
+        setUserData(null);
         setIsLoading(false);
         setToken(null);
-        setUserData(null);
         setMenuCategories(null);
         await AsyncStorage.setItem('userData', '');
         await AsyncStorage.removeItem('token');
@@ -129,15 +125,15 @@ export const AuthProvider = ({ children }: { children: any }) => {
             if (userData === '' || !userData || menuCategories === '' || token === '') {
                 console.log('Login Not Found')
                 clearAsyncStorageForUserData();
-            } else if(token) {
+            } else if (token) {
                 console.log('Token found')
                 const _payload = token.split('.')[1];
                 const payload = decode(_payload);
                 const expiry = (JSON.parse(payload)).exp;
-                if(Math.floor((new Date).getTime() / 1000) >  expiry) {
+                if (Math.floor((new Date).getTime() / 1000) > expiry) {
                     console.log('Token invalid');
                     logout();
-                }     
+                }
                 console.log('Token valid')
                 setUserData(JSON.parse(userData));
                 setToken(JSON.stringify(token));
