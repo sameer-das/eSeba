@@ -5,7 +5,7 @@ import colors from '../constants/colors'
 import { windowHeight, windowWidth } from '../utils/dimension';
 
 const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, label,
-    placeholder, listData, optionLable, searchKey }: any) => {
+    placeholder, listData, optionLable, searchKey, disabled }: any) => {
     // const borderStyle = errorMessage === '' ? { borderColor: colors.secondary100 }
     //     : { borderColor: colors.primary100 }
     const borderStyle = { borderColor: colors.primary100 }
@@ -47,9 +47,9 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
         <>
             <View style={{}}>
                 <Text style={styles.label}>{label}</Text>
-                <Pressable style={[styles.pressable]} onPress={openModal}>
-                    <Text style={styles.text}>{value === '' ? placeholder : value}</Text>
-                    <MaterialIcon name='arrow-drop-down' size={30} color={colors.primary500} />
+                <Pressable style={[styles.pressable, {borderStyle : disabled ? 'dotted': 'solid'}]} onPress={openModal} disabled={disabled}>
+                    <Text style={[styles.text, {color: disabled ? colors.grey : colors.primary500}]}>{value === '' ? placeholder : value}</Text>
+                    <MaterialIcon name='arrow-drop-down' size={30} color={disabled ? colors.grey : colors.primary500} />
                 </Pressable>
                 <Text style={styles.errorLabel}>{errorMessage}</Text>
             </View>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        color: colors.primary500,
+        
     },
     label: {
         fontSize: 16,

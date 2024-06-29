@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const BASE_URL = `https://api.esebakendra.com`;
+export const USER_TYPE = ['', 'Users', 'Retailers', 'Distributor', 'Master Distributor', 'Admin'];
+
 
 axios.interceptors.request.use(async (config) => {
     console.log(config.url);
@@ -9,7 +11,7 @@ axios.interceptors.request.use(async (config) => {
         return config;
     } else {
         const token = await AsyncStorage.getItem('token');
-        console.log(token)
+        // console.log(token)
         config.headers.Authorization = `Bearer ${token}`;
         return config;
     }
@@ -239,4 +241,10 @@ export const verifyOtpForAdhar = (userId:number, payload:any) => {
 
 export const verifyPanDetails = (userId:number, payload:any) => {
   return axios.post(`${BASE_URL}/api/User/GetPanDetails?uId=${userId}`, payload)
+}
+
+
+
+export const getRetailerWiseUsers = (userId:number) => {
+  return axios.get(`${BASE_URL}/api/User/GetRetailerWiseUsers?userId=${userId}`)
 }

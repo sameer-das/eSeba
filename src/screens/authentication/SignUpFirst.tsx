@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView, Pressable, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, KeyboardAvoidingView, Pressable, ScrollView, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
 
 import colors from '../../constants/colors'
 import { windowHeight } from '../../utils/dimension'
@@ -15,9 +15,11 @@ const SignUpFirst = () => {
 
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
+    
+
 
     const [formValue, setFormValue] = useState<any>({
-        userType: { value: { name: 'End User', value: '1' }, error: '', pattern: '', required: true },
+        userType: { value: { name: 'End User', value: '1' }, error: '', pattern: '', required: true, disabled: false },
         firstName: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z ]*$/), required: true },
         lastName: { value: '', error: '', pattern: new RegExp(/^[a-zA-Z ]*$/), required: true },
         gender: { value: { name: 'Male', value: 'Male' }, error: '', pattern: '', required: true },
@@ -52,6 +54,34 @@ const SignUpFirst = () => {
         lastName: 'Last name can contain only characters',
     }
 
+
+    useEffect(() => {
+        console.log(route.params?.['regRefNoType']);
+
+        if(!route.params?.['regRefNoType']) {
+            Alert.alert('Alert', 'Reference ID Type not found.')
+            navigation.goBack();            
+            return;
+        }
+
+        if(route.params?.['regRefNoType'] === '2') {
+            // Retailer can create End user
+            setFormValue({ ...formValue, userType: { value: { name: 'End User', value: '1' }, error: '', pattern: '', required: true, disabled: true } });
+        } else if (route.params?.['regRefNoType'] === '3') {
+            // Distributer can create Retailer
+            setFormValue({ ...formValue, userType: { value: { name: 'E-Sathi', value: '2' }, error: '', pattern: '', required: true, disabled: true } });
+        } else if (route.params?.['regRefNoType'] === '5') {
+            // Else Admin, who can create both, so enable the field
+            setFormValue({ ...formValue, userType: { value: { name: 'End User', value: '1' }, error: '', pattern: '', required: true, disabled: false } });
+        } else {
+            Alert.alert('Alert', 'Invalid Reference ID.');
+            navigation.goBack();
+        }
+
+    }, [route.params?.['regRefNoType']])
+
+
+
     const handleInputChange = (text: string, keyName: string) => {
         let errorMessage = '';
 
@@ -67,6 +97,7 @@ const SignUpFirst = () => {
         else if (!isFirstPageValid_FromChangeHandler)
             setIsfirstPageValidFromChangeHandler(true);
     }
+
 
 
     const validateFirstPage = () => {
@@ -95,6 +126,8 @@ const SignUpFirst = () => {
 
     }
 
+
+
     const handleNextCtaPress = async () => {
         const isFirstPageValid_FromCtaPress = validateFirstPage()
         if (isFirstPageValid_FromCtaPress && isFirstPageValid_FromChangeHandler) {
@@ -110,6 +143,8 @@ const SignUpFirst = () => {
             navigation.push('SignUpSecond');
         }
     }
+
+
 
     return (
         <ScrollView>
@@ -132,6 +167,7 @@ const SignUpFirst = () => {
                                 const obj = { ...formValue.userType, value: item }
                                 setFormValue({ ...formValue, userType: obj });
                             }}
+                            disabled={formValue.userType.disabled}
                         />
                     </View>
 

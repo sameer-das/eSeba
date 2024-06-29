@@ -32,12 +32,12 @@ const CheckRefNo = () => {
         clearAsyncStorageForRefNo();
         try {
             const { data } = await checkRefId(refNo);
-            if (data.status === 'Success' && data.code === 200 && data.data === 'S') {
+            console.log(data)
+            if (data.status === 'Success' && data.code === 200 && data.data.startsWith('S')) {
                 // go next
-                console.log(data)
                 await AsyncStorage.setItem('regRefNo', refNo);
-                navigation.push('SignUpFirst');
-            } else if (data.status === 'Success' && data.code === 200 && data.data === 'F') {
+                navigation.push('SignUpFirst', { regRefNoType: data.data.split('|')[1] });
+            } else if (data.status === 'Success' && data.code === 200 && data.data.startsWith('F')) {
                 Alert.alert('Not Found',
                     'The reference number you have entered is invalid.');
                 setErrorLable('');

@@ -44,6 +44,7 @@ const ListBillers = () => {
     const navigation = useNavigation();
 
     const callAPI = async (searchValue: string) => {
+        console.log('CallAPI')
         try {
             setIsLoading(true);
             // console.log('calling api')
@@ -65,8 +66,9 @@ const ListBillers = () => {
 
     useEffect(() => {
         setSearchValue('');
-        // console.log(route.params);
-        const searchValue = ServicesToPathMapping.find((m: any) => m.path.toLowerCase() === (route.params as any).path.substr(1).toLowerCase())
+        console.log('use effect path :: ' + JSON.stringify(route.params));
+        console.log(ServicesToPathMapping)
+        const searchValue = ServicesToPathMapping.find((m: any) => m.cat_id === (route.params as any).cat_id)
         if (searchValue) {
             callAPI(searchValue.searchValue);
         } else {

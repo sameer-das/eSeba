@@ -38,6 +38,7 @@ const HelpSupport = () => {
   }
 
   const onSubmit = async () => {
+    
     if (!subject) {
       setSubjectErrorMessage('Please enter subject!');
       return;
