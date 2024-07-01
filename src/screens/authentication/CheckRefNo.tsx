@@ -66,7 +66,7 @@ const CheckRefNo = () => {
                 text: 'Agree',
                 onPress: async () => {
                     await AsyncStorage.setItem('regRefNo', '555401005338');
-                    navigation.push('SignUpFirst');
+                    navigation.push('SignUpFirst', { regRefNoType: '5' });
                 }
             }, {
                 text: 'No',

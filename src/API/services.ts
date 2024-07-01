@@ -248,3 +248,4 @@ export const verifyPanDetails = (userId:number, payload:any) => {
 export const getRetailerWiseUsers = (userId:number) => {
   return axios.get(`${BASE_URL}/api/User/GetRetailerWiseUsers?userId=${userId}`)
 }
+
