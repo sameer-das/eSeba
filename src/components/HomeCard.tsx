@@ -71,7 +71,8 @@ const HomeCard = ({ item }: { item: any }) => {
             // No access as per Avinash from mobile
             Alert.alert('Limited Access', 'Please register as a retailer to avail these services. For more information, please contact us at Toll-Free No 1800 8904 368')
         } else if (['PMFBY'].includes(item.services_Cat_Name)) {
-            Alert.alert('Coming Soon', 'This feature is not yet available.')
+            // Alert.alert('Coming Soon', 'This feature is not yet available.')
+            navigation.navigate('PMFBYStack')
         } else {
             await AsyncStorage.setItem('currentServiceDetails', JSON.stringify(
                 { services_id: item.services_ID, services_cat_id: item.services_Cat_ID }

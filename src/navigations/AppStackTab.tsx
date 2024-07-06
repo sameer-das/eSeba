@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useContext, useEffect, useReducer } from 'react';
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../constants/colors';
 import { AuthContext } from '../context/AuthContext';
@@ -11,6 +11,9 @@ import FetchBillDetails from '../screens/bbps/FetchBillDetails';
 import ListBillers from '../screens/bbps/ListBillers';
 import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
 // import OtpScreen from '../screens/common/OtpScreen';
+import AboutEPayMain from '../screens/About ePay/AboutEPayMain';
+import PolicyDetails from '../screens/About ePay/PolicyDetails';
+import NewOtpScreen from '../screens/common/NewOtpScreen';
 import PrepaidTransactionStatus from '../screens/common/PrepaidTransactionStatus';
 import DMTTabs from '../screens/dmt/DmtTabs';
 import AddRecipient from '../screens/dmt/RecipientTab/AddRecipient';
@@ -19,6 +22,7 @@ import ShowConveyanceFee from '../screens/dmt/SendMoneyTab/ShowConveyanceFee';
 import HelpSupportStack from '../screens/help-support/HelpSupportStack';
 import Home from '../screens/home/Home';
 import MyTeams from '../screens/myTeams/MyTeams';
+import Notification from '../screens/notification/Notification';
 import ProceedToPay from '../screens/prepaid recharge/ProceedToPay';
 import SearchContact from '../screens/prepaid recharge/SearchContact';
 import ShowPlans from '../screens/prepaid recharge/ShowPlans';
@@ -37,13 +41,9 @@ import EnterOtpForPinChange from '../screens/wallet/EnterOtpForPinChange';
 import RechargeWallet from '../screens/wallet/RechargeWallet';
 import SetNewWalletPin from '../screens/wallet/SetNewWalletPin';
 import Wallet from '../screens/wallet/Wallet';
-import EnterPinToHome from './EnterPinToHome';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AboutEPayMain from '../screens/About ePay/AboutEPayMain';
-import PolicyDetails from '../screens/About ePay/PolicyDetails';
-import Notification from '../screens/notification/Notification';
 import { windowHeight, windowWidth } from '../utils/dimension';
-import NewOtpScreen from '../screens/common/NewOtpScreen';
+import EnterPinToHome from './EnterPinToHome';
+import PmfbyHome from '../screens/pmfby/PmfbyHome';
 
 
 const Tab = createBottomTabNavigator();
@@ -160,6 +160,12 @@ const DMTStack = () => {
     </Stack.Navigator>)
 }
 
+const PMFBYStack = () => {
+    return (<Stack.Navigator>
+        <Stack.Screen name='pmfbyHome' component={PmfbyHome} options={{ headerShown: false }} />
+    </Stack.Navigator>)
+}
+
 
 const WalletStack = () => {
     return (<Stack.Navigator
@@ -258,6 +264,7 @@ const AppStackTab = () => {
             <Stack.Screen name='AddDMTRecipientFromHomeScreen' component={AddRecipient} options={{ headerShown: false }} />
             <Stack.Screen name='transferMoneyFromHomeScreenStack' component={TransferMoneyFromHomeScreenStack} options={{ headerShown: false }} />
             <Stack.Screen name='notification' component={Notification} options={{ headerShown: true, title: 'Notifications', headerStyle: { backgroundColor: colors.primary500 }, headerTintColor: colors.white }} />
+            <Stack.Screen name='PMFBYStack' component={PMFBYStack} options={{ headerShown: false }} />
 
             {/* Common Screens */}
             <Stack.Screen name='otpScreen' component={NewOtpScreen} options={{ headerShown: false }} />

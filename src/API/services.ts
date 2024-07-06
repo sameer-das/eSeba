@@ -249,3 +249,18 @@ export const getRetailerWiseUsers = (userId:number) => {
   return axios.get(`${BASE_URL}/api/User/GetRetailerWiseUsers?userId=${userId}`)
 }
 
+
+
+export const getPmfbyStatus = (mobileNo:number) => {
+  return axios.get(`${BASE_URL}/api/POSP/POSPRegistrationStatusCheck?mobile_no=${mobileNo}`)
+}
+
+
+export const pmfbyRegistration = (pmfby:any) => {
+  return axios.post(`${BASE_URL}/api/POSP/POSPRegistration`, pmfby)
+}
+
+
+export const pmfbyDocUpload =  (payload:any, userId: number) => {
+  return axios.post(`${BASE_URL}/api/POSP/POSPDocumnetUpload?userId=${userId}`, payload)
+}

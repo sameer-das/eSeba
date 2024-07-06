@@ -48,7 +48,7 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
             <View style={{}}>
                 <Text style={styles.label}>{label}</Text>
                 <Pressable style={[styles.pressable, {borderStyle : disabled ? 'dotted': 'solid'}]} onPress={openModal} disabled={disabled}>
-                    <Text style={[styles.text, {color: disabled ? colors.grey : colors.primary500}]}>{value === '' ? placeholder : value}</Text>
+                    <Text style={[styles.text, {color: disabled ? colors.grey : colors.primary500}]}>{value === '' ? placeholder : (typeof value === 'object' ? optionLable(value) : value)}</Text>
                     <MaterialIcon name='arrow-drop-down' size={30} color={disabled ? colors.grey : colors.primary500} />
                 </Pressable>
                 <Text style={styles.errorLabel}>{errorMessage}</Text>
