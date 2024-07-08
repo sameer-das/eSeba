@@ -394,7 +394,7 @@ Qualification : ${education.name}`;
                 fontWeight: 'bold',
                 color: colors.primary500,
                 textAlign: 'center',
-                marginBottom: 20
+                marginVertical: 20
             }}>
                 Pradhan Mantri Fasal Bima Yojana
             </Text>
@@ -402,20 +402,20 @@ Qualification : ${education.name}`;
             {pmfbyStatusData ?
                 <View>
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: colors.primary500, textAlign: 'center', marginBottom: 14, textDecorationLine: 'underline' }}>Your Application Status</Text>
-                    <Text style={[{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 14 }, { color: colors.white }]}>{pmfbyStatusData.message}</Text>
+                    <Text style={[{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 14 }, { color: colors.primary500 }]}>{pmfbyStatusData.message}</Text>
 
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: 12, alignItems: 'center' }}>
                         <Text style={styles.lable}>POSP ID : {pmfbyStatusData?.data?.posp_id}</Text>
                         <Text style={styles.lable}>Index ID : {pmfbyStatusData?.data?.index_id}</Text>
                     </View>
 
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: 12, alignItems: 'center' }}>
                         <Text style={styles.lable}>Name : {pmfbyStatusData?.data?.name}</Text>
                         <Text style={styles.lable}>Mobile : {pmfbyStatusData?.data?.mobile_no}</Text>
                     </View>
 
                     {/* Education Details If Available */}
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: 12, alignItems: 'center' }}>
                         {pmfbyStatusData?.data?.education && <Text style={styles.lable}>Education : {pmfbyStatusData?.data?.education}</Text>}
                         {pmfbyStatusData?.data?.education_status && <Text style={styles.lable}>Education Status : {pmfbyStatusData?.data?.education_status}</Text>}
                         {pmfbyStatusData?.data?.remarks && <Text style={styles.lable}>Remarks Status : {pmfbyStatusData?.data?.remarks}</Text>}
@@ -423,7 +423,7 @@ Qualification : ${education.name}`;
 
                     {
                         pmfbyStatusData?.data?.file_path &&
-                        <View style={{height: 300, marginTop: 12}}>
+                        <View style={{height: 300, marginTop: 40}}>
                             <Image style={{ width: windowWidth - 16, height: '100%', resizeMode: 'center' }} source={{ uri: pmfbyStatusData?.data?.file_path }} />
                         </View>
                     }
