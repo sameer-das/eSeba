@@ -52,7 +52,6 @@ const ShowPlans = () => {
         await AsyncStorage.setItem('rechargeContactDetail', JSON.stringify({ ...data.resultDt.data, contactName: (route.params as any).name }))
         // setMobileDetails(data.resultDt.data);
 
-
         const planResponse = await getPlanForMobileNo(data.resultDt.data.currentOptBillerId, data.resultDt.data.currentLocation)
         if (planResponse.data.code === 200 && planResponse.data.status === 'Success' && planResponse.data.resultDt !== "") {
           setPlanDetails(planResponse?.data?.resultDt?.data?.rechargePlan?.rechargePlansDetails);
@@ -71,7 +70,7 @@ const ShowPlans = () => {
 
 
   useEffect(() => {
-    getMobileDetails()
+    getMobileDetails();    
   }, []);
 
   useEffect(() => {
@@ -88,7 +87,13 @@ const ShowPlans = () => {
 
 
   const onPlanPress = async (item: any) => {
-    await AsyncStorage.setItem('rechargePlan', JSON.stringify(item))
+    await AsyncStorage.setItem('rechargePlan', JSON.stringify(item));
+    let isCommission: boolean = true;
+    if ('isCommission' in (route.params as any)) {
+      isCommission = (route.params as any).isCommission
+    }
+    await AsyncStorage.setItem('rechargeIsCommission', JSON.stringify(isCommission));
+
     navigation.navigate('proceedToPay');
   }
 

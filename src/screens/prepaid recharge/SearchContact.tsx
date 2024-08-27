@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Pressable, FlatList, Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, FlatList, Image, Alert, Modal, Appearance } from 'react-native'
 import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import colors from '../../constants/colors';
@@ -8,14 +8,18 @@ import { useNavigation } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getPreviousTransations } from '../../API/services';
-import { windowHeight } from '../../utils/dimension';
-import { MobileOperatorLogoMapping } from '../../constants/mobile-operator-logo-mapping';
+import { windowHeight, windowWidth } from '../../utils/dimension';
+import { MobileOperatorLogoMapping, MunimultiOperatorLogoMapping } from '../../constants/mobile-operator-logo-mapping';
+import * as convert from 'xml-js';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const uniqByKeepLast = (data: any[], key: Function) => {
     return [...new Map(
         data.map(x => [key(x), x])
     ).values()]
 }
+
+
 
 const getContactsArray = (contacts: any[]) => {
     const result: any[] = [];
@@ -39,6 +43,25 @@ const getContactsArray = (contacts: any[]) => {
 
 
 
+const getTransDetailsAsJSON = (trans: any) => {
+    // console.log(trans)
+    const j = convert.xml2json(trans['wallet_transaction_request'], { compact: true });
+    // console.log(j)
+    const json = JSON.parse(j);
+    return {
+        billerId: json.billPaymentRequest.billerId['_text'],
+        amt: json.billPaymentRequest.amountInfo.amount['_text'] / 100, // to convert to rupees
+        mn: json.billPaymentRequest.inputParams.input.paramValue['_text']
+    }
+}
+
+
+
+/************************************************************************************
+ *                              SearchContact Component 
+ ************************************************************************************/
+
+
 const SearchContact = () => {
     const navigation = useNavigation<any>();
 
@@ -49,13 +72,19 @@ const SearchContact = () => {
     const [filteredContactList, setFilteredContactList] = useState<any[]>(contactList);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [prevTrans, setPrevTrans] = useState([]);
+    const [showPrevTrans, setShowPrevTrans] = useState(false);
 
+    const [isCommission, setIsCommission] = useState<boolean>(true);
 
-
+    const [transModalVisible, setTransModalVisible] = useState(false);
+    const colorScheme = Appearance.getColorScheme();
 
     const contactPressHandler = (item: any) => {
-        navigation.push('showPlan', { ...item })
+        navigation.push('showPlan', { ...item, isCommission })
     }
+
+
 
     const contactItem = ({ item }: any) => {
         return (
@@ -66,6 +95,8 @@ const SearchContact = () => {
         )
     }
 
+
+
     useEffect(() => {
         const result = contactList.filter(contact => {
             return contact.name.toLowerCase().includes(mobileNo.toLowerCase()) ||
@@ -75,68 +106,65 @@ const SearchContact = () => {
     }, [contactList, mobileNo])
 
 
+
+
     const onSearchMobileNo = (searchText: string) => {
         setMobileNo(searchText);
     }
 
+
+
     const newContactPressHandler = () => {
-        navigation.push('showPlan', { number: mobileNo, name: 'Unknow' })
+        navigation.push('showPlan', { number: mobileNo, name: 'Unknow', isCommission })
     }
 
-    const [prevTrans, setPrevTrans] = useState([]);
-    const [showPrevTrans, setShowPrevTrans] = useState(true);
+
 
     const callApi = async () => {
-        const PREPAID_RECHARGE_OPERATOR = [
-            { "op": 1, "provider": "AirTel" },
-            { "op": 604, "provider": "airtel up east" },
-            { "op": 2, "provider": "BSNL" },
-            { "op": 32, "provider": "BSNL Special" },
-            { "op": 505, "provider": "DOCOMO RECHARGE" },
-            { "op": 506, "provider": "DOCOMO SPECIAL" },
-            { "op": 4, "provider": "Idea" },
-            { "op": 167, "provider": "Jio" },
-            { "op": 5, "provider": "Vodafone" }
-        ]
 
         // console.log('In getPreviousTransactions search contact')
         const prevTransResp: any = await getPreviousTransations(userData.user.user_EmailID, 1, 1);
         if (prevTransResp.data['code'] === 200 && prevTransResp.data["status"] === "Success") {
-            const arr = prevTransResp.data['data'].map((trans: any) => {
-                const json = getTransDetailsAsJSON(trans);
-                let operatorDetails: any;
-                let foundOp: any;
-                if (json) {
-                    operatorDetails = PREPAID_RECHARGE_OPERATOR.find(curr => +curr.op === +json.op)
-                    foundOp = MobileOperatorLogoMapping.find((op: any) => op.name.includes(operatorDetails?.provider?.trim().toLowerCase()))
-                }
-                // Assign Name from contact list
-                const foundContact = contactList.find(c => c.number === json.mn);
-                // console.log(foundContact);
-                return {
-                    // data: json,
-                    trans_id: json.wallet_transaction_ID,
-                    amount: json?.amt,
-                    mn: json?.mn,
-                    op: json?.op,
-                    operatorDetails,
-                    logo: foundOp && foundOp.imageUri,
-                    name: foundContact ? foundContact.name : 'Unknown'
+            // console.log(prevTransResp.data['data'])
+            const arr = prevTransResp.data['data'].map((curr: any) => {
+
+                if (curr.wallet_transaction_recall === 'BBPS') {
+                    // IF BBPS 
+                    // console.log(curr)
+                    const req = getTransDetailsAsJSON(curr);
+                    const found = MobileOperatorLogoMapping.find(curr => curr.BBPSBillerID === req.billerId)
+                    const foundContact = contactList.find(c => c.number === req.mn);
+                    return {
+                        ...req,
+                        operatorLogo: found?.imageUri,
+                        operatorName: found?.BBPSBillerName,
+                        name: foundContact ? foundContact.name : 'Unknown'
+                    }
+
+                } else {
+                    // IF Munimulti
+                    const req = curr.wallet_transaction_request && JSON.parse(curr.wallet_transaction_request);
+                    let operatorDetails: any;
+                    let foundOp: any;
+                    if (req) {
+                        operatorDetails = MunimultiOperatorLogoMapping.find(curr => +curr.op === +req.op)
+                        foundOp = MobileOperatorLogoMapping.filter((op: any) => op.name.includes(operatorDetails?.provider?.trim().toLowerCase()))
+                    }
+                    const foundContact = contactList.find(c => c.number === req.mn);
+                    return {
+                        ...JSON.parse(curr.wallet_transaction_Logfile),
+                        operatorLogo: foundOp?.length > 0 ? foundOp[0].imageUri : '',
+                        operatorName: operatorDetails ? operatorDetails?.provider : '',
+                        name: foundContact ? foundContact.name : 'Unknown'
+                    }
                 }
             })
-            // console.log(JSON.stringify(arr))
+
+            //  console.log(arr)
             setPrevTrans(arr)
         }
     }
 
-    const getTransDetailsAsJSON = (trans: any) => {
-        const removedSlash = trans['wallet_transaction_request']?.replace(new RegExp('/', 'g'), '');
-        if (removedSlash) {
-            return JSON.parse(removedSlash)
-        } else {
-            return undefined;
-        }
-    }
 
 
     useEffect(() => {
@@ -163,12 +191,16 @@ const SearchContact = () => {
         });
     }, []);
 
+
+
     useEffect(() => {
-        if(contactList.length > 0) {
+        if (contactList.length > 0) {
             console.log('Contact List Popullated, fetch Prev Trans')
             callApi()
         }
     }, [contactList.length])
+
+
 
     if (isLoading)
         return <Loading label={'Reading your contacts'} />
@@ -176,46 +208,9 @@ const SearchContact = () => {
     return (
         <View style={styles.rootContainer}>
 
-            {prevTrans.length > 0 && <View style={{ maxHeight: windowHeight * 0.3 }}>
-                <View style={{ flexDirection: 'row', justifyContent: showPrevTrans ? 'space-between' : 'flex-end', alignItems: 'center' }}>
-                    {showPrevTrans && <Text style={{ fontSize: 18, color: colors.primary500, fontWeight: 'bold', paddingVertical: 6, textDecorationLine: 'underline' }}>Recent Recharges</Text>}
-                    <Pressable onPress={() => { setShowPrevTrans(!showPrevTrans) }}>
-                        <Text style={{ fontSize: 18, color: colors.primary500, fontWeight: 'bold', textDecorationLine: 'underline' }}>{showPrevTrans ? 'Hide' : 'Show Prev. Transaction'}</Text>
-                    </Pressable>
-                    {/* 9124433901 */}
-                </View>
-                {showPrevTrans && <View>
-                    <FlatList data={prevTrans} renderItem={({ item }: any) => {
-                        return <Pressable key={item.trans_id}
-                            onPress={() => {
-                                console.log('pressed ' + JSON.stringify(item))
-                                navigation.push('showPlan', { number: item.mn, name: item.name })
-                            }}
-                            style={{
-                                flexDirection: 'row',
-                                borderBottomWidth: 1,
-                                borderBottomColor: colors.primary100,
-                                alignItems: 'center',
-                                paddingVertical: 8,
-                                paddingHorizontal: 4
-                            }}>
-                            <View>
-                                <Image source={item?.logo}
-                                    style={{ width: 40, height: 40 }} />
-                            </View>
-                            <View style={{ marginLeft: 16 }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
-                                    <Text style={{ color: colors.primary500, fontSize: 16, fontWeight: 'bold', width: '50%' }}>₹ {item.amount}</Text>
-                                    <Text style={{ color: colors.primary500, fontSize: 16, fontWeight: 'bold', width: '50%' }}>No. {item.mn}</Text>
-                                </View>
-                                <Text style={{ color: colors.primary500, fontSize: 14 }}>{item.name}</Text>
-                            </View>
-                        </Pressable>
-                    }} />
-                </View>}
-            </View>}
+
             {/* Adjust margin according to prevtrans array */}
-            <View style={[styles.inputContainer, { marginTop: prevTrans.length > 0 ? (showPrevTrans ? 40 : 8) : 0 }]}>
+            <View style={[styles.inputContainer, { marginTop: 0 }]}>
                 <Text style={styles.inputLabel}>Please enter mobile or name</Text>
                 <View style={styles.mobileNoInput}>
                     {/* <Text style={styles.countryCode}>+91</Text> */}
@@ -226,6 +221,77 @@ const SearchContact = () => {
                         onChangeText={onSearchMobileNo} />
                 </View>
             </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
+                {
+                    prevTrans.length > 0 ?
+                        <Pressable onPress={() => setTransModalVisible(true)}>
+                            <Text style={{ fontSize: 16, textDecorationLine:'underline' ,color: colors.primary500 }}>Show History</Text>
+                            </Pressable>
+                        : <View></View> // empty view
+                }
+
+                <BouncyCheckbox
+                    size={25}
+                    isChecked={isCommission}
+                    fillColor={colors.primary500}                // unFillColor="#FFFFFF"
+                    text="Commission"
+                    textStyle={{ textDecorationLine: "none", color: colors.primary500 }}
+                    iconStyle={{ borderColor: colors.primary500 }}
+                    innerIconStyle={{ borderWidth: 2 }}
+                    onPress={(isChecked: boolean) => {
+                        setIsCommission(isChecked)        
+                    }} />
+            </View>
+
+            <Modal visible={transModalVisible} 
+                transparent
+                animationType='fade' 
+                onRequestClose={() => { setTransModalVisible(false) }}>
+                    <View style={modalStyle.modalBackdrop}>
+                        <View style={modalStyle.modalContent}>
+
+                        <View style={modalStyle.modalHeader}>
+                            <Text style={modalStyle.modalHeaderLAbel}>Previous Transations</Text>
+                            <Pressable onPress={() => {console.log('modal close'); setTransModalVisible(false)}}>
+                                <Text style={modalStyle.modalCloseLabel}>Close</Text>
+                            </Pressable>
+                        </View>
+
+                        <View style={{flex: 1, marginTop: 12}}>
+                            <FlatList data={prevTrans} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} renderItem={({ item }: any) => {
+                                return <Pressable key={item.trans_id}
+                                    onPress={() => {
+                                        setTransModalVisible(false);
+                                        console.log('pressed ' + JSON.stringify(item))
+                                        navigation.push('showPlan', { number: item.mn, name: item.name, isCommission })
+                                    }}
+                                    style={{
+                                        flexDirection: 'row',
+                                        borderBottomWidth: 1,
+                                        borderBottomColor: colors.primary100,
+                                        alignItems: 'center',
+                                        paddingVertical: 8,                   
+                                    }}>
+                                    <View>
+                                        <Image source={item?.operatorLogo}
+                                            style={{ width: 40, height: 40 }} />
+                                    </View>
+                                    <View style={{ paddingLeft: 8 }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                                            <Text style={{ color: colors.primary500, fontSize: 16, fontWeight: 'bold', width: '50%' }}>₹ {item.amt}</Text>
+                                            <Text style={{ color: colors.primary500, fontSize: 16, fontWeight: 'bold', width: '50%' }}>No. {item.mn}</Text>
+                                        </View>
+                                        <Text style={{ color: colors.primary500, fontSize: 14 }}>{item.name}</Text>
+                                    </View>
+                                </Pressable>
+                            }} />
+                        </View>
+
+                        </View>
+                    </View>
+            </Modal>
+
 
 
             <View style={{ flex: 1 }}>
@@ -310,6 +376,39 @@ const styles = StyleSheet.create({
     contactNumber: {
         fontSize: 18,
         color: colors.primary400,
-    }
+    },
 
+    
+
+})
+
+
+const modalStyle = StyleSheet.create({
+    modalBackdrop: {
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modalContent: {
+        width: windowWidth - 50,
+        height: windowHeight - 200,
+        backgroundColor: colors.white,
+        borderRadius: 8,
+        padding: 8
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent:'space-between'
+    },
+    modalHeaderLAbel: {
+        fontSize: 20,
+        color: colors.primary500,
+        fontWeight: 'bold'
+    },
+    modalCloseLabel: {
+        fontSize: 18,
+        color: colors.secondary500,
+        fontWeight: 'bold'
+    }
 })

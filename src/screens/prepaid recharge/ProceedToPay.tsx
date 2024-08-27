@@ -8,7 +8,8 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { AuthContext } from '../../context/AuthContext'
 import { operatorList } from '../../constants/mobile-operator-billerid-mapping'
 import { validateWalletBalance, validateWalletPin } from '../../utils/walletUtil'
-import { prepaidRecharge } from '../../API/services'
+import { bbpsPayBill, getBillerInfo, prepaidRecharge } from '../../API/services'
+import { BBPS_CONSTANTS } from '../../constants/bbps-constants'
 
 
 const ProceedToPay = () => {
@@ -16,19 +17,53 @@ const ProceedToPay = () => {
     const [item, setItem] = useState<any>({});
     const [isLoading, setIsLoading] = useState(false);
     const [loadingLabel, setLoadingLabel] = useState('Loading...');
-    const [mobileDetails, setMobileDetails] = useState<any>({})
-        ;
+    const [mobileDetails, setMobileDetails] = useState<any>({});
     const navigation = useNavigation<any>();
     const route = useRoute<any>();
+    const [isCommission, setIsCommission] = useState(true);
+
+    const [billerDetail, setBillerDetail] = useState<any | null>(null);
 
     const readAsynchStorage = async () => {
         setIsLoading(true);
         const rechargePlan = await AsyncStorage.getItem('rechargePlan') || '{}';
         setItem(JSON.parse(rechargePlan));
-        setIsLoading(false);
+        console.log(JSON.parse(rechargePlan))
+        
 
         const details = await AsyncStorage.getItem('rechargeContactDetail') || '{}';
         setMobileDetails(JSON.parse(details));
+        
+        const isCommission = await AsyncStorage.getItem('rechargeIsCommission') || 'true';
+        setIsCommission(isCommission === 'true');
+        setIsLoading(false);
+
+
+        // Fetch Biller Details if setIsCommission is false
+        if(isCommission !== 'true') {
+            console.log('Fetch Biller Details')
+            console.log(JSON.parse(details).currentOptBillerId)
+            setIsLoading(true);
+            try {
+                const {data:resp} = await getBillerInfo (JSON.parse(details).currentOptBillerId)
+                // console.log(resp)
+                console.log("===================================")
+                if(resp.code === 200 && resp.status === 'Success' && resp.resultDt?.resultDt?.billerId) {
+                    console.log(JSON.stringify(resp.resultDt.resultDt))
+                    setBillerDetail(resp.resultDt.resultDt)
+                } else {
+                    setBillerDetail(null)
+                }
+            } catch (error) { 
+                console.log('Error while fetching biller details')
+                setBillerDetail(null)
+                console.log(error)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        
+
     }
 
     const goForRecharge = async () => {
@@ -104,7 +139,12 @@ const ProceedToPay = () => {
                 const isWalletOk = await validateWalletBalance(+item.amount, userData.user.user_EmailID);
                 if (isWalletOk) {
                     console.log('wallet ok');
-                    const rechargeResp = await goForRecharge();
+                    if(isCommission) {
+                        const rechargeResp = await goForRecharge();
+                    } else  {
+                        const rechargeResp = await goForRechargeBBPS ();
+                    }
+
                 }
             } else {
                 // incorrect pin
@@ -122,6 +162,71 @@ const ProceedToPay = () => {
         }
 
     }
+
+
+    const  goForRechargeBBPS = async () => {
+        const inputParams: any = {
+            "paramName": "Mobile Number",
+            "paramValue": mobileDetails?.mobileNo
+        };
+
+        const paymentPayload = {
+            "agentId": BBPS_CONSTANTS.BBPS_AGENT_ID,
+            "billerAdhoc": billerDetail?.billerAdhoc,
+            "agentDeviceInfo": BBPS_CONSTANTS.BBPS_AGENT_DEVICE_INFO,
+            "customerInfo": {
+                "customerMobile": "9777117452",
+                "customerEmail": "info.gskindiaorg@gmail.com",
+                "customerAdhaar": "",
+                "customerPan": ""
+            },
+            "billerId": billerDetail?.billerId,
+            inputParams,
+            "amountInfo": {
+                "amount": (+item.amount * 100),
+                "currency": 356,
+                "custConvFee": 0
+            },
+            "paymentMethod": {
+                "paymentMode": "WALLET",
+                "quickPay": "N",
+                "splitPay": "N",
+            },
+            "paymentInfo": {
+                "info": [
+                    {
+                        "infoName": "WalletName",
+                        "infoValue": "Paytm"
+                    }, {
+                        "infoName": "MobileNo",
+                        "infoValue": userData.user.mobile_Number
+                    }
+                ]
+            }
+        }
+
+
+        // console.log(paymentPayload)
+        try {
+            setIsLoading(true)
+            const { data:resp } = await bbpsPayBill('', paymentPayload,"1", "1", userData.user.user_EmailID)
+            console.log(resp)
+            if(resp.status === 'Success') {
+                setIsLoading(false)
+                navigation.navigate('prepaidTransSuccess', { message: 'Recharge Success' });
+            } else {
+                Alert.alert('Failed', 'Recharge failed. Please try after sometime.')
+            }            
+        } catch (error) {
+            Alert.alert('Error', 'Erroe while recharge. Please try after sometime.')
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+
+    
 
     const payHandler = () => {
         navigation.navigate('otpScreen', {
@@ -142,7 +247,7 @@ const ProceedToPay = () => {
     }, [(route.params as any)?.pin])
 
     useEffect(() => {
-        readAsynchStorage()
+        readAsynchStorage();        
     }, [])
 
     if (isLoading)

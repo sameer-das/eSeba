@@ -264,3 +264,4 @@ export const pmfbyRegistration = (pmfby:any) => {
 export const pmfbyDocUpload =  (payload:any, userId: number) => {
   return axios.post(`${BASE_URL}/api/POSP/POSPDocumnetUpload?userId=${userId}`, payload)
 }
+

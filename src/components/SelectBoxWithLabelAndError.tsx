@@ -60,7 +60,7 @@ const SelectBoxWithLabelAndError = ({ errorMessage, onSelectionChange, value, la
                     <View style={[styles.modalBody, { height: listData.length >= 5 ? 430 : (listData.length * 50) + 130 }]}>
                         <View>
                             <View style={styles.modalHeader}>
-                                <Text style={styles.modalTitle}>{label}</Text>
+                                <Text style={[styles.modalTitle, {fontSize: label.length > 25 ? 18 : 24}]}>{label}</Text>
                                 <Pressable onPress={() => { setModalVisible(false) }}>
                                     <MaterialIcon name='close' size={30} color={colors.secondary300} />
                                 </Pressable>
@@ -147,7 +147,6 @@ const styles = StyleSheet.create({
         height: 50
     },
     modalTitle: {
-        fontSize: 24,
         fontWeight: 'bold',
         color: colors.primary500
     },

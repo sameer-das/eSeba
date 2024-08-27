@@ -44,6 +44,7 @@ import Wallet from '../screens/wallet/Wallet';
 import { windowHeight, windowWidth } from '../utils/dimension';
 import EnterPinToHome from './EnterPinToHome';
 import PmfbyHome from '../screens/pmfby/PmfbyHome';
+import AadharMain from '../screens/aadhar/AadharMain';
 
 
 const Tab = createBottomTabNavigator();
@@ -64,7 +65,7 @@ const HomeScreen = () => {
     const CustomHeader = () => {
         const navigation = useNavigation<any>();
 
-  
+
         // console.log('In CustomHeader URL ' + profileUri.uri);
         return <View style={{ backgroundColor: colors.primary400, height: 60, paddingHorizontal: 12, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
@@ -250,6 +251,20 @@ const TransferMoneyFromHomeScreenStack = () => {
     </Stack.Navigator>
 }
 
+
+
+const AadharStack = () => {
+    const Stack = createNativeStackNavigator();
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name='AadharHome' component={AadharMain} options={{ headerShown: false }}></Stack.Screen>
+        </Stack.Navigator>
+    )
+}
+
+
+
+
 const Stack = createNativeStackNavigator();
 const AppStackTab = () => {
     return (
@@ -265,6 +280,7 @@ const AppStackTab = () => {
             <Stack.Screen name='transferMoneyFromHomeScreenStack' component={TransferMoneyFromHomeScreenStack} options={{ headerShown: false }} />
             <Stack.Screen name='notification' component={Notification} options={{ headerShown: true, title: 'Notifications', headerStyle: { backgroundColor: colors.primary500 }, headerTintColor: colors.white }} />
             <Stack.Screen name='PMFBYStack' component={PMFBYStack} options={{ headerShown: false }} />
+            <Stack.Screen name='AadharStack' component={AadharStack} options={{ headerShown: false }} />
 
             {/* Common Screens */}
             <Stack.Screen name='otpScreen' component={NewOtpScreen} options={{ headerShown: false }} />
