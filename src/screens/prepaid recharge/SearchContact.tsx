@@ -132,8 +132,9 @@ const SearchContact = () => {
                     // IF BBPS 
                     // console.log(curr)
                     const req = getTransDetailsAsJSON(curr);
+                    // console.log(req)
                     const found = MobileOperatorLogoMapping.find(curr => curr.BBPSBillerID === req.billerId)
-                    const foundContact = contactList.find(c => c.number === req.mn);
+                    const foundContact = contactList.find(c => c.number.slice(-10) === req.mn);
                     return {
                         ...req,
                         operatorLogo: found?.imageUri,
@@ -161,14 +162,14 @@ const SearchContact = () => {
             })
 
             //  console.log(arr)
-            setPrevTrans(arr)
+            setPrevTrans(arr.slice(0,10))
         }
     }
 
 
 
     useEffect(() => {
-        console.log('in list contacts')
+        // console.log('in list contacts')
         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
             title: 'Contacts',
             message: 'This app would like to view your contacts.',
@@ -234,7 +235,7 @@ const SearchContact = () => {
                 <BouncyCheckbox
                     size={25}
                     isChecked={isCommission}
-                    fillColor={colors.primary500}                // unFillColor="#FFFFFF"
+                    fillColor={colors.primary500}
                     text="Commission"
                     textStyle={{ textDecorationLine: "none", color: colors.primary500 }}
                     iconStyle={{ borderColor: colors.primary500 }}

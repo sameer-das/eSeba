@@ -53,7 +53,7 @@ const ListRecipientsToSendMoney = () => {
   }
   return (
     <View style={styles.rootContainer}>
-      <Text style={{ fontSize: 24, color: colors.primary500, fontWeight: 'bold', textAlign: 'center' }}>Send Money</Text>
+      <Text style={{ fontSize: 20, color: colors.primary500, fontWeight: 'bold', textAlign: 'center' }}>Send Money</Text>
       <Text style={{ color: colors.primary500, marginTop: 8, fontSize: 16, textAlign: 'center' }}>Choose one from below list to transfer money</Text>
 
       <FlatList data={recipient}

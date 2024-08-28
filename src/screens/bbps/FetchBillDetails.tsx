@@ -203,7 +203,8 @@ const FetchBillDetails = () => {
 
         try {
             const { data } = await bbpsPayBill(requestID, payBillPayload, serviceDetails.services_cat_id, serviceDetails.services_id, userData.user.user_EmailID)
-            // console.log(JSON.stringify(data));
+            console.log("=====================reached to navigate")
+            console.log(JSON.stringify(data));
 
             await AsyncStorage.removeItem('bbpsTxnStatus');
             await AsyncStorage.setItem('bbpsTxnStatus', JSON.stringify({
@@ -211,7 +212,6 @@ const FetchBillDetails = () => {
             }));
             setLoadingLabel('Loading...');
             setIsLoading(false);
-
 
             navigation.navigate('bbpsTxnStatus', {
                 txnStatus: data.resultDt

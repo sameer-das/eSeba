@@ -25,7 +25,7 @@ const PlanTabView = ({ plans, handlePress }: any) => {
 
     // Set the route at initial load, dont rerun it on swipe
     useEffect(() => {
-        console.log('Plans changed')
+        // console.log('Plans changed')
         const routes = plans?.map((curr: any) => {
             return { key: curr.planName, title: curr.planName }
         });

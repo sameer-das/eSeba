@@ -165,10 +165,11 @@ const ProceedToPay = () => {
 
 
     const  goForRechargeBBPS = async () => {
-        const inputParams: any = {
+        const inputParams:any = {};
+        inputParams.input =[{
             "paramName": "Mobile Number",
-            "paramValue": mobileDetails?.mobileNo
-        };
+            "paramValue": String(mobileDetails?.mobileNo)
+        }];
 
         const paymentPayload = {
             "agentId": BBPS_CONSTANTS.BBPS_AGENT_ID,
@@ -206,7 +207,7 @@ const ProceedToPay = () => {
         }
 
 
-        // console.log(paymentPayload)
+        console.log(JSON.stringify(paymentPayload))
         try {
             setIsLoading(true)
             const { data:resp } = await bbpsPayBill('', paymentPayload,"1", "1", userData.user.user_EmailID)
@@ -215,7 +216,7 @@ const ProceedToPay = () => {
                 setIsLoading(false)
                 navigation.navigate('prepaidTransSuccess', { message: 'Recharge Success' });
             } else {
-                Alert.alert('Failed', 'Recharge failed. Please try after sometime.')
+                Alert.alert('Failed', resp.message)
             }            
         } catch (error) {
             Alert.alert('Error', 'Erroe while recharge. Please try after sometime.')

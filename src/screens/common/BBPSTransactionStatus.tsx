@@ -40,8 +40,9 @@ const BBPSTransactionStatus = () => {
             <View style={{ marginTop: windowHeight / 4, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
 
                 <Text style={styles.header}>You Bill Payment Status</Text>
-                <Text style={styles.text}>Transaction {txnStatus?.responseReason}</Text>
-                {txnStatus?.respAmount && <Text style={styles.amount}>₹ {txnStatus?.respAmount}</Text>}
+                {!txnStatus?.responseReason && <Text style={styles.txnStatus}>{txnStatus.responseCode == 0 ? 'Success' : 'Failed'}</Text>}
+                {txnStatus?.responseReason && <Text style={styles.text}>Transaction {txnStatus?.responseReason}</Text>}
+                {txnStatus?.respAmount > 0 && <Text style={styles.amount}>₹ {txnStatus?.respAmount}</Text>}
                 {txnStatus?.respCustomerName && <Text style={styles.details}>Name:  {txnStatus?.respCustomerName}</Text>}
                 {txnStatus?.txnRefId && <Text style={styles.details}>Ref Id:  {txnStatus?.txnRefId}</Text>}
             </View>
@@ -77,5 +78,11 @@ const styles = StyleSheet.create({
     details: {
         fontSize: 16,
         color: colors.white,
+    }, 
+    txnStatus: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 10
     }
 })

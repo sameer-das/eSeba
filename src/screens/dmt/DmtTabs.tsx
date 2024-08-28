@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DMTAddSenderOtpScreen from './AddSender/DMTAddSenderOtpScreen';
 import DMTSendMoneyPinScreen from './SendMoneyTab/DMTSendMoneyPinScreen';
 import OtpScreen from '../common/OtpScreen';
+import ListTransactions from './HistoryTab/ListTransactions';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +36,14 @@ const SendMoneyStack = () => {
       <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
       <Stack.Screen name='showConveyanceFee' component={ShowConveyanceFee} />
       <Stack.Screen name='dmtSendMoneyPinScreen' component={OtpScreen} />
+    </Stack.Navigator>
+  )
+}
+
+const HistoryStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='listTxns' component={ListTransactions} />
     </Stack.Navigator>
   )
 }
@@ -90,17 +99,21 @@ const DMTTabs = () => {
         tabBarStyle: { backgroundColor: colors.primary500, height: 65 },
         tabBarActiveTintColor: colors.white,
         tabBarInactiveTintColor: colors.primary100,
-        tabBarLabelStyle: { fontSize: 18, marginBottom: 8 },
+        tabBarLabelStyle: { fontSize: 16, marginBottom: 10 },
         tabBarHideOnKeyboard: true
         // tabBarShowLabel: false
       }}>
         <Tab.Screen name="Send" component={SendMoneyStack}
-          options={{
+          options={{            
             tabBarIcon: ({ focused, color }) => <MaterialIcon name="send" size={25} color={color} />,
           }} />
         <Tab.Screen name="Recipients" component={RecipientStack}
           options={{
-            tabBarIcon: ({ focused, color }) => <MaterialIcon name="format-list-bulleted" size={30} color={color} />,
+            tabBarIcon: ({ focused, color }) => <MaterialIcon name="format-list-bulleted" size={28} color={color} />,
+          }} />
+        <Tab.Screen name="History" component={HistoryStack}
+          options={{
+            tabBarIcon: ({ focused, color }) => <MaterialIcon name="compare-arrows" size={28} color={color} />,
           }} />
       </Tab.Navigator>
     )
