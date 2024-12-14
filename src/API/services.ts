@@ -265,3 +265,7 @@ export const pmfbyDocUpload =  (payload:any, userId: number) => {
   return axios.post(`${BASE_URL}/api/POSP/POSPDocumnetUpload?userId=${userId}`, payload)
 }
 
+
+export const downloadIcardURL = (userid: number) => {
+    return `https://api.esebakendra.com/api/User/DownloadICardFile?userid=${userid}`
+}

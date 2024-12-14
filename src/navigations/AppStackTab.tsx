@@ -45,6 +45,7 @@ import { windowHeight, windowWidth } from '../utils/dimension';
 import EnterPinToHome from './EnterPinToHome';
 import PmfbyHome from '../screens/pmfby/PmfbyHome';
 import AadharMain from '../screens/aadhar/AadharMain';
+import Icard from '../screens/profile-screen/Icard';
 
 
 const Tab = createBottomTabNavigator();
@@ -233,6 +234,7 @@ const ProfileStack = () => {
         <Stack.Screen name='updateProfilePic' component={UpdateProfilePic} options={{ title: 'Update Profile Pic', ...profileStackHeaderOption }} />
         <Stack.Screen name='updateGst' component={UpdateGST} options={{ title: 'Update GSTN', ...profileStackHeaderOption }} />
         <Stack.Screen name='changePassword' component={ChangePassword} options={{ title: 'Change Login Password', ...profileStackHeaderOption }} />
+        <Stack.Screen name='icard' component={Icard} options={{ title: 'My Identity Card', ...profileStackHeaderOption }} />
 
         <Stack.Screen name='aboutEPayMain' component={AboutEPayMain} options={{ title: 'About e-Pay', ...profileStackHeaderOption }} />
         <Stack.Screen name='policyDetails' component={PolicyDetails} options={{ title: 'e-Pay Policies', ...profileStackHeaderOption }} />

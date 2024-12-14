@@ -8,7 +8,7 @@ import { AuthContext } from '../../context/AuthContext';
 
 const ProfileMainScreen = () => {
     const navigation = useNavigation<any>();
-    const { logout } = useContext(AuthContext);
+    const { logout, userData } = useContext(AuthContext);
 
     const onLogout = () => {
         Alert.alert('Are you sure to logout?', undefined, [{
@@ -26,14 +26,23 @@ const ProfileMainScreen = () => {
                 <Text style={styles.profileButtonLanbel}>Profile</Text>
                 <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
             </Pressable>
+            
             <Pressable style={styles.profileButton} onPress={() => { navigation.push('documents') }}>
                 <Text style={styles.profileButtonLanbel}>My Documents</Text>
                 <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
             </Pressable>
+
+            {/* Show ID Card only for User Type == 2 */}
+            {userData.user.user_Type_ID === 2 && <Pressable style={styles.profileButton} onPress={() => { navigation.push('icard') }}>
+                <Text style={styles.profileButtonLanbel}>My ID Card</Text>
+                <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
+            </Pressable>}
+
             <Pressable style={styles.profileButton} onPress={() => { navigation.push('changePassword') }}>
                 <Text style={styles.profileButtonLanbel}>Change Password</Text>
                 <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
             </Pressable>
+            
             <Pressable style={styles.profileButton} onPress={() => { navigation.push('aboutEPayMain') }}>
                 <Text style={styles.profileButtonLanbel}>About e-Pay</Text>
                 <MaterialIcon name='keyboard-arrow-right' size={20} color={colors.white} />
