@@ -127,9 +127,11 @@ export const AuthProvider = ({ children }: { children: any }) => {
                 clearAsyncStorageForUserData();
             } else if (token) {
                 console.log('Token found')
+                console.log(token)
                 const _payload = token.split('.')[1];
                 const payload = decode(_payload);
                 const expiry = (JSON.parse(payload)).exp;
+                console.log(new Date(expiry * 1000))
                 if (Math.floor((new Date).getTime() / 1000) > expiry) {
                     console.log('Token invalid');
                     logout();

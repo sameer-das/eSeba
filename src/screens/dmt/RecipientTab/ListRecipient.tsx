@@ -19,7 +19,8 @@ const ListRecipient = () => {
         const payload = {
             "requestType": "AllRecipient",
             "senderMobileNumber": userData.user.mobile_Number,
-            "txnType": "IMPS"
+            "txnType": "IMPS",
+            "bankId": "FINO"
         }
         setIsLoading(true);
 

@@ -17,6 +17,8 @@ import DMTAddSenderOtpScreen from './AddSender/DMTAddSenderOtpScreen';
 import DMTSendMoneyPinScreen from './SendMoneyTab/DMTSendMoneyPinScreen';
 import OtpScreen from '../common/OtpScreen';
 import ListTransactions from './HistoryTab/ListTransactions';
+import { getFocusedRouteNameFromRoute, useNavigation, useRoute } from '@react-navigation/native';
+import DMTTxnStatus from './SendMoneyTab/DMTTxnStatus';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -30,12 +32,25 @@ const AddSenderStack = () => {
 }
 
 const SendMoneyStack = () => {
+  const route = useRoute<any>();
+  const navigation = useNavigation<any>();
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'listSenderToSend';
+
+  React.useEffect(() => {
+    if (routeName === 'dmtTxn') {
+      navigation.setOptions({ tabBarStyle: { display: 'none' } }); // Hide tab bar
+    } else {
+      navigation.setOptions({ tabBarStyle: { display: 'flex', backgroundColor: colors.primary500, height: 65, } }); // Show tab bar
+    }
+  }, [navigation, routeName]);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name='listSenderToSend' component={ListRecipientsToSendMoney} />
       <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
       <Stack.Screen name='showConveyanceFee' component={ShowConveyanceFee} />
       <Stack.Screen name='dmtSendMoneyPinScreen' component={OtpScreen} />
+      <Stack.Screen name='dmtTxn' component={DMTTxnStatus} />
     </Stack.Navigator>
   )
 }
@@ -51,21 +66,22 @@ const HistoryStack = () => {
 const DMTTabs = () => {
   const { userData } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [showAddSender, setShowAddSender] = useState(false);
+  const [showAddSender, setShowAddSender] = useState(true);
 
   const senderinfo = async () => {
     const payload = {
       "requestType": "SenderDetails",
       "senderMobileNumber": userData.user.mobile_Number,
-      "txnType": "IMPS"
+      "txnType": "IMPS",
+      "bankId": "FINO"
     }
 
     try {
       await AsyncStorage.removeItem('dmtSenderDetail');
-
+      // console.log('sender info')
       setIsLoading(true);
       const { data } = await getSenderInfo(payload);
-      console.log(data);
+      // console.log(data);
       if (data.code === 200 && data.status === 'Success' && (data.resultDt.senderMobileNumber === 0 || !data.resultDt.senderName)) {
         // sender not found
         setShowAddSender(true);
@@ -79,11 +95,13 @@ const DMTTabs = () => {
     } catch (e) {
       console.log('Error Fetching Sender for DMT');
       console.log(e)
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     senderinfo()
+    setIsLoading(false)
   }, [])
 
 
@@ -96,7 +114,7 @@ const DMTTabs = () => {
     return (
       <Tab.Navigator screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: colors.primary500, height: 65 },
+        tabBarStyle: { backgroundColor: colors.primary500, height: 65, display:'flex' },
         tabBarActiveTintColor: colors.white,
         tabBarInactiveTintColor: colors.primary100,
         tabBarLabelStyle: { fontSize: 16, marginBottom: 10 },

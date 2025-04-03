@@ -168,12 +168,23 @@ export const verifySender = (payload: any) => {
     return axios.post(`${BASE_URL}/api/DMT/eVerifySender`, payload)
 }
 
+export const resendOtpForVerifySender = (payload: any) => {
+    return axios.post(`${BASE_URL}/api/DMT/eResendOTPForVerifySender`, payload)
+}
+
 export const getConveyanceFee = (payload: any) => {
     return axios.post(`${BASE_URL}/api/DMT/eCustomerConv`, payload);
 }
 
-export const dmtFundTransfer = (payload: any, serviceId: string, categoryId: string, userId: string) => {
-    return axios.post(`${BASE_URL}/api/DMT/eFundTransfer?serviceId=${serviceId}&categoryId=${categoryId}&userId=${userId}`, payload);
+// export const dmtFundTransfer = (payload: any, serviceId: string, categoryId: string, userId: string) => {
+//     return axios.post(`${BASE_URL}/api/DMT/eFundTransfer?serviceId=${serviceId}&categoryId=${categoryId}&userId=${userId}`, payload);
+// }
+
+export const dmtFundTransfer = (payload: any) => {
+    return axios.post(`https://api.esebakendra.com/api/DMT/eTransactionWithOTP`, payload);
+}
+export const dmtFundTransferVerifyOtp = (payload: any, serviceId: string, categoryId: string, userId: string) => {
+    return axios.post(`https://api.esebakendra.com/api/DMT/eTransactionVarifyOTP?serviceId=${serviceId}&categoryId=${categoryId}&userId=${userId}`, payload);
 }
 
 

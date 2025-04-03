@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Alert, Pressable } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
 import colors from '../../constants/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -23,26 +23,38 @@ const OtpScreen = () => {
         // console.log('code fill called')
         if (pin1 && pin2 && pin3 && pin4) {
             const pin = pin1 + pin2 + pin3 + pin4;
-            // (route.params as any).onPinInput(pin);
-            // navigation.goBack();
             navigation.navigate({
                 name: (route.params as any).fromRouteName,
-                params: {pin: pin},
+                params: {code: (route.params as any)?.code, pin: pin},
                 merge: true
             })
         }
     }
 
+
+    const handleSubmitPress = () => {
+        if (pin1 && pin2 && pin3 && pin4) {
+            const pin = pin1 + pin2 + pin3 + pin4;
+            navigation.navigate({
+                name: (route.params as any).fromRouteName,
+                params: {code: (route.params as any)?.code, pin: pin},
+                merge: true
+            })
+        } else {
+            Alert.alert('Invalid', 'Please enter valid OTP!')
+        }
+    }
+
     useEffect(() => {
-        onCodeFill();
+        // onCodeFill();
     }, [pin4]) // trigger only when last input is changed
 
     return (
         <View style={styles.rootContainer}>
-            <Text style={styles.otpLable}>Please enter your secure pin!</Text>
+            <Text style={styles.otpLable}>{(route.params as any)?.header}</Text>
 
             {(route.params as any).purpose && <View style={styles.purpose}>
-                <Text style={styles.purposeText}>{(route.params as any).purpose}</Text>
+                <Text style={styles.purposeText}>{(route.params as any)?.purpose}</Text>
             </View>}
 
             <View style={styles.inputContainer}>
@@ -113,9 +125,24 @@ const OtpScreen = () => {
                         if (nativeEvent.key === 'Backspace') {
                             ref3.current.focus();
                         }
-                    }} />
+                    }} 
+                    
+                    onSubmitEditing={handleSubmitPress}/>
 
             </View>
+
+            <Pressable style={{paddingVertical: 10, 
+                                backgroundColor: colors.primary400, 
+                                width: '70%',
+                                borderRadius: 8,
+                                marginVertical: 26,}}
+                        onPress={handleSubmitPress}>
+                <Text style={{color: colors.white, 
+                            fontSize: 18, 
+                            textAlign: 'center', 
+                            fontWeight:'bold'}}>Submit</Text>
+
+            </Pressable>
 
         </View>
     )

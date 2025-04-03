@@ -44,7 +44,7 @@ const SendMoneyForm = () => {
       console.log('conv details ')
       console.log(data);
 
-      if (data.code = 200 && data.status === "Success" &&
+      if (data.code === 200 && data.status === "Success" &&
         data.resultDt?.responseCode === 0 && data.resultDt?.responseReason === "Successful") {
         navigation.push('showConveyanceFee', {
           amount: amount,

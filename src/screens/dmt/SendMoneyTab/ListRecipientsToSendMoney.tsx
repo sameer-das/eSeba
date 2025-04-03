@@ -16,7 +16,8 @@ const ListRecipientsToSendMoney = () => {
     const payload = {
       "requestType": "AllRecipient",
       "senderMobileNumber": userData.user.mobile_Number,
-      "txnType": "IMPS"
+      "txnType": "IMPS",
+      "bankId": "FINO"
     }
     console.log('Fetching recipient')
     try {

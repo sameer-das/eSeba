@@ -6,8 +6,8 @@ import colors from '../../../constants/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import { validateWalletBalance, validateWalletPin } from '../../../utils/walletUtil';
-import { dmtFundTransfer } from '../../../API/services';
-
+import { dmtFundTransfer, dmtFundTransferVerifyOtp } from '../../../API/services';
+import {fail, success} from './dmt_txn_result_sample_data';
 const ShowConveyanceFee = () => {
 
     const [senderDetail, setSenderDetail] = useState<any>({});
@@ -23,10 +23,25 @@ const ShowConveyanceFee = () => {
     }
 
     const onProceed = () => {
+        // -------------- this is for testing
+        // const data = JSON.parse(fail);
+        // navigation.push('dmtTxn', { ...data.resultDt });
 
+
+        // -------------- this is for testing
+        // navigation.push('dmtSendMoneyPinScreen', {
+        //     fromRouteName: 'showConveyanceFee',
+        //     header: 'Please enter OTP!',
+        //     code: 'OTP_FOR_TXN',
+        //     purpose: `Sending Rs. ${route.params.amount} via DMT to ${route.params.recipientName}`
+        // })
+        
+        // -------------- this is for Live
         navigation.setParams({ ...route.params, pin: '' });
         navigation.push('dmtSendMoneyPinScreen', {
             fromRouteName: 'showConveyanceFee',
+            header: 'Please enter your secure pin!',
+            code: 'PIN_FOR_WALLET',
             purpose: `Sending Rs. ${route.params.amount} via DMT to ${route.params.recipientName}`
         })
 
@@ -35,38 +50,34 @@ const ShowConveyanceFee = () => {
 
     const fundTransfer = async () => {
         const sendMoneyPayload = {
-            "requestType": "FundTransfer",
-            "senderMobileNo": String(userData.user.mobile_Number),
+            "requestType": "TXNSENDOTP",
             "agentId": "",
             "initChannel": "AGT",
+            "senderMobileNo": String(userData.user.mobile_Number),
             "recipientId": route.params.recipientId,
             "txnAmount": String(route.params.amount * 100),
             "convFee": String(route.params.custConvFee),
-            "txnType": route.params.transType
+            "txnType": route.params.transType,
+            "bankId": "FINO"
         }
         console.log(sendMoneyPayload)
 
-        const _data = await AsyncStorage.getItem('currentServiceDetails') || '{}';
-        const serviceId = JSON.parse(_data)?.services_id;
-        const serviceCatId = JSON.parse(_data)?.services_cat_id;
-        console.log(serviceCatId, serviceId);
 
-        if (!serviceId || !serviceCatId) {
-            Alert.alert('Wrong', 'Service id or Service category id not found');
-            return;
-        }
         setIsLoading(true);
         try {
-            const { data } = await dmtFundTransfer(sendMoneyPayload, serviceId, serviceCatId, userData.user.user_EmailID)
+            const { data } = await dmtFundTransfer(sendMoneyPayload)
             console.log(data);
             setIsLoading(false);
-            if (data.code === 200 && data.status === 'Success' && data.resultDt && data.resultDt?.responseCode == 0) {
-                Alert.alert('Successful', 'Successfully amount has been transfered to the recipient.', [{
-                    text: 'Ok',
-                    onPress: () => {
-                        navigation.popToTop()
-                    }
-                }])
+            if (data.code === 200 && data.status === 'Successful' && data.resultDt && data.resultDt?.responseCode === '000') {
+                // Show OTP screen
+                navigation.setParams({ ...route.params, pin: '' });
+                navigation.push('dmtSendMoneyPinScreen', {
+                    fromRouteName: 'showConveyanceFee',
+                    header: 'Please enter OTP!',
+                    code: 'OTP_FOR_TXN',
+                    purpose: `Sending Rs. ${route.params.amount} via DMT to ${route.params.recipientName}`
+                })
+
             } else {
                 Alert.alert('Fail', 'Failed while transfering amount. Please try after sometime.')
             }
@@ -84,13 +95,19 @@ const ShowConveyanceFee = () => {
         const checkPinResponse = await validateWalletPin(userData.user.user_ID, userPin);
         console.log(checkPinResponse)
         if (checkPinResponse) {
-            const checkWalletBalance = await validateWalletBalance(route.params.amount, userData.user.user_EmailID);
-            console.log(checkWalletBalance)
-            setIsLoading(false);
-            if (checkWalletBalance) {
-                console.log('ok let trnsfer');
-                fundTransfer()
+            try{
+                const checkWalletBalance = await validateWalletBalance(route.params.amount, userData.user.user_EmailID);
+                console.log(checkWalletBalance);                
+                if (checkWalletBalance) {
+                    console.log('ok let trnsfer');
+                    fundTransfer()
+                }
+            } catch(e) {
+
+            } finally {
+                setIsLoading(false);
             }
+           
         } else {
             setIsLoading(false);
             Alert.alert('Invalid Pin', 'You have entered invalid wallet PIN.')
@@ -98,14 +115,65 @@ const ShowConveyanceFee = () => {
     }
 
 
+    const submitOTpForTransaction = async (otp: string) => {
+
+        const verifyOtpPayload = {
+            "requestType": "TXNVERIFYOTP",
+            "agentId": "",
+            "initChannel": "AGT",
+            "senderMobileNo": String(userData.user.mobile_Number),
+            "recipientId": route.params.recipientId,
+            "txnAmount": String(route.params.amount * 100),
+            "convFee": String(route.params.custConvFee),
+            "txnType": route.params.transType,
+            "bankId": "FINO",
+            "otp": otp
+        }
+        const _data = await AsyncStorage.getItem('currentServiceDetails') || '{}';
+        const serviceId = JSON.parse(_data)?.services_id;
+        const serviceCatId = JSON.parse(_data)?.services_cat_id;
+        console.log(serviceCatId, serviceId);
+
+        setIsLoading(true)
+        if (!serviceId || !serviceCatId) {
+            Alert.alert('Wrong', 'Service id or Service category id not found');
+            setIsLoading(false)
+            return;
+        }
+
+        try {
+            console.log(verifyOtpPayload);
+            const { data } = await dmtFundTransferVerifyOtp(verifyOtpPayload, serviceId, serviceCatId, userData.user.user_ID)
+            console.log(JSON.stringify(data))
+            // Show Transaction Status Screen 
+            navigation.push('dmtTxn', { ...data.resultDt });
+
+        } catch (e) {
+            Alert.alert('Error', 'Error while sending money!');
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+
+    // Handle OTP After Its Input from OTP Screen
     useEffect(() => {
         const pin = (route.params as any)?.pin;
         if ((route.params as any)?.pin) {
-            console.log('otp Found in DMT show conv screen ' + pin); // Reset PIN 
-            if (pin !== '')
-                validatePinAndWalletBalance(pin)
+            if ((route.params as any)?.code === 'PIN_FOR_WALLET') {
+                console.log('Otp Found in DMT show conv screen for Wallet check ' + pin); // Reset PIN 
+                if (pin !== '')
+                    validatePinAndWalletBalance(pin)
 
-            navigation.setParams({ pin: '' })
+                navigation.setParams({ pin: '' })
+            } else if ((route.params as any)?.code === 'OTP_FOR_TXN') {
+                console.log('Otp Found in DMT show conv screen for OTP for TXN ' + pin); // Reset PIN 
+                if (pin !== '')
+                    submitOTpForTransaction(pin);
+                // navigation.popToTop();
+
+                navigation.setParams({ pin: '' })
+            }
         }
     }, [(route.params as any)?.pin])
 

@@ -10,7 +10,6 @@ import SearchDMTRecipient from '../screens/TransferMoneyFromHomeScreen/SearchDMT
 import FetchBillDetails from '../screens/bbps/FetchBillDetails';
 import ListBillers from '../screens/bbps/ListBillers';
 import BBPSTransactionStatus from '../screens/common/BBPSTransactionStatus';
-// import OtpScreen from '../screens/common/OtpScreen';
 import AboutEPayMain from '../screens/About ePay/AboutEPayMain';
 import PolicyDetails from '../screens/About ePay/PolicyDetails';
 import NewOtpScreen from '../screens/common/NewOtpScreen';

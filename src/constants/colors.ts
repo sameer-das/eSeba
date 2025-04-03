@@ -17,7 +17,8 @@ const colors = {
     grey: '#666666',
     pageDarkBg:'#020622',
     homeScreenCardBg:'#202440',
-    transferMoneyIconBg: '#6080D2'
+    transferMoneyIconBg: '#6080D2',
+    failed: '#e05353'
  
 
 }

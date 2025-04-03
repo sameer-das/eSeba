@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">e-Pay</string>
+    <string name="btnName">Click Me</string>
 </resources>

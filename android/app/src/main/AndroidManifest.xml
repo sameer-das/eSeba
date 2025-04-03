@@ -26,6 +26,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".TestActivity"
+            android:exported="false" />
+        <activity
             android:name=".CCAvenueWebview"
             android:exported="false" />
         <activity
