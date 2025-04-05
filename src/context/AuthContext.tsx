@@ -74,8 +74,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
         }
     }
 
-    const logout = () => {
-        clearAsyncStorageForUserData();
+    const logout = async () => {
+        await clearAsyncStorageForUserData();
     }
 
     const refreshUserDataInContext = async (userId?: number) => {
@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
                 console.log(new Date(expiry * 1000))
                 if (Math.floor((new Date).getTime() / 1000) > expiry) {
                     console.log('Token invalid');
-                    logout();
+                    await logout();
                 }
                 console.log('Token valid')
                 setUserData(JSON.parse(userData));

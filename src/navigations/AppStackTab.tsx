@@ -45,6 +45,8 @@ import EnterPinToHome from './EnterPinToHome';
 import PmfbyHome from '../screens/pmfby/PmfbyHome';
 import AadharMain from '../screens/aadhar/AadharMain';
 import Icard from '../screens/profile-screen/Icard';
+import OtpScreen from '../screens/common/OtpScreen';
+import DMTTxnStatus from '../screens/dmt/SendMoneyTab/DMTTxnStatus';
 
 
 const Tab = createBottomTabNavigator();
@@ -248,7 +250,8 @@ const TransferMoneyFromHomeScreenStack = () => {
         <Stack.Screen name='searchDMTRecipient' component={SearchDMTRecipient} />
         <Stack.Screen name='sendMoneyForm' component={SendMoneyForm} />
         <Stack.Screen name='showConveyanceFee' component={ShowConveyanceFee} />
-        <Stack.Screen name='dmtSendMoneyPinScreen' component={NewOtpScreen} />
+        <Stack.Screen name='dmtSendMoneyPinScreen' component={OtpScreen} />
+        <Stack.Screen name='dmtTxn' component={DMTTxnStatus} />
     </Stack.Navigator>
 }
 

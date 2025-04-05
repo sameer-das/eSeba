@@ -8,6 +8,7 @@ import ButtonPrimary from '../../../components/ButtonPrimary';
 import { validateWalletBalance, validateWalletPin } from '../../../utils/walletUtil';
 import { dmtFundTransfer, dmtFundTransferVerifyOtp } from '../../../API/services';
 import {fail, success} from './dmt_txn_result_sample_data';
+import Loading from '../../../components/Loading';
 const ShowConveyanceFee = () => {
 
     const [senderDetail, setSenderDetail] = useState<any>({});
@@ -143,7 +144,7 @@ const ShowConveyanceFee = () => {
 
         try {
             console.log(verifyOtpPayload);
-            const { data } = await dmtFundTransferVerifyOtp(verifyOtpPayload, serviceId, serviceCatId, userData.user.user_ID)
+            const { data } = await dmtFundTransferVerifyOtp(verifyOtpPayload, serviceId, serviceCatId, userData.user.user_EmailID)
             console.log(JSON.stringify(data))
             // Show Transaction Status Screen 
             navigation.push('dmtTxn', { ...data.resultDt });
@@ -190,6 +191,10 @@ const ShowConveyanceFee = () => {
         });
         return unsubscribe;
     }, [])
+
+    
+    if(isLoading)
+        return <Loading label="Processing payment, Don't press back"/>
 
     return (
         <View style={styles.rootContainer}>

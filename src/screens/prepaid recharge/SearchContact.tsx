@@ -75,7 +75,7 @@ const SearchContact = () => {
     const [prevTrans, setPrevTrans] = useState([]);
     const [showPrevTrans, setShowPrevTrans] = useState(false);
 
-    const [isCommission, setIsCommission] = useState<boolean>(true);
+    const [isCommission, setIsCommission] = useState<boolean>(false);
 
     const [transModalVisible, setTransModalVisible] = useState(false);
     const colorScheme = Appearance.getColorScheme();

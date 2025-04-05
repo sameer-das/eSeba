@@ -48,10 +48,8 @@ const ListBillers = () => {
         try {
             setIsLoading(true);
             // console.log('calling api')
-            const resp: any = await getAllBillers(searchValue);
-
-            // console.log(resp)
-            const { data } = resp;
+            const { data } = await getAllBillers(searchValue);
+            // console.log(data)
             if (data.status === 'Success' && data.code === 200) {
                 setBillers(data.resultDt);
                 setFilteredBillers(data.resultDt);

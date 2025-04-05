@@ -152,7 +152,7 @@ const EnterPinToHome = () => {
     const onLogout = () => {
         Alert.alert('Are you sure to logout?', undefined, [{
             text: 'Sure',
-            onPress: () => { logout() }
+            onPress: async () => {  await logout() }
         }, {
             text: 'No',
             onPress: () => { }
