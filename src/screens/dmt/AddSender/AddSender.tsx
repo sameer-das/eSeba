@@ -10,7 +10,7 @@ const { CCAvenueBridgeModule } = NativeModules;
 import * as convert from 'xml-js';
 import { encode } from 'base-64';
 
-import x from './string';
+
 
 const AddSender = () => {
   const navigation = useNavigation<any>();
@@ -20,8 +20,6 @@ const AddSender = () => {
   const [isNeft, setIsNeft] = useState<boolean>(false);
   const [isCaptureDisabled, setIsCaptureDisabled] = useState<boolean>(true);
   const { userData } = useContext(AuthContext);
-
-
   const [isLoading, setIsLoading] = useState(false);
   const [fingerData, setFingerData] = useState('');
 
@@ -29,11 +27,11 @@ const AddSender = () => {
 
 
   const handleSubmit = async () => {
+    
     if (fullname === '' || !fullname) {
       Alert.alert('Invalid Input', 'Please enter your full name.');
       return;
     }
-
 
     const payload = {
       "requestType": "SenderRegister",
@@ -44,13 +42,15 @@ const AddSender = () => {
       "bankId": "FINO",
       "skipVerification": "N",
       "aadharNumber": aadhar,
-      "bioPid": encode(fingerData),
+      "bioPid": fingerData,
       "bioType": "FIR"
     }
 
     try {
       setIsLoading(true)
+      // writeToFile("SenderRegister Payload ----" + JSON.stringify(payload))
       const { data } = await registerSenderInfo(payload);
+      // writeToFile("SenderRegister Resposne ----" + JSON.stringify(data))
       console.log(data);
       setIsLoading(false);
       if (data.code === 200 && data.status === 'Success') {
@@ -63,7 +63,7 @@ const AddSender = () => {
                   "txnType": isNeft ? 'NEFT' : 'IMPS',
                   "additionalRegData": String(data.resultDt.additionalRegData),
                   "aadharNumber": aadhar,
-                  "bioPid": encode(fingerData),
+                  "bioPid": fingerData,
                 })
               }
             }])
@@ -79,18 +79,18 @@ const AddSender = () => {
       Alert.alert('Error', 'Error while registering sender. Please try after sometime.');
       setIsLoading(false);
     }
-
   }
 
 
+
   const captureFingerPrintFromDevice = async () => {
-    console.log('Calliing in captureFingerPrintFromDevice');
+    // console.log('Calliing in captureFingerPrintFromDevice');
     try {
       setFingerData('');
       const PID_OPTION = '<!--?xml version="1.0"?-->' + '<PidOptions ver="1.0">' + '<Opts fCount="1" fType="2" iCount="0" pCount="0" format="0" pidVer="2.0" timeout="10000" wadh="18f4CEiXeXcfGXvgWA/blxD+w2pw7hfQPY45JMytkPw=" posh="UNKNOWN" env="P"> </Opts> </PidOptions>'
       let errorCode = '0';
-      let errorMessage ='' ;
-      
+      let errorMessage = '';
+
       // const res = await CCAvenueBridgeModule.getDeviceInfo();
       const res = await CCAvenueBridgeModule.capture(PID_OPTION);
 
@@ -99,11 +99,13 @@ const AddSender = () => {
       console.log(errorCode, typeof errorCode);
       console.log(errorMessage);
 
-      if(res !== 'DNR' && res !== 'DNC') {
+      if (res !== 'DNR' && res !== 'DNC') {
 
-        if(errorCode === '0') {
+        if (errorCode === '0') {
           setFingerData(encode(res));
           Alert.alert('Success', 'Fingerprint read successfully');
+          // writeToFile("Capture Finger Print ----- " + res);
+          // writeToFile("Capture Finger Print Encoded----- " + encode(res));
         } else {
           // Show Alert
           Alert.alert('Error', getResponseCodeOfFingerData(res, 'errInfo'));
@@ -113,11 +115,11 @@ const AddSender = () => {
         setFingerData('');
         // Show alert
       }
-       
+
       console.log(res)
     } catch (error: any) {
       console.log("======================================= Error =================================");
-      if(error.code === "INTENT_NOT_FOUND") {
+      if (error.code === "INTENT_NOT_FOUND") {
         Alert.alert("Driver not found", "No application found to capture the fingerprint.");
       } else {
         Alert.alert("Driver not found", "No application found to capture the fingerprint.");
@@ -125,39 +127,7 @@ const AddSender = () => {
     }
   }
 
-  const goToOtp = () => {
-    navigation.replace('dmtAddSenderOtpScreen', {
-      "txnType": isNeft ? 'NEFT' : 'IMPS',
-      "additionalRegData": 'NA',
-      "aadharNumber": aadhar,
-      "bioPid": fingerData,
-    })
-  }
 
-  const discoverRdService = () => {
-    const url = 'http://127.0.0.1:11100/';
-    console.log('discoverRdService')
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('RDSERVICE', url, true);
-    xhr.setRequestHeader("Content-Type", "text/xml");
-    xhr.setRequestHeader("Accept", "text/xml");
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              console.log('if')
-                console.log(xhr.responseText);
-            }
-            else {
-              console.log('else')
-                console.log(xhr.statusText)
-            }
-        }
-    };
-
-    xhr.send();
-}
 
   const getResponseCodeOfFingerData = (str: string, key: string) => {
     const j = convert.xml2json(str, { compact: true })
@@ -165,8 +135,12 @@ const AddSender = () => {
     return res['PidData']['Resp']['_attributes'][key];
   }
 
+
+
   if (isLoading)
     return <Loading label='Loading...' />
+
+  
   return (
     <View style={styles.rootContainer}>
       <Text style={styles.pageHeader}>DMT Sender Registration</Text>
@@ -178,7 +152,7 @@ const AddSender = () => {
             if (!text || !aadhar)
               setIsCaptureDisabled(true)
             else
-            setIsCaptureDisabled(false)
+              setIsCaptureDisabled(false)
           }}
           inputLabel="Enter your full name"
           errorMessage="" />
@@ -189,7 +163,7 @@ const AddSender = () => {
             setAadhar(text);
             const reg = new RegExp('^[0-9]{12}$');
             const validAadhar = reg.test(text);
-            if(validAadhar) {
+            if (validAadhar) {
               setAadharErrorMessage("");
             } else {
               setAadharErrorMessage("Please enter valid aadhar number");
@@ -220,13 +194,18 @@ const AddSender = () => {
         <Pressable style={[styles.cta, { backgroundColor: isCaptureDisabled ? colors.primary100 : colors.primary500 }]} disabled={isCaptureDisabled} onPress={captureFingerPrintFromDevice}>
           <Text style={styles.ctaLabel}>Capture Finger Print</Text>
         </Pressable>
+
+        {/* <Pressable style={[styles.cta, { backgroundColor: colors.primary500 }]} onPress={() => writeToFile("Hello world!")}>
+          <Text style={styles.ctaLabel}>Write to File</Text>
+        </Pressable> */}
+
         {/* <Pressable style={[styles.cta, { backgroundColor: colors.primary500 }]} disabled={false} onPress={discoverRdService}>
           <Text style={styles.ctaLabel}>Discover</Text>
         </Pressable> */}
 
         {/* Submit Button   */}
         {
-          fingerData && <Pressable style={[styles.cta, { backgroundColor: colors.primary500 }]}  onPress={handleSubmit}>
+          fingerData && <Pressable style={[styles.cta, { backgroundColor: colors.primary500 }]} onPress={handleSubmit}>
             <Text style={styles.ctaLabel}>Submit</Text>
           </Pressable>
         }

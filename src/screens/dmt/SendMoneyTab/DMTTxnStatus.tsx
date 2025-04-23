@@ -6,14 +6,16 @@ import colors from '../../../constants/colors'
 const DMTTxnStatus = () => {
     const route = useRoute();
     const navigation = useNavigation<any>();
-
     const params = (route.params as any) || {}; // Default to empty object to prevent crashes
+
 
     const handleBackButton = () => {
         console.log('back button pressed in DMTTxnStatus');
         navigation.popToTop(); // goes to the main screen
         return true; // do not default go back if true
     }
+
+
 
     useEffect(() => {
         // console.log(params)
@@ -25,6 +27,7 @@ const DMTTxnStatus = () => {
     }, []);
 
 
+    
     const calculateConvFee = (fee: string) => {
         let f = 0;
         try {
@@ -36,6 +39,8 @@ const DMTTxnStatus = () => {
         }
         return f;
     }
+
+
 
     return (
         <View style={
@@ -96,7 +101,11 @@ const DMTTxnStatus = () => {
     )
 }
 
+
+
 export default DMTTxnStatus
+
+
 
 const styles = StyleSheet.create({
     rootContainer: {

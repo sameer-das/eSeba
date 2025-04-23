@@ -40,7 +40,9 @@ const DMTAddSenderOtpScreen = () => {
             }
             console.log(verifySenderPayload)
             setIsLoading(true);
+            // writeToFile("VerifySender Payload ----" + JSON.stringify(verifySenderPayload));
             const { data } = await verifySender(verifySenderPayload);
+            // writeToFile("VerifySender Response ----" + JSON.stringify(data));
             console.log(data);
             setIsLoading(false);
             if (data.status === 'Success' && data.code === 200) {

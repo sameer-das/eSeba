@@ -97,7 +97,9 @@ const ShowConveyanceFee = () => {
         console.log(checkPinResponse)
         if (checkPinResponse) {
             try{
-                const checkWalletBalance = await validateWalletBalance(route.params.amount, userData.user.user_EmailID);
+                const totalAmount = +route.params.amount + (+route.params.custConvFee / 100);
+                // console.log("Total Amount to be deducted from wallet in rupees :: " + totalAmount);
+                const checkWalletBalance = await validateWalletBalance(totalAmount, userData.user.user_EmailID);
                 console.log(checkWalletBalance);                
                 if (checkWalletBalance) {
                     console.log('ok let trnsfer');
